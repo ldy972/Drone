@@ -44,7 +44,7 @@ GENERIC_BINARIES_SOURCE_ENTRYPOINTS+=			\
 GENERIC_INCLUDES:=$(addprefix -I,$(GENERIC_INCLUDES))
 
 GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR)
-GENERIC_LIBS=-lpc_ardrone -lrt -lgtk-x11-2.0 -lcairo
+GENERIC_LIBS=-lpc_ardrone -lrt -lgtk-x11-2.0 -lgdk-x11-2.0 -lgobject-2.0 -lcairo -lm
 
 
 SDK_FLAGS+="USE_APP=yes"
