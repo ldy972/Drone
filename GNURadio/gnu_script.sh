@@ -29,7 +29,7 @@ cd gnuRadio/
 pwd
 #fetching gnu radio
 echo "fetching gnu radio : 1 hour left"
-sudo wget http://www.sbrac.org/files/build-gnuradio && chmod a+x ./build-gnuradio && ./build-gnuradio
+sudo wget http://www.sbrac.org/files/build-gnuradio && sudo chmod a+x ./build-gnuradio && ./build-gnuradio
 
 #echo "almost done"
 #sudo apt-get install rtl-sdr
@@ -83,7 +83,7 @@ cd
 else
 echo "bloquage temporaire de rtl nécessaire. En cours..."
 sudo rmmod dvb_usb_rtl28xxu rtl2832
-cd ../../
+cd ../
 fi
 echo "finished"
 echo "lancement de Rtone.grc"
