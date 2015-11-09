@@ -128,7 +128,7 @@ endif
 
 GENERIC_LIB_PATHS=-L$(GENERIC_TARGET_BINARIES_DIR)
 GENERIC_CFLAGS+=-DLIBUDEV_I_KNOW_THE_API_IS_SUBJECT_TO_CHANGE
-GENERIC_LIBS+=-liw -lpc_ardrone -lgthread-2.0 -lgtk-x11-2.0 -lrt -lxml2 -ludev -lswscale -lSDL
+GENERIC_LIBS+=-liw -lpc_ardrone -lgthread-2.0 -lgtk-x11-2.0 -lrt -lxml2 -ludev -lswscale -lSDL -lm
 
 #ifeq ($(USE_ARDRONE_VISION),yes)
 #   GENERIC_LIBS+=-lpc_vision
