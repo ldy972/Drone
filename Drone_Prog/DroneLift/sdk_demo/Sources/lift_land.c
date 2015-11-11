@@ -15,6 +15,7 @@ DEFINE_THREAD_ROUTINE( lift_land, nomParams )
 
   printf("YOLO\n");
 
+
   // Tentative de rotation
   // TODO A faire marcher
   for (i = 0; i < 50; i++) { 
@@ -23,7 +24,10 @@ DEFINE_THREAD_ROUTINE( lift_land, nomParams )
   }
   ardrone_at_set_progress_cmd(0b00,0,0,0,0);
 
+
   usleep(5000000);
+	ardrone_at_set_progress_cmd(TRUE,0.0,0.0,0.0,1);
+usleep(5000000);
   for (i = 0; i < 10; i++) {
   // Aterrissage
   // TODO Utiliser les données de navigation pour déterminer que le drone a bien aterri
