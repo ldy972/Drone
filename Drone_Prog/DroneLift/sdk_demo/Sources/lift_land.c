@@ -17,8 +17,10 @@ DEFINE_THREAD_ROUTINE( lift_land, nomParams )
 
   // Tentative de rotation
   // TODO A faire marcher
-  ardrone_at_set_progress_cmd(0b11,0.5,0,0,1);
-  usleep(5000000);
+  for (i = 0; i < 50; i++) { 
+    ardrone_at_set_progress_cmd(0b01,0.5,0.2,1,1);
+    usleep(30000);
+  }
   ardrone_at_set_progress_cmd(0b00,0,0,0,0);
 
   usleep(5000000);
