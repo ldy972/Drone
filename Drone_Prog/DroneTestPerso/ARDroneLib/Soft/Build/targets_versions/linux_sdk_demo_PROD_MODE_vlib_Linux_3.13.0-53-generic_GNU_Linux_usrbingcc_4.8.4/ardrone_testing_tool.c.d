@@ -1,7 +1,7 @@
 ardrone_testing_tool.o ../../Soft/Build/targets_versions/linux_sdk_demo_PROD_MODE_vlib_Linux_3.13.0-53-generic_GNU_Linux_usrbingcc_4.8.4/ardrone_testing_tool.c.d: \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/ardrone_testing_tool.c \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/ardrone_testing_tool.c \
  /usr/include/stdc-predef.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/ardrone_testing_tool.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/ardrone_testing_tool.h \
  /usr/include/stdio.h /usr/include/features.h \
  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
@@ -22,14 +22,14 @@ ardrone_testing_tool.o ../../Soft/Build/targets_versions/linux_sdk_demo_PROD_MOD
  ..//VP_Os/linux/vp_os_serial.h /usr/include/termios.h \
  /usr/include/x86_64-linux-gnu/bits/termios.h \
  /usr/include/x86_64-linux-gnu/sys/ttydefaults.h ../VP_Os/linux/intrin.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/utils/ardrone_time.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/utils/ardrone_time.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/time.h \
  /usr/include/x86_64-linux-gnu/bits/time.h \
  /usr/include/x86_64-linux-gnu/sys/select.h \
  /usr/include/x86_64-linux-gnu/bits/select.h \
  /usr/include/x86_64-linux-gnu/bits/sigset.h \
  /usr/include/x86_64-linux-gnu/bits/select2.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_navdata_client.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_navdata_client.h \
  ../VP_Api/vp_api_thread_helper.h ../VP_Os/vp_os_thread.h \
  ..//VP_Os/linux/vp_os_thread_dep.h /usr/include/pthread.h \
  /usr/include/endian.h /usr/include/x86_64-linux-gnu/bits/endian.h \
@@ -38,8 +38,8 @@ ardrone_testing_tool.o ../../Soft/Build/targets_versions/linux_sdk_demo_PROD_MOD
  /usr/include/x86_64-linux-gnu/bits/sched.h /usr/include/xlocale.h \
  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/ardrone_api.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/ardrone_common_config.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/ardrone_api.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/ardrone_common_config.h \
  ../ATcodec/ATcodec_api.h ../ATcodec/ATcodec.h \
  ../ATcodec/ATcodec_Memory.h ../ATcodec/ATcodec_Error.h \
  ../ATcodec/ATcodec_Tree.h ../ATcodec/ATcodec_Buffer.h \
@@ -54,11 +54,11 @@ ardrone_testing_tool.o ../../Soft/Build/targets_versions/linux_sdk_demo_PROD_MOD
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/navdata_common.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/config.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/generated_custom.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/vision_common.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/maths.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/navdata_common.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/config.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/generated_custom.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/vision_common.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/maths.h \
  /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/huge_val.h \
  /usr/include/x86_64-linux-gnu/bits/huge_valf.h \
  /usr/include/x86_64-linux-gnu/bits/huge_vall.h \
@@ -68,11 +68,11 @@ ardrone_testing_tool.o ../../Soft/Build/targets_versions/linux_sdk_demo_PROD_MOD
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathinline.h \
  /usr/lib/gcc/x86_64-linux-gnu/4.8/include/float.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/matrices.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/navdata_keys.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/quaternions.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/led_animation.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/config_keys.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/matrices.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/navdata_keys.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/quaternions.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/led_animation.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/config_keys.h \
  ../../VLIB/../VLIB/video_codec.h ../../VLIB/../VLIB/video_controller.h \
  ../VP_Api/vp_api_picture.h ../../FFMPEG/Includes/libavutil/avutil.h \
  ../../FFMPEG/Includes/libavutil/common.h /usr/include/ctype.h \
@@ -100,15 +100,20 @@ ardrone_testing_tool.o ../../Soft/Build/targets_versions/linux_sdk_demo_PROD_MOD
  ../../VLIB/../VLIB/video_picture_defines.h \
  ../../VLIB/../VLIB/video_gob.h ../../VLIB/../VLIB/video_macroblock.h \
  ../../VLIB/../VLIB/P264/p264_common.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Control/ardrone_navdata_control.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_navdata_file.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_general_navdata.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_academy_navdata.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Video/video_navdata_handler.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Control/ardrone_control.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/UI/ardrone_input.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/ardrone_tool.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/academy_common.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Control/ardrone_navdata_control.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_navdata_file.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_general_navdata.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Navdata/ardrone_academy_navdata.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Video/video_navdata_handler.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/Control/ardrone_control.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/UI/ardrone_input.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/ardrone_tool/ardrone_tool.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Common/academy_common.h \
  ../VP_Os/vp_os_print.h ../VP_Os/vp_os_signal.h \
  ..//VP_Os/linux/vp_os_signal_dep.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/Video/video_stage.h
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/Video/video_stage.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/lift_land.h \
+ /usr/include/unistd.h /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
+ /usr/include/x86_64-linux-gnu/bits/unistd.h
