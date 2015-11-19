@@ -3,9 +3,9 @@ all : test_udp
 clean :
 	rm *.o test_udp
 
-test_udp : test_udp.o udp_sender.o
-	gcc -Wall test_udp.o udp_sender.o -o $@
+test_udp : udp_sender.o test_udp.o 
+	gcc -Wall udp_sender.o test_udp.o -o $@
 
-%.o : %.c %.h
+%.o : %.c $(wildcard *.h)
 	gcc -Wall -DEMBED -c $<
 

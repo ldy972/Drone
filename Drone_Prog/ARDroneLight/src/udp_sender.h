@@ -6,7 +6,6 @@
 #include <errno.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <netinet.h>
 #include <arpa/inet.h>
 #include <string.h>
 

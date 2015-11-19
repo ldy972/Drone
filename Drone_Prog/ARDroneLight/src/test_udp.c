@@ -9,9 +9,13 @@ int main ()
     printf("Testing UDP_sender for IP adress: %s and port: %d\n", IP_ADRESS, UDP_PORT);
 
     printf("Opening socket\n");
-    initialize_socket();
+    if (initialize_socket() != 0)
+    {
+        printf("Fail INIT\n");
+        return 1;
+    }
     printf("Socket opened\n");
-    int nb_messages = 50;
+    int nb_messages = 10;
     int i = 0;
 
     printf("Sending %d messages\n", nb_messages);
@@ -19,12 +23,21 @@ int main ()
 
     for (i = 0; i < nb_messages; i++)
     {
-        send_message(mess);
-        printf("Sending message %d\n", i);
+        printf("Sending message %d: %s.\n", i, mess);
+        if (send_message(mess) != 0)
+        {
+            printf("Fail INIT\n");
+            return 2;
+        }
+        usleep(100000);
     }
 
     printf("Closing socket\n");
-    close_socket();
+    if (close_socket() != 0)
+    {
+        printf("Fail INIT\n");
+        return 3;
+    }
     printf("Socket closed\n");
 
     return 0;
