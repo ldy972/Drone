@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#moving my .o in my Build repo
+
+cd ./Sources/
+mv *.o ../Build/
+
+echo "done moving obj"
