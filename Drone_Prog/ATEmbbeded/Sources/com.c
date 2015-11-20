@@ -2,26 +2,24 @@
 
 
 /**
+*
+**/
+ char maxSeqReach=0;
+ int16_t connectionOpen=0;
+/**
  * @overview : gestion du numéro de séquence
  * @arg :
  * @return :
  * */
  void inc_num_sequence(void){
+	int i = 0;
+        for (i = 0; i < 4; i++) {
+            numSequence[i] = 0; 
+        }
+		sprintf(numSequence,"%i",++numSeq) ;
+	if(numSeq>9999)
+		maxSeqReach++ ;
 
-		if(++(numSeq[0])>'9'){
-			numSeq[0] = '0';
-			strcat(numSequence,numSeq);
-			if(++(numSequence[2])=='9'){
-				numSequence[2]='0';
-				if(++(numSequence[1])=='9'){
-					numSequence[1]='0';
-					if(++(numSequence[0])=='9'){
-						numSequence[0]='0';
-						maxSeqReach++ ;
-					}
-				}
-			}
-		}
 	 }
 
 	 
@@ -39,74 +37,74 @@ char* make(cmd_type trg){
 			case CMD_DECOLLAGE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_REF) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_DECOLLAGE) ;
 			case CMD_ATTERISSAGE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_REF) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_ATTERISSAGE) ;
 			case CMD_ARRET_URGENCE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_REF) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_ARRET_URGENCE) ;
 			case CMD_ANTI_ARRET_URGENCE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_REF) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_ANTI_ARRET_URGENCE) ;
 			case CMD_AVANT :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
+				strcat(commande_result,H_AT_PCMD) ;	
 				strcat(commande_result,numSequence) ;
-				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,COMMANDE_AT_AVANT) ;
 			case CMD_ARRIERE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_PCMD) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_ARRIERE) ;
 			case CMD_GAUCHE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_PCMD) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_GAUCHE) ;
 			case CMD_DROITE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_PCMD) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_DROITE) ;
 			case CMD_HAUT :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_PCMD) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_HAUT) ;
 			case CMD_BAS :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_PCMD) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_BAS) ;
 			case CMD_ROTATION_GAUCHE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_PCMD) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_ROTATION_GAUCHE) ;
 			case CMD_ROTATION_DROITE :
 				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
 				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,numSequence) ;
 				strcat(commande_result,H_AT_PCMD) ;
+				strcat(commande_result,numSequence) ;
 				strcat(commande_result,COMMANDE_AT_ROTATION_DROITE) ;
 			default: commande_result = strdup("") ;
 		}

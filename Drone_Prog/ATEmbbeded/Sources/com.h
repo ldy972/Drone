@@ -12,10 +12,10 @@
 /***********************************************************************
  * global variables
  * *********************************************************************/
- static char numSequence[4] = {0}; //ascii 48 = '0'
- static char* numSeq="0" ;
- static char maxSeqReach=0 ;
- static int16_t connectionOpen = 0 ;
+ static char numSequence[4] ; //ascii 48 = '0'
+ static int numSeq=0;
+ extern char maxSeqReach;
+ extern int16_t connectionOpen;
  
 /***********************************************************************
  * AT defines
