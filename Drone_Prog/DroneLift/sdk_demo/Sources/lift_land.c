@@ -19,11 +19,11 @@ DEFINE_THREAD_ROUTINE( lift_land, nomParams )
 
   // Tentative de rotation
   // TODO A faire marcher
-//  for (i = 0; i < 100; i++) {
-    ardrone_at_set_progress_cmd(TRUE,0,0,0.0,0.5);
+  for (i = 0; i < 100; i++) {
+    ardrone_at_set_progress_cmd(0,0,0,0.0,1);
     usleep(30000);
-  //  printf("Up %d\n", i);
- // }
+    printf("Up %d\n", i);
+  }
   ardrone_at_set_progress_cmd(0,0,0,0.0,0.0);
   printf("Stahp !\n");
 
