@@ -272,7 +272,5 @@ int translate_left(int times){
 	return manage_cmd(CMD_CLOSE_CONNEC,0) ;
 }
 	 
-int main (){
-		return 0 ;
-}
+
 
