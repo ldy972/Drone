@@ -12,6 +12,7 @@
  * @return :
  * */
  void inc_num_sequence(void){
+    ENTER_FCT()
 	int i = 0;
         for (i = 0; i < 4; i++) {
             numSequence[i] = 0; 
@@ -19,7 +20,7 @@
 		sprintf(numSequence,"%i",++numSeq) ;
 	if(numSeq>9999)
 		maxSeqReach++ ;
-
+    EXIT_FCT()
 	 }
 
 	 
@@ -30,6 +31,7 @@
  * @TODO : factoriser le switch case par une sous fonction
  * **/
 char* make(cmd_type trg){
+    ENTER_FCT()
 
 		char* commande_result = NULL ;
 		size_t taille ;
@@ -108,6 +110,7 @@ char* make(cmd_type trg){
 				strcat(commande_result,COMMANDE_AT_ROTATION_DROITE) ;
 			default: commande_result = strdup("") ;
 		}
+    EXIT_FCT()
 		return commande_result ;
 	}
 	
@@ -120,6 +123,7 @@ char* make(cmd_type trg){
  *@return : int state
  * **/
 int send_cmd(cmd_type cmd) {
+    ENTER_FCT()
 
 
 	// on réalise le payload à l'aide de la commande demandée
@@ -132,9 +136,11 @@ int send_cmd(cmd_type cmd) {
 		if(cmd == CMD_CLOSE_CONNEC){ //TODO : Quel message envoyer au drone pour cesser la connection?
 			if(close_socket()==0){
 				connectionOpen=0 ;
+    EXIT_FCT()
 				return 0 ;
 			}
 			
+    EXIT_FCT()
 			return -1; // EXIT 1
 		}
 		
@@ -144,8 +150,10 @@ int send_cmd(cmd_type cmd) {
 			if(send_message(payload)==0){
 				inc_num_sequence();
 				connectionOpen=0 ;
+    EXIT_FCT()
 				return 0 ;
 			}
+    EXIT_FCT()
 			return -1; // EXIT 2
 		}
 		exit(-1) ;
@@ -156,6 +164,7 @@ int send_cmd(cmd_type cmd) {
  * @return : status
  * */
 int manage_cmd(cmd_type cmd, int times){
+    ENTER_FCT()
 	cmd_type generalCommande = cmd ;
 	int nb_envoie = 1;
 	int return_val = 0 ;
@@ -170,6 +179,7 @@ int manage_cmd(cmd_type cmd, int times){
 		return_val += send_cmd(generalCommande) ;
 		DELAY() ;
 	}
+    EXIT_FCT()
 	return return_val ;
 }
 /**
@@ -179,7 +189,7 @@ int manage_cmd(cmd_type cmd, int times){
  * **/
  
 int taking_off_AT(){
-
+    ENTER_FCT()
 	return manage_cmd(CMD_DECOLLAGE,0) ;
 }
 /**
@@ -188,6 +198,7 @@ int taking_off_AT(){
  * @return : status 0 = OK
  * **/
  int landing_AT(){
+    ENTER_FCT()
 	return manage_cmd(CMD_ATTERISSAGE,0) ;
 }
 /**
@@ -196,6 +207,7 @@ int taking_off_AT(){
  * @return : status 0 = OK
  * **/
  int rising_AT(int times) {
+    ENTER_FCT()
 	return manage_cmd(CMD_HAUT,times) ;
 }
 
@@ -205,6 +217,7 @@ int taking_off_AT(){
  * @return : status 0 = OK
  * **/
 int go_down_AT(int times){
+    ENTER_FCT()
 	return manage_cmd(CMD_BAS,times) ;
 }
 
@@ -214,9 +227,11 @@ int go_down_AT(int times){
  * @return : status 0 = OK
  * **/
 int turn_AT_Right(int times) {
+    ENTER_FCT()
 	return manage_cmd(CMD_ROTATION_DROITE,times) ;
 }
 int turn_AT_Left(int times){
+    ENTER_FCT()
 	return manage_cmd(CMD_ROTATION_GAUCHE,times) ;
 }
 
@@ -226,9 +241,11 @@ int turn_AT_Left(int times){
  * @return : status 0 = OK
  * **/
 int go_forward_AT(int times){
+    ENTER_FCT()
 	return manage_cmd(CMD_AVANT,times) ;
 }
 int go_back_AT(int times){
+    ENTER_FCT()
 	return manage_cmd(CMD_ARRIERE,times) ;
 }
 
@@ -238,9 +255,11 @@ int go_back_AT(int times){
  * @return : status 0 = OK
  * **/
 int translate_right(int times){
+    ENTER_FCT()
 	return manage_cmd(CMD_DROITE,times) ;
 }
 int translate_left(int times){
+    ENTER_FCT()
 	return manage_cmd(CMD_GAUCHE,times) ;
 }
 
@@ -250,6 +269,7 @@ int translate_left(int times){
  * @return : status 0 = OK
  * **/
  int emergency_stop(){
+    ENTER_FCT()
 	return manage_cmd(CMD_ARRET_URGENCE,0) ;
 }
 /**
@@ -258,6 +278,7 @@ int translate_left(int times){
  * @return : status 0 = OK
  * **/
  int no_emergency_stop(){
+    ENTER_FCT()
 	return manage_cmd(CMD_ANTI_ARRET_URGENCE,0) ;
 }
 
@@ -267,6 +288,7 @@ int translate_left(int times){
  * @return : status 0 = OK
  * **/
  int close_connect(){
+    ENTER_FCT()
 	return manage_cmd(CMD_CLOSE_CONNEC,0) ;
 }
 	 

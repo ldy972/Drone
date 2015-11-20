@@ -1,8 +1,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "com.h"
 #include "udp_sender.h"
+#include "debug.h"
 
 int main(void)
 {

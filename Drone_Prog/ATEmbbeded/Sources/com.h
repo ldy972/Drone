@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "udp_sender.h"
+#include "debug.h"
 
  /***********************************************************************
  * global defines and macro
