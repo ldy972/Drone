@@ -8,7 +8,7 @@
  * global defines and macro
  * *********************************************************************/
 #define NB_ESSAI_UDP 10
-#define DELAY() {sleep(35);}	 
+#define DELAY() {usleep(35);}	 
 
 /***********************************************************************
  * global variables

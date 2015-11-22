@@ -9,12 +9,16 @@ ifdef DEBUG
     CFLAGS += -DDEBUG
 endif
 
+ifdef EMBED
+    CFLAGS += -DEMBED
+endif
+
 all : $(EXEC)
 
 test_com : $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
-%.o : %.c $(wildcard %.h)
+%.o : %.c $(wildcard %.h) debug.h
 	$(CC) $(CFLAGS) -c $< -o $@
 	
 clean :

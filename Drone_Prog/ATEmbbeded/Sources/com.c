@@ -4,115 +4,130 @@
 /**
 *
 **/
- char maxSeqReach=0;
- int16_t connectionOpen=0;
+char maxSeqReach=0;
+int16_t connectionOpen=0;
 /**
  * @overview : gestion du numéro de séquence
  * @arg :
  * @return :
  * */
- void inc_num_sequence(void){
+void inc_num_sequence(void)
+{
     ENTER_FCT()
 	int i = 0;
-        for (i = 0; i < 4; i++) {
-            numSequence[i] = 0; 
-        }
-		sprintf(numSequence,"%i",++numSeq) ;
+    for (i = 0; i < 4; i++) {
+        numSequence[i] = 0; 
+    }
+	sprintf(numSequence,"%i",++numSeq) ;
 	if(numSeq>9999)
 		maxSeqReach++ ;
     EXIT_FCT()
-	 }
+}
 
-	 
+
 /**
  * @overview : créer la payload a envoyer en respectant les normes AR Drone
- * @arg : char* commande voulue (Cf. com.h "CMD_*")
+ * @arg : cmd_type commande voulue (Cf. com.h "CMD_*")
  * @return : char* pointeur vers le string créé
  * @TODO : factoriser le switch case par une sous fonction
  * **/
-char* make(cmd_type trg){
+char* make(cmd_type trg)
+{
     ENTER_FCT()
-
-		char* commande_result = NULL ;
-		size_t taille ;
-		switch(trg){
-			case CMD_DECOLLAGE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_REF) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_DECOLLAGE) ;
-			case CMD_ATTERISSAGE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_REF) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_ATTERISSAGE) ;
-			case CMD_ARRET_URGENCE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_REF) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_ARRET_URGENCE) ;
-			case CMD_ANTI_ARRET_URGENCE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_REF) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_ANTI_ARRET_URGENCE) ;
-			case CMD_AVANT :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;	
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_AVANT) ;
-			case CMD_ARRIERE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_ARRIERE) ;
-			case CMD_GAUCHE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_GAUCHE) ;
-			case CMD_DROITE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_DROITE) ;
-			case CMD_HAUT :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_HAUT) ;
-			case CMD_BAS :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_BAS) ;
-			case CMD_ROTATION_GAUCHE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_ROTATION_GAUCHE) ;
-			case CMD_ROTATION_DROITE :
-				taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-				commande_result = (char*)malloc(taille*sizeof(char)) ;
-				strcat(commande_result,H_AT_PCMD) ;
-				strcat(commande_result,numSequence) ;
-				strcat(commande_result,COMMANDE_AT_ROTATION_DROITE) ;
-			default: commande_result = strdup("") ;
-		}
+    char* commande_result = NULL ;
+    size_t taille ;
+    switch (trg) {
+    case CMD_DECOLLAGE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*) malloc(taille * sizeof(char)) ;
+        strcat(commande_result,H_AT_REF) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_DECOLLAGE) ;
+        break;
+    case CMD_ATTERISSAGE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_REF) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_ATTERISSAGE) ;
+        break;
+    case CMD_ARRET_URGENCE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_REF) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_ARRET_URGENCE) ;
+        break;
+    case CMD_ANTI_ARRET_URGENCE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_REF) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_ANTI_ARRET_URGENCE) ;
+        break;
+    case CMD_AVANT :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;	
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_AVANT) ;
+        break;
+    case CMD_ARRIERE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_ARRIERE) ;
+        break;
+    case CMD_GAUCHE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_GAUCHE) ;
+        break;
+    case CMD_DROITE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_DROITE) ;
+        break;
+    case CMD_HAUT :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_HAUT) ;
+        break;
+    case CMD_BAS :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_BAS) ;
+        break;
+    case CMD_ROTATION_GAUCHE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_ROTATION_GAUCHE) ;
+        break;
+    case CMD_ROTATION_DROITE :
+        taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
+        commande_result = (char*)malloc(taille*sizeof(char)) ;
+        strcat(commande_result,H_AT_PCMD) ;
+        strcat(commande_result,numSequence) ;
+        strcat(commande_result,COMMANDE_AT_ROTATION_DROITE) ;
+        break;
+    default:
+        commande_result = strdup("") ;
+    }
+    PRINT_LOG("Command created : %s", commande_result)
     EXIT_FCT()
-		return commande_result ;
-	}
+    return commande_result ;
+}
 	
 
 
@@ -122,42 +137,43 @@ char* make(cmd_type trg){
  *@arg : char* commande voulue, size_t size of the payload (strlenght)
  *@return : int state
  * **/
-int send_cmd(cmd_type cmd) {
+int send_cmd(cmd_type cmd)
+{
     ENTER_FCT()
-
-
-	// on réalise le payload à l'aide de la commande demandée
-		char*  payload = make(cmd) ;
-	// on ouvre ou ferme la connection en fonction de ce qui est demandé
-		if(connectionOpen==0){
-			initialize_socket();
-			connectionOpen=1 ;
+    // on réalise le payload à l'aide de la commande demandée
+    char*  payload = make(cmd) ;
+    // on ouvre ou ferme la connection en fonction de ce qui est demandé
+    if(connectionOpen == 0){
+        initialize_socket();
+        connectionOpen = 1;
+    }
+	if (cmd == CMD_CLOSE_CONNEC) {
+        //TODO : Quel message envoyer au drone pour cesser la connection?
+		if (close_socket() == 0) {
+			connectionOpen = 0;
+            EXIT_FCT()
+			return 0 ;
 		}
-		if(cmd == CMD_CLOSE_CONNEC){ //TODO : Quel message envoyer au drone pour cesser la connection?
-			if(close_socket()==0){
-				connectionOpen=0 ;
-    EXIT_FCT()
-				return 0 ;
-			}
-			
-    EXIT_FCT()
-			return -1; // EXIT 1
-		}
+        EXIT_FCT()
+		return -1; // EXIT 1
+	}
 		
 	//on envoie notre message
-		if(strlen(payload)<1024){
-
-			if(send_message(payload)==0){
-				inc_num_sequence();
-				connectionOpen=0 ;
-    EXIT_FCT()
-				return 0 ;
-			}
-    EXIT_FCT()
-			return -1; // EXIT 2
+	if (strlen(payload) < 1024) {
+        PRINT_LOG("Command to send : %s", payload)
+        if (send_message(payload) == 0) {
+            inc_num_sequence();
+            connectionOpen = 1;
+            free(payload);
+            EXIT_FCT()
+            return 0 ;
 		}
-		exit(-1) ;
+        free(payload);
+        EXIT_FCT()
+		return -1; // EXIT 2
 	}
+	exit(-1) ;
+}
 
 /** factorisation des fonctions gestion de vol
  * @arg : commande de vol
