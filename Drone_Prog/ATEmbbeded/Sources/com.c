@@ -16,7 +16,14 @@ int numSeq=0;
  * @return :
  * */
  void inc_num_sequence(void){
-		sprintf(numSequence,"%d",++numSeq) ;
+	 ENTER_FCT()
+	 if(numSeq==9999){
+		 maxSeqReach++ ;
+		 numSeq=0 ;
+	 }
+		
+	sprintf(numSequence,"%d",++numSeq) ;
+	EXIT_FCT()
  }
 
 /**
@@ -27,6 +34,7 @@ int numSeq=0;
  char* convert_power(power_percent_type power_p){
 	 
 		char tmp[POWER_P_SIZE+1];
+		tmp[POWER_P_SIZE] = '\0' ;
 		switch(power_p){
 			case POS_POWER_5_ :
 				sprintf(tmp,"%i",POS_POWER_5_) ;
@@ -82,7 +90,7 @@ int numSeq=0;
  * **/
 char* placer_puissance(cmd_type cmd, power_percent_type percent){
 
-	char tmp[200],*res=NULL;
+	char tmp[200];
 	
 	switch(cmd){
 		case CMD_AVANT :
@@ -113,22 +121,8 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
 		default :
 			break ;
 	}
-	res = strdup(tmp) ;
-	return res ;
+	return strdup(tmp) ;
 }
-
-/*void inc_num_sequence(void)
-{
-    ENTER_FCT()
-	int i = 0;
-    for (i = 0; i < 4; i++) {
-        numSequence[i] = 0; 
-    }
-	sprintf(numSequence,"%i",++numSeq) ;
-	if(numSeq>9999)
-		maxSeqReach++ ;
-    EXIT_FCT()
-}*/
 
 
 /**
