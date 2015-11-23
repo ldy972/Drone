@@ -8,7 +8,7 @@
  * */
  void inc_num_sequence(void){
 		sprintf(numSequence,"%d",++numSeq) ;
- }
+	 }
 
 /**
  * @overview : convertir le type power_percent_type en string null terminating
