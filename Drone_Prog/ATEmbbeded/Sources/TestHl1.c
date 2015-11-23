@@ -6,20 +6,25 @@
 #include "udp_sender.h"
 #include "debug.h"
 
+
+#define SEC_DELAY(x) {sleep(x);}
+
 int main(void)
 {
+	power_percent_type power_percent = POS_POWER_50_ ;
+	int times = 500 ;
     printf("Décollage\n");
 	taking_off_AT(); 
     printf("Dodo Décollage\n");
-	sleep(6);
+	SEC_DELAY(6)
     printf("Up, up, and away !\n");
-	rising_AT(500);
+	rising_AT(times,power_percent);
     printf("Dodo Montée\n");
-	sleep(2);
+	SEC_DELAY(2)
     printf("A droite toute !\n");
-	turn_AT_Right(500) ;
+	turn_AT_Right(times,power_percent) ;
     printf("Dodo Droite\n");
-	sleep(2);
+	SEC_DELAY(2)
     printf("Retour sur le plancher des vaches\n");
 	landing_AT();
     printf("Fini\n");

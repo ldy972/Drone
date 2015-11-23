@@ -8,15 +8,13 @@
  * global defines and macro
  * *********************************************************************/
 #define NB_ESSAI_UDP 10
-#define DELAY() {usleep(35);}
+#define DELAY(x) {usleep(x);}
 #define POWER_P_SIZE 10	 
 
 
 /***********************************************************************
  * global variables
  * *********************************************************************/
- static char numSequence[4] ; //ascii 48 = '0'
- static int numSeq=0;
  extern char maxSeqReach;
  extern int16_t connectionOpen;
  

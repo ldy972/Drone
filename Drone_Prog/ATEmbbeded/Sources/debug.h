@@ -8,7 +8,7 @@
 #else
 #define ENTER_FCT(fct)
 #define EXIT_FCT(fct)
-#define PRINT_LOG(mess)
+#define PRINT_LOG(mess, ...) 
 #endif
 
 #define ERROR_LOG(mess) fprintf(stderr, "[ERROR] (%s:%d) in function %s : "mess"\n", __FILE__, __LINE__, __FUNCTION__);

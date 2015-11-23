@@ -1,11 +1,15 @@
 #include "com.h"
 
+#define DEBUG
 
 /**
 *
 **/
 char maxSeqReach=0;
 int16_t connectionOpen=0;
+char numSequence[4] = {0}; //ascii 48 = '0'
+int numSeq=0;
+
 /**
  * @overview : gestion du numéro de séquence
  * @arg :
@@ -227,7 +231,7 @@ char* make(cmd_type trg,power_percent_type percent){
 		result=strdup(commande_result) ;
 		free(commande_result) ;
 	   	PRINT_LOG("Command created : %s", commande_result)
-		EXIT_FCT
+		EXIT_FCT() ;
 		return result ;
 	}
 
@@ -274,7 +278,6 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
         free(payload);
         EXIT_FCT()
 		return -1; // EXIT 2
-	}
 	exit(-1) ;
 }
 
@@ -297,7 +300,7 @@ int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
 		 
 	for(cpt=0;cpt<NB_ESSAI_UDP*nb_envoie;cpt++){
 		return_val += send_cmd(generalCommande,percent) ;
-		DELAY() ;
+		DELAY(35) ;
 	}
     EXIT_FCT()
 	return return_val ;
@@ -310,9 +313,9 @@ int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
  * **/
  
 int taking_off_AT(){
-ENTER_FCT()
-	return manage_cmd(CMD_DECOLLAGE,NULL_POWER_VALUE,0) 
-    }
+	ENTER_FCT()
+	return manage_cmd(CMD_DECOLLAGE,NULL_POWER_VALUE,0) ;
+}
 /**
  * atterir
  * @arg : void
