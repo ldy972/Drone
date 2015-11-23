@@ -2,21 +2,33 @@
 #include <stdlib.h>
 #include <string.h>
 #include "udp_sender.h"
+#include "debug.h"
 
  /***********************************************************************
  * global defines and macro
  * *********************************************************************/
 #define NB_ESSAI_UDP 10
-#define DELAY() {sleep(35);}
+<<<<<<< HEAD
+#define DELAY() {usleep(35);}
 #define POWER_P_SIZE 10	 
+=======
+#define DELAY() {usleep(35);}	 
+>>>>>>> fc41d3f828a1a42ee60f5184a11f1730271dd859
 
 /***********************************************************************
  * global variables
  * *********************************************************************/
+<<<<<<< HEAD
  char numSequence[4] = {0}; //ascii 48 = '0' //TODO a corriger tab char
  int numSeq = 0 ;
  static char maxSeqReach=0 ;
  static int16_t connectionOpen = 0 ;
+=======
+ static char numSequence[4] ; //ascii 48 = '0'
+ static int numSeq=0;
+ extern char maxSeqReach;
+ extern int16_t connectionOpen;
+>>>>>>> fc41d3f828a1a42ee60f5184a11f1730271dd859
  
 /***********************************************************************
  * AT defines

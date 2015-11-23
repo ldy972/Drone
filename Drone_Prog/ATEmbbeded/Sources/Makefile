@@ -1,13 +1,28 @@
-all : com
+CC = gcc
+CFLAGS = -W -Wall
+EXEC = test_com
 
-com : com.o udp_sender.o
-	gcc -w -Wall -o com com.o udp_sender.o
+SRC = $(wildcard *.c)
+OBJS = $(SRC:.c=.o)
 
-com.o : com.c com.h
-	gcc -W -Wall -o com.o -c com.c
+ifdef DEBUG
+    CFLAGS += -DDEBUG
+endif
+
+ifdef EMBED
+    CFLAGS += -DEMBED
+endif
+
+all : $(EXEC)
+
+test_com : $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
+
+%.o : %.c $(wildcard %.h) debug.h
+	$(CC) $(CFLAGS) -c $< -o $@
 	
-udp_sender.o : udp_sender.c udp_sender.h
-	gcc -W -Wall -o udp_sender.o -c udp_sender.c
-
 clean :
 	rm -rf *.o
+
+mrproper : clean
+	rm -rf $(EXEC)

@@ -2,13 +2,18 @@
 
 
 /**
+*
+**/
+char maxSeqReach=0;
+int16_t connectionOpen=0;
+/**
  * @overview : gestion du numéro de séquence
  * @arg :
  * @return :
  * */
  void inc_num_sequence(void){
 		sprintf(numSequence,"%d",++numSeq) ;
-	 }
+ }
 
 /**
  * @overview : convertir le type power_percent_type en string null terminating
@@ -108,9 +113,23 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
 	return res ;
 }
 
+/*void inc_num_sequence(void)
+{
+    ENTER_FCT()
+	int i = 0;
+    for (i = 0; i < 4; i++) {
+        numSequence[i] = 0; 
+    }
+	sprintf(numSequence,"%i",++numSeq) ;
+	if(numSeq>9999)
+		maxSeqReach++ ;
+    EXIT_FCT()
+}*/
+
+
 /**
  * @overview : créer la payload a envoyer en respectant les normes AR Drone
- * @arg : char* commande voulue (Cf. com.h "CMD_*")
+ * @arg : cmd_type commande voulue (Cf. com.h "CMD_*")
  * @return : char* pointeur vers le string créé
  * @TODO : factoriser le switch case par une sous fonction
  * **/
@@ -207,9 +226,10 @@ char* make(cmd_type trg,power_percent_type percent){
 		}
 		result=strdup(commande_result) ;
 		free(commande_result) ;
+	   	PRINT_LOG("Command created : %s", commande_result)
+		EXIT_FCT
 		return result ;
 	}
-	
 
 
 /**
@@ -220,7 +240,7 @@ char* make(cmd_type trg,power_percent_type percent){
  * **/
 int send_cmd(cmd_type cmd,power_percent_type percent) {
 
-
+	ENTER_FCT()
 	// on réalise le payload à l'aide de la commande demandée
 		char*  payload = make(cmd,percent) ;
 	// on ouvre ou ferme la connection en fonction de ce qui est demandé
@@ -232,32 +252,38 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
 		if(cmd == CMD_CLOSE_CONNEC){ //TODO : Quel message envoyer au drone pour cesser la connection?
 			if(close_socket()==0){
 				connectionOpen=0 ;
+			EXIT_FCT()
 				return 0 ;
 			}
-			
+			EXIT_FCT()
 			return -1; // EXIT 1
 		}
-		
-	//on envoie notre message
 		if(strlen(payload)<1024){
-
+			PRINT_LOG("Command to send : %s", payload)
 			if(send_message(payload)==0){
-				printf("message sent\n") ;
 				inc_num_sequence();
 				connectionOpen=0 ;
-				printf("message sent\n") ;
+				free(payload);
+				EXIT_FCT()
 				return 0 ;
 			}
+			if(payload!=NULL)
+				free(payload);
 			return -1; // EXIT 2
 		}
-		exit(-1) ;
+        free(payload);
+        EXIT_FCT()
+		return -1; // EXIT 2
 	}
+	exit(-1) ;
+}
 
 /** factorisation des fonctions gestion de vol
  * @arg : commande de vol
  * @return : status
  * */
 int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
+	ENTER_FCT()
 	cmd_type generalCommande = cmd ;
 	int nb_envoie = 1;
 	int return_val = 0 ;
@@ -273,6 +299,7 @@ int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
 		return_val += send_cmd(generalCommande,percent) ;
 		DELAY() ;
 	}
+    EXIT_FCT()
 	return return_val ;
 }
 
@@ -283,22 +310,27 @@ int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
  * **/
  
 int taking_off_AT(){
-	return manage_cmd(CMD_DECOLLAGE,NULL_POWER_VALUE,0) ;
-}
+ENTER_FCT()
+	return manage_cmd(CMD_DECOLLAGE,NULL_POWER_VALUE,0) 
+    }
 /**
  * atterir
  * @arg : void
  * @return : status 0 = OK
  * **/
  int landing_AT(){
+ ENTER_FCT()
 	return manage_cmd(CMD_ATTERISSAGE,NULL_POWER_VALUE,0) ;
+
 }
 /**
  * monter
  * @arg : times <=> on envoie le commande pendant times*35ms
  * @return : status 0 = OK
  * **/
+
  int rising_AT(int times,power_percent_type percent) {
+ 	ENTER_FCT()
 	return manage_cmd(CMD_HAUT,percent,times) ;
 }
 
@@ -317,9 +349,11 @@ int go_down_AT(int times,power_percent_type percent){
  * @return : status 0 = OK
  * **/
 int turn_AT_Right(int times,power_percent_type percent) {
+	ENTER_FCT()
 	return manage_cmd(CMD_ROTATION_DROITE,percent,times) ;
 }
 int turn_AT_Left(int times,power_percent_type percent){
+	ENTER_FCT()
 	return manage_cmd(CMD_ROTATION_GAUCHE,percent,times) ;
 }
 
@@ -329,9 +363,11 @@ int turn_AT_Left(int times,power_percent_type percent){
  * @return : status 0 = OK
  * **/
 int go_forward_AT(int times,power_percent_type percent){
+	ENTER_FCT()
 	return manage_cmd(CMD_AVANT,percent,times) ;
 }
 int go_back_AT(int times,power_percent_type percent){
+	ENTER_FCT()
 	return manage_cmd(CMD_ARRIERE,percent,times) ;
 }
 
@@ -341,9 +377,11 @@ int go_back_AT(int times,power_percent_type percent){
  * @return : status 0 = OK
  * **/
 int translate_right(int times,power_percent_type percent){
+	ENTER_FCT()
 	return manage_cmd(CMD_DROITE,percent,times) ;
 }
 int translate_left(int times,power_percent_type percent){
+	ENTER_FCT()
 	return manage_cmd(CMD_GAUCHE,percent,times) ;
 }
 
@@ -353,6 +391,7 @@ int translate_left(int times,power_percent_type percent){
  * @return : status 0 = OK
  * **/
  int emergency_stop(){
+	ENTER_FCT()
 	return manage_cmd(CMD_ARRET_URGENCE,NULL_POWER_VALUE,0) ;
 }
 /**
@@ -361,6 +400,7 @@ int translate_left(int times,power_percent_type percent){
  * @return : status 0 = OK
  * **/
  int no_emergency_stop(){
+	ENTER_FCT()
 	return manage_cmd(CMD_ANTI_ARRET_URGENCE,NULL_POWER_VALUE,0) ;
 }
 
@@ -370,6 +410,7 @@ int translate_left(int times,power_percent_type percent){
  * @return : status 0 = OK
  * **/
  int close_connect(){
+	ENTER_FCT()
 	return manage_cmd(CMD_CLOSE_CONNEC,NULL_POWER_VALUE,0) ;
 }
 	 
@@ -377,10 +418,11 @@ int main (){
 		printf("access\n");
 		taking_off_AT() ;
 		printf("access3\n");
-		sleep(100) ;
+		usleep(100) ;
 		printf("access4\n");
 		landing_AT() ;
 		printf("max reach : %d",maxSeqReach);
 		return 0 ;
 }
+
 
