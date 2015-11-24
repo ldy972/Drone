@@ -18,7 +18,7 @@ int main(void)
     printf("Dodo Décollage\n");
 	SEC_DELAY(6)
     printf("Up, up, and away !\n");
-	rising_AT(times,power_percent);
+	//rising_AT(times,power_percent);
     printf("Dodo Montée\n");
 	SEC_DELAY(2)
     printf("A droite toute !\n");

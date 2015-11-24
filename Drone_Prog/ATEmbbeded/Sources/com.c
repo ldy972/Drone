@@ -112,10 +112,10 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
 			sprintf(tmp,"%s%s%s",",1,0,0,", convert_power(percent) , ",0\r") ;
 			break;
 		case CMD_ROTATION_GAUCHE :
-			sprintf(tmp,"%s%s%s",",1,0,0,0", convert_power(percent) , "\r") ;
+			sprintf(tmp,"%s%s%s",",1,0,0,0,", convert_power(percent) , "\r") ;
 			break;
 		case CMD_ROTATION_DROITE :
-			sprintf(tmp,"%s%s%s",",1,0,0,0", convert_power(percent), "\r") ;
+			sprintf(tmp,"%s%s%s",",1,0,0,0,", convert_power(percent), "\r") ;
 			break;
 
 		default :
@@ -243,7 +243,6 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
 		char*  payload = make(cmd,percent) ;
 	// on ouvre ou ferme la connection en fonction de ce qui est demandé
 		if(connectionOpen==0){
-			printf("access2\n") ;
 			printf("init socket : %d\n",initialize_socket());
 			connectionOpen=1 ;
 		}
@@ -260,8 +259,9 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
 			PRINT_LOG("Command to send : %s", payload)
 			if(send_message(payload)==0){
 				inc_num_sequence();
-				connectionOpen=0 ;
-				free(payload);
+				connectionOpen=1 ;
+				if(payload!=NULL)
+					free(payload);
 				EXIT_FCT()
 				return 0 ;
 			}
@@ -269,10 +269,8 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
 				free(payload);
 			return -1; // EXIT 2
 		}
-        free(payload);
         EXIT_FCT()
 		return -1; // EXIT 2
-	exit(-1) ;
 }
 
 /** factorisation des fonctions gestion de vol
@@ -411,15 +409,4 @@ int translate_left(int times,power_percent_type percent){
 	return manage_cmd(CMD_CLOSE_CONNEC,NULL_POWER_VALUE,0) ;
 }
 	 
-/*int main (){
-		printf("access\n");
-		taking_off_AT() ;
-		printf("access3\n");
-		usleep(100) ;
-		printf("access4\n");
-		landing_AT() ;
-		printf("max reach : %d",maxSeqReach);
-		return 0 ;
-}
-*/
 

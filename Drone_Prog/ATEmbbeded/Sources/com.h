@@ -19,7 +19,7 @@
  extern int16_t connectionOpen;
  
 /***********************************************************************
- * AT defines
+ * AT defines _ USELESS
  * *********************************************************************/
 #define COMMANDE_AT_DECOLLAGE    ",290718208\r" 
 #define COMMANDE_AT_ATTERISSAGE    ",290717696\r" 
@@ -38,14 +38,14 @@
 /***********************************************************************
  * HEADER AT defines
  * *********************************************************************/
-#define H_AT_REF "AT*REF"
-#define H_AT_PCMD "AT*PCMD"
-#define H_AT_PCMD_MAG "AT*PCMD_MAG"
-#define H_AT_FTRIM "AT*FTRIM"
-#define H_AT_CONFIG "AT*CONFIG"
-#define H_AT_CONFIG_IDS "AT*CONFIG_IDS"
-#define H_AT_COMWDG "AT*COMWDG"
-#define H_AT_CALIB "AT*CALIB"
+#define H_AT_REF "AT*REF="
+#define H_AT_PCMD "AT*PCMD="
+#define H_AT_PCMD_MAG "AT*PCMD_MAG="
+#define H_AT_FTRIM "AT*FTRIM="
+#define H_AT_CONFIG "AT*CONFIG="
+#define H_AT_CONFIG_IDS "AT*CONFIG_IDS="
+#define H_AT_COMWDG "AT*COMWDG="
+#define H_AT_CALIB "AT*CALIB="
 
 /***********************************************************************
  * Internal types
