@@ -1,3 +1,8 @@
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,9 +12,10 @@
  /***********************************************************************
  * global defines and macro
  * *********************************************************************/
-#define NB_ESSAI_UDP 10
+#define NB_ESSAI_UDP 5
 #define DELAY(x) {usleep(x);}
 #define POWER_P_SIZE 10	 
+#define TAILLE_COMMANDE 100
 
 
 /***********************************************************************
@@ -19,7 +25,7 @@
  extern int16_t connectionOpen;
  
 /***********************************************************************
- * AT defines _ USELESS
+ * AT defines __USELESS __Examples for commande at max power
  * *********************************************************************/
 #define COMMANDE_AT_DECOLLAGE    ",290718208\r" 
 #define COMMANDE_AT_ATTERISSAGE    ",290717696\r" 
@@ -105,3 +111,7 @@ int translate_left(int times,power_percent_type percent) ;
 int emergency_stop() ;
 int no_emergency_stop() ;
 int close_connect() ;
+
+#ifdef __cplusplus
+}
+#endif

@@ -2,6 +2,6 @@
 
 #moving my .o in my Build repo
 
-mv ./Sources/*.o ./Build/
+mv ./Sources/*.o ./Build
 
 echo "done moving obj"

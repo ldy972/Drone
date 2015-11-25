@@ -1,16 +1,19 @@
-#Yann LABEL#
-#futur makefile#
-#v1 17/11/2015#
-#obj : permettre une compilation générique via une arborescence fixée#
-#target : Cortex A8 (armv7)#
-#compilateur : arm-linux-gnueabi#
+#Yann LABEL# futur makefile# v1 17/11/2015# obj : permettre une 
+#compilation générique via une arborescence fixée# target : Cortex A8 
+#(armv7)# compilateur : arm-linux-gnueabi-gcc#
 
 
-CC = arm-linux-gnueabi-gcc
-CFLAGS = -march=armv7-a
+ifdef EMBED
+	CC = arm-linux-gnueabi-gcc
+	CFLAGS = -march=armv7-a
+	EXEC = inc howard_cc.elf
+else
+	CC = gcc 
+	EXEC = howard
+endif
+
 CXXFLAGS = -W -Wall
 LDFLAGS =
-EXEC = inc howard_cc.elf
 
 SRCS_DIR:= $(shell pwd)/Sources
 OBJS_DIR:= $(shell pwd)/Build
@@ -18,13 +21,13 @@ LIB_DIR:= $(shell pwd)/Lib
 SRC=$(wildcard  $(SRCS_DIR)/*.c)
 OBJS= $(SRC:.c=.o)
 
-#include part : si la compilation nécessite un makefile partieculier, l'insérer dans son dossier Sources
+#include part : si la compilation nécessite un makefile particulier, l'insérer dans son dossier Sources
 ifdef EMBED
 	CFLAGS+= -DEMBED
 endif
 
 -include $(wildcard $(LIB_DIR)/*)
--include moving.sh
+#-include moving.sh
 
 all : $(EXEC)
 	
