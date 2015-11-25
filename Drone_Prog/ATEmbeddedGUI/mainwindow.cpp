@@ -135,11 +135,15 @@ void MainWindow::process_droite() {
 }
 
 void MainWindow::process_taking_off(){
+    set_m_percent() ;
+    set_m_times() ;
     gestion_commande->taking_off() ;
 }
 
 void MainWindow::process_landing(){
-    gestion_commande->landing();
+    set_m_percent() ;
+    set_m_times() ;
+   gestion_commande->landing();
 }
 
 void MainWindow::process_monter() {
@@ -179,14 +183,20 @@ void MainWindow::process_trans_left(){
 }
 
 void MainWindow::process_emerg_stop() {
+    set_m_percent() ;
+    set_m_times() ;
     gestion_commande->emerg_stop();
 }
 
 void MainWindow::process_no_emerg_stop() {
+    set_m_percent() ;
+    set_m_times() ;
     gestion_commande->no_emerg_stop();
 }
 
 void MainWindow::process_close() {
+    set_m_percent() ;
+    set_m_times() ;
     gestion_commande->close();
 }
 
