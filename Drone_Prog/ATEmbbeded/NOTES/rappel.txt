@@ -17,7 +17,7 @@ make OBJ=toto.o --just-print
 ##pour lancer le makefile en orientation embarqué
 ##i-e gcc = arm-gnueabi-gcc ARCH=V7
 ##@IP (Cf udp_sender.h) = localhost
-make -DEMBED
+make EMBED=1 DEBUG=1
 
 ## test de compilation (Cf make -DEMBED) au niveau Makefile
 make
