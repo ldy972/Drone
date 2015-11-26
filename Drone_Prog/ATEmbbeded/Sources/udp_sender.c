@@ -36,11 +36,11 @@ int initialize_src_socket(int * sock_id, struct sockaddr_in * addr_src, int port
 {
     // Initialize source adress structure
     bzero(addr_src, sizeof(struct sockaddr_in));
-    addr_dest->sin_family = AF_INET;
-    addr_dest->sin_addr.s_addr = htonl(INADDR_ANY);
-    addr_dest->sin_port = htons(port);
+    addr_src->sin_family = AF_INET;
+    addr_src->sin_addr.s_addr = htonl(INADDR_ANY);
+    addr_src->sin_port = htons(port);
 
-    if (bind(*sock_id, (struct sockaddr *) addr_dest, sizeof(addr_dest)) == -1)
+    if (bind(*sock_id, (struct sockaddr *) addr_src, sizeof(addr_src)) == -1)
     {
         fprintf(stderr, "Echec d'association de l'adresse source au socket\n");
         return 1;
