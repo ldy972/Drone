@@ -66,12 +66,17 @@ void CommandeGen::close() {
     m_status = close_connect();
 }
 
+void CommandeGen::get_nav_data(){
+    char temp_commande_nav_data[] = COMMANDE_AT_GET_NAV_DATA;
+    m_status = send_navadata(temp_commande_nav_data) ;
+}
+
 /**
  * @brief CommandeGen::to_percent
  * Convertit un int en power_percent_type positive
  * Pour les sens Gauche Avant ET Descendre utilier la fonction "negate"
- * @param p
- * @return
+ * @param p int value of percentage
+ * @return power_percent_type corresponding to p
  */
 power_percent_type CommandeGen::to_percent(int p){
     power_percent_type percent = POS_POWER_5_ ;

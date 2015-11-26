@@ -35,3 +35,4 @@ traiter les navdata
 mettre en place les "missions"
 ajouter des modules usb/dongle/gnuRadio (except GRC) sur le drone
 simuler une mission (a définir)
+enrichir le make pour adapter la compilation au non EMBARQUE

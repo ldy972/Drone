@@ -271,18 +271,20 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
 	// on réalise le payload à l'aide de la commande demandée
         char*  payload = NULL ;
 	// on ouvre ou ferme la connection en fonction de ce qui est demandé
-		if(connectionOpen==0){
+        if(cmd != CMD_CLOSE_CONNEC && connectionOpen==0){
 			printf("init socket : %d\n",initialize_socket());
 			connectionOpen=1 ;
 		}
-		if(cmd == CMD_CLOSE_CONNEC){ //TODO : Quel message envoyer au drone pour cesser la connection?
+        if(cmd == CMD_CLOSE_CONNEC && connectionOpen==1){ //DONE : Quel message envoyer au drone pour cesser la connection? : num de séquence remis à zéro
 			if(close_socket()==0){
 				connectionOpen=0 ;
+                numSeq = 0 ;
                 printf("socket closed\n");
                 EXIT_FCT()
 				return 0 ;
 			}
 			EXIT_FCT()
+            printf("socket not closed properly\n");
 			return -1; // EXIT 1
 		}
         inc_num_sequence();
@@ -318,6 +320,7 @@ int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
 	int cpt = 0 ;
 
 	if(cmd==CMD_CLOSE_CONNEC){
+        numSeq = 0 ;
         return send_cmd(cmd,percent) ;
 	}
 	if(times!=0)

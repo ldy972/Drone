@@ -29,6 +29,7 @@ public:
     void no_emerg_stop() ;
     void close() ;
 
+    void get_nav_data() ;
 
 private:
     int m_status ;

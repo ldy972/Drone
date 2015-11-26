@@ -9,7 +9,7 @@ ifdef EMBED
 	EXEC = inc howard_cc.elf
 else
 	CC = gcc 
-	EXEC = howard
+	EXEC = inc howard
 endif
 
 CXXFLAGS = -W -Wall
@@ -48,6 +48,8 @@ clean:
 	rm -rf ~.o
 	rm -rf *.elf
 	rm -rf ~.elf
+	./moving.sh
+	rm -rf $(OBJS_DIR)/*
 	
 mrproper: clean
 	rm -rf $(EXEC)

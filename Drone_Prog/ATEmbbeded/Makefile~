@@ -9,7 +9,7 @@ ifdef EMBED
 	EXEC = inc howard_cc.elf
 else
 	CC = gcc 
-	EXEC = howard
+	EXEC = inc howard
 endif
 
 CXXFLAGS = -W -Wall
@@ -20,7 +20,7 @@ OBJS_DIR:= $(shell pwd)/Build
 LIB_DIR:= $(shell pwd)/Lib
 SRC=$(wildcard  $(SRCS_DIR)/*.c)
 OBJS= $(SRC:.c=.o)
-
+MOVING_CLEANING:=&(shell pwd)/moving.sh
 #include part : si la compilation nécessite un makefile particulier, l'insérer dans son dossier Sources
 ifdef EMBED
 	CFLAGS+= -DEMBED
@@ -48,6 +48,8 @@ clean:
 	rm -rf ~.o
 	rm -rf *.elf
 	rm -rf ~.elf
+	$(MOVING_CLEANING)
+	rm -rf $(OBJS_DIR)/*
 	
 mrproper: clean
 	rm -rf $(EXEC)

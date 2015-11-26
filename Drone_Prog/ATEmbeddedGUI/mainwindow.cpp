@@ -32,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     b_emergency_stop = new QPushButton("EMERGENCY");
     b_start = new QPushButton;
     b_back = new QPushButton("Back");
+    b_mission = new QPushButton("Mission") ;
+    b_avant = new QPushButton("Avant") ;
+    b_arriere = new QPushButton("Arrière") ;
 
     /***********************************************************************
      * Private Other Widgets
@@ -40,11 +43,15 @@ MainWindow::MainWindow(QWidget *parent) :
     power_slider->setTickInterval(100);
     power_slider->setMinimum(0);
     power_slider->setMaximum(100);
+    power_slider->setValue(50);
     power_slider->setOrientation(Qt::Horizontal);
 
     e_num_times = new QSpinBox() ;
     e_num_times->setMinimum(0);
     e_num_times->setMaximum(100);
+    e_num_times->setValue(20);
+
+    cb_nav_data = new QCheckBox ;
 
     l_image = new QLabel;
     p_image = new QPixmap("/home/yann/projets/QtDATA/ATEmbeddedGUI/wolowitz.jpg") ;
@@ -74,21 +81,25 @@ MainWindow::MainWindow(QWidget *parent) :
     /***********************************************************************
      * Organisation Layout
      * *********************************************************************/
-    layout->addWidget(b_haut,0,1);
-    layout->addWidget(b_gauche,1,0);
-    layout->addWidget(b_droite,1,2);
-    layout->addWidget(b_bas,2,1);
-    layout->addWidget(b_take_off,4,1);
-    layout->addWidget(b_land,5,1);
-    layout->addWidget(b_translate_left,3,0);
-    layout->addWidget(b_translate_right,3,2);
+    layout->addWidget(b_haut,4,0);
+    layout->addWidget(b_gauche,3,1);
+    layout->addWidget(b_droite,3,3);
+    layout->addWidget(b_bas,5,0);
+    layout->addWidget(b_take_off,4,4);
+    layout->addWidget(b_land,5,4);
+    layout->addWidget(b_translate_left,1,1);
+    layout->addWidget(b_translate_right,1,3);
+    layout->addWidget(b_avant,0,2);
+    layout->addWidget(b_arriere,2,2);
     f_layout->addRow("Power Percent : ",power_slider);
-    f_layout->addRow("Commande Duration : (X*350ms)",e_num_times);
+    f_layout->addRow("Commande Duration : (X*35ms)",e_num_times);
+    f_layout->addRow("Nav.Data : ", cb_nav_data);
     h_layout->addWidget(b_close);
     h_layout->addWidget(b_emergency_stop);
     v_layout->addWidget(l_image);
     v_layout->addLayout(layout);
     v_layout->addLayout(f_layout);
+    v_layout->addWidget(b_mission);
     v_layout->addLayout(h_layout);
     v_layout->addWidget(b_back);
     acceuil_layout->addWidget(l_img_acceuil,0,0);
@@ -105,6 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
     zone->setLayout(background_layout);
     setCentralWidget(zone);
     zoneAcceuil->show();
+
     /***********************************************************************
      * Private Connect
      * *********************************************************************/
@@ -116,13 +128,22 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(b_land,SIGNAL(clicked()),this,SLOT(process_landing())) ;
     QObject::connect(b_translate_left,SIGNAL(clicked()),this,SLOT(process_trans_left())) ;
     QObject::connect(b_translate_right,SIGNAL(clicked()),this,SLOT(process_trans_right())) ;
+    QObject::connect(b_avant,SIGNAL(clicked()),this,SLOT(process_avancer())) ;
+    QObject::connect(b_arriere,SIGNAL(clicked()),this,SLOT(process_reculer())) ;
     QObject::connect(b_close,SIGNAL(clicked()),this,SLOT(process_close())) ;
     QObject::connect(b_emergency_stop,SIGNAL(clicked()),this,SLOT(process_emerg_stop())) ;
     QObject::connect(b_start,SIGNAL(clicked()),this,SLOT(process_layout())) ;
     QObject::connect(b_back,SIGNAL(clicked()),this,SLOT(process_layout())) ;
-
-
+    QObject::connect(b_mission,SIGNAL(clicked()),this,SLOT(process_mission())) ;
+    QObject::connect(cb_nav_data,SIGNAL(toggled(bool)),this,SLOT(process_nav_data(bool)))  ;
 }
+
+
+
+
+/***********************************************************************
+ * Process definitions : SLOTS
+ * *********************************************************************/
 
 void MainWindow::process_gauche(){
     set_m_percent() ;
@@ -201,6 +222,39 @@ void MainWindow::process_close() {
     gestion_commande->close();
 }
 
+void MainWindow::process_nav_data(bool checked){
+    if(checked)
+        gestion_commande->get_nav_data();
+}
+
+void MainWindow::process_mission(){
+    set_m_percent();
+    set_m_times();
+    //TODO gestion_commande->do_mission(int times,int percent);
+}
+
+/**
+ * @brief MainWindow::process_layout
+ * gere l'affichage et la fermeture automatique de connection
+ * **/
+void MainWindow::process_layout(){
+
+    if(m_acceuil==0){
+        zoneCentrale->show();
+        zoneAcceuil->setHidden(true);
+        m_acceuil=1;
+    }else{
+        zoneAcceuil->show();
+        zoneCentrale->setHidden(true);
+        gestion_commande->close();
+        m_acceuil=0;
+    }
+}
+
+
+/***********************************************************************
+ * Getters & (private) Setters
+ * *********************************************************************/
 int MainWindow::get_power_value(){
     return m_percent ;
 }
@@ -226,25 +280,12 @@ void MainWindow::set_m_times(int times){
 int MainWindow::get_status_value(){
     return m_status ;
 }
-/**
- * @brief MainWindow::process_layout
- * gere l'affichage et la fermeture automatique de connection
- * **/
-void MainWindow::process_layout(){
-
-    if(m_acceuil==0){
-        zoneCentrale->show();
-        zoneAcceuil->setHidden(true);
-        m_acceuil=1;
-    }else{
-        zoneAcceuil->show();
-        zoneCentrale->setHidden(true);
-        gestion_commande->close();
-        m_acceuil=0;
-    }
-}
 
 
+
+/***********************************************************************
+ * Destructor
+ * *********************************************************************/
 MainWindow::~MainWindow()
 {
     delete ui;

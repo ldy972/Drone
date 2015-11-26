@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QIcon>
+#include <QCheckBox>
 
 #include "commandegen.h"
 
@@ -44,15 +45,18 @@ public slots :
     void process_trans_left() ;
     void process_emerg_stop() ;
     void process_no_emerg_stop() ;
-    void process_close() ;
+    void process_close();
     void process_layout();
-
+    void process_mission();
+    void process_nav_data(bool checked) ;
 
 private:
     Ui::MainWindow *ui;
 
     QPushButton *b_haut ;
     QPushButton *b_bas ;
+    QPushButton *b_avant ;
+    QPushButton *b_arriere;
     QPushButton *b_gauche ;
     QPushButton *b_droite ;
     QPushButton *b_take_off;
@@ -63,6 +67,8 @@ private:
     QPushButton *b_emergency_stop;
     QPushButton *b_start;
     QPushButton *b_back;
+    QPushButton *b_mission ;
+    QCheckBox *cb_nav_data ;
 
     QSlider *power_slider;
     QSpinBox *e_num_times ;
@@ -73,8 +79,6 @@ private:
     QIcon *start_icon;
     QLabel *l_background;
     QPixmap *p_background;
-
-
 
     QGridLayout *layout;
     QVBoxLayout *v_layout;
