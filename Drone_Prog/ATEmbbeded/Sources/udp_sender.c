@@ -5,9 +5,10 @@ static struct sockaddr_in addr_dest_commands;
 
 static int socket_id_navdata;
 static struct sockaddr_in addr_dest_navdata;
+static struct sockaddr_in addr_src_navdata;
 
 
-// Initialize the specified socket
+// Initialize the specified socket and the destiation address
 int initialize_dest_socket(int * sock_id, struct sockaddr_in * addr_dest, int port)
 {
     // Initalize commands socket
@@ -23,8 +24,26 @@ int initialize_dest_socket(int * sock_id, struct sockaddr_in * addr_dest, int po
     addr_dest->sin_port = htons(port);
     if (inet_aton(IP_ADRESS, &(addr_dest->sin_addr)) == 0)
     {
-        fprintf(stderr, "Echec d'association de l'adresse IP au socket commandes\n");
+        fprintf(stderr, "Echec d'association de l'adresse destination au socket\n");
         return 2;
+    }
+
+    return 0;
+}
+
+// Initialize the sourc address
+int initialize_src_socket(int * sock_id, struct sockaddr_in * addr_src, int port)
+{
+    // Initialize source adress structure
+    bzero(addr_src, sizeof(struct sockaddr_in));
+    addr_dest->sin_family = AF_INET;
+    addr_dest->sin_addr.s_addr = htonl(INADDR_ANY);
+    addr_dest->sin_port = htons(port);
+
+    if (bind(*sock_id, (struct sockaddr *) addr_dest, sizeof(addr_dest)) == -1)
+    {
+        fprintf(stderr, "Echec d'association de l'adresse source au socket\n");
+        return 1;
     }
 
     return 0;
@@ -43,8 +62,16 @@ int initialize_sockets()
         result = initialize_dest_socket(&socket_id_navdata, &addr_dest_navdata, UDP_NAVDATA_PORT);
     }
 
+    // If succeded, initialize source address for navdata
+    if (result == 0) {
+        result = initialize_src_socket(&socket_id_navdata, &addr_src_navdata, UDP_NAVDATA_PORT);
+    } else {
+        result += 2;
+    }
+
     // 1 and 2 : error for first socket; 3 and 4 : error for second socket
-    return result == 0 ? result : result + 2;
+    // 5 : error for navdata source port
+    return result == 0 ? result : result + 4;
 }
 
 
