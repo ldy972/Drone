@@ -15,8 +15,8 @@
 #else 
 #define IP_ADRESS   "192.168.1.1"   // static IP of the drone for non embedded
 #endif
-#define UDP_COMMANDS_PORT   5554
-#define UDP_NAVDATA_PORT    5556
+#define UDP_COMMANDS_PORT   5556
+#define UDP_NAVDATA_PORT    5554
 #define MAX_BUF_LEN 1024
 
 // Open a socket on port 5556 to send messages to the drone
