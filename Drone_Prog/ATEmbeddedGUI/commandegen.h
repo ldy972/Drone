@@ -31,6 +31,8 @@ public:
 
     void get_nav_data() ;
 
+    void do_mission(int times,int percent);
+
 private:
     int m_status ;
     power_percent_type to_percent(int p) ;

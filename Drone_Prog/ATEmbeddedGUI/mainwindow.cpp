@@ -67,6 +67,9 @@ MainWindow::MainWindow(QWidget *parent) :
     p_background = new QPixmap("/home/yann/projets/QtDATA/ATEmbeddedGUI/bazinga.jpg");
     l_background->setPixmap(*p_background);
 
+    l_wdg = new QLabel;
+    l_wdg->setText(QString::number(0));
+
     /***********************************************************************
      * Private Layout
      * *********************************************************************/
@@ -105,17 +108,20 @@ MainWindow::MainWindow(QWidget *parent) :
     acceuil_layout->addWidget(l_img_acceuil,0,0);
     acceuil_layout->addWidget(b_start,1,0);
     background_layout->addWidget(l_background,0,0);
+    background_layout->addWidget(l_wdg,1,0);
 
 
     /***********************************************************************
      * General Variable __CAREFUL__
      * *********************************************************************/
     gestion_commande = new CommandeGen;
+    t_manage_wdg = new Managewdg;
     zoneAcceuil->setLayout(acceuil_layout);
     zoneCentrale->setLayout(v_layout);
     zone->setLayout(background_layout);
     setCentralWidget(zone);
     zoneAcceuil->show();
+    t_manage_wdg->start();
 
     /***********************************************************************
      * Private Connect
@@ -136,10 +142,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(b_back,SIGNAL(clicked()),this,SLOT(process_layout())) ;
     QObject::connect(b_mission,SIGNAL(clicked()),this,SLOT(process_mission())) ;
     QObject::connect(cb_nav_data,SIGNAL(toggled(bool)),this,SLOT(process_nav_data(bool)))  ;
+    QObject::connect(t_manage_wdg, SIGNAL(resultReady(int)), this, SLOT(handle_wdg(int)));
 }
-
-
-
 
 /***********************************************************************
  * Process definitions : SLOTS
@@ -230,7 +234,7 @@ void MainWindow::process_nav_data(bool checked){
 void MainWindow::process_mission(){
     set_m_percent();
     set_m_times();
-    //TODO gestion_commande->do_mission(int times,int percent);
+    gestion_commande->do_mission(m_times,m_percent);
 }
 
 /**
@@ -251,6 +255,10 @@ void MainWindow::process_layout(){
     }
 }
 
+void MainWindow::handle_wdg(int value){
+    l_wdg->setText(QString::number(value));
+    t_manage_wdg->start();
+}
 
 /***********************************************************************
  * Getters & (private) Setters
@@ -289,4 +297,8 @@ int MainWindow::get_status_value(){
 MainWindow::~MainWindow()
 {
     delete ui;
+    t_manage_wdg->quit();
+    t_manage_wdg->wait();
+    delete t_manage_wdg;
+    delete gestion_commande;
 }
