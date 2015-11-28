@@ -45,53 +45,6 @@ char * convert_power(power_percent_type power_p){
 
 	sprintf(tmp,"%i",power_p) ;
 
-	/*switch(power_p){
-	case POS_POWER_5_ :
-		sprintf(tmp,"%i",POS_POWER_5_) ;
-		break;
-	case POS_POWER_10_ :
-		sprintf(tmp,"%i",POS_POWER_10_) ;
-		break;
-	case POS_POWER_20_ :
-		sprintf(tmp,"%i",POS_POWER_20_) ;
-		break;
-	case POS_POWER_25_ :
-		sprintf(tmp,"%i",POS_POWER_25_) ;
-			break;
-	case POS_POWER_50_ :
-		sprintf(tmp,"%i",POS_POWER_50_) ;
-		break;
-	case POS_POWER_75_ :
-		sprintf(tmp,"%i",POS_POWER_75_) ;
-		break;
-	case POS_POWER_100_ :
-		sprintf(tmp,"%i",POS_POWER_100_) ;
-		break;
-	case NEG_POWER_5_ :
-	    sprintf(tmp,"%i",NEG_POWER_5_) ;
-		break;
-	case NEG_POWER_10_ :
-		sprintf(tmp,"%i",NEG_POWER_10_) ;
-		break;
-	case NEG_POWER_20_ :
-		sprintf(tmp,"%i",NEG_POWER_20_) ;
-		break;
-	case NEG_POWER_25_ :
-	    sprintf(tmp,"%i",NEG_POWER_25_) ;
-		break;
-	case NEG_POWER_50_ :
-		sprintf(tmp,"%i",NEG_POWER_50_) ;
-		break;
-    case NEG_POWER_75_ :
-		sprintf(tmp,"%i",NEG_POWER_75_) ;
-		break;
-	case NEG_POWER_100_ :
-		sprintf(tmp,"%i",NEG_POWER_100_) ;
-		break;
-    case NULL_POWER_VALUE :
-        sprintf(tmp,"%i",NULL_POWER_VALUE) ;
-        break ;
-	}*/
 	return strdup(tmp) ;
 }
 
@@ -323,7 +276,7 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
         inc_num_sequence();
         payload = make(cmd,percent);
         if(payload!=NULL && strlen(payload)<1024){
-			PRINT_LOG("Command to send : %s", payload)
+			PRINT_LOG("Command to send : %s\n", payload)
             printf("CMD envoyée? : %s : \n",payload) ;
 			if(send_message(payload)==0){
 				connectionOpen=1 ;
@@ -516,7 +469,12 @@ int send_ack(){
  * **/
 int open_connection(){
 	ENTER_FCT()
-	
+    if (connectionOpen == 0) {
+        initialize_sockets();
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 	 

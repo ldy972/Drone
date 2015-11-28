@@ -18,13 +18,13 @@ int main(void)
     printf("Dodo Décollage\n");
 	SEC_DELAY(6)
     printf("Up, up, and away !\n");
-	//rising_AT(times,power_percent);
+	rising_AT(times,power_percent);
     printf("Dodo Montée\n");
-	SEC_DELAY(2)
+	/*SEC_DELAY(2)
     printf("A droite toute !\n");
 	turn_AT_Right(times,power_percent) ;
     printf("Dodo Droite\n");
-	SEC_DELAY(2)
+	SEC_DELAY(2)*/
     printf("Retour sur le plancher des vaches\n");
 	landing_AT();
     printf("Fini\n");

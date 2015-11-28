@@ -64,15 +64,15 @@ int initialize_sockets()
     }
 
     // If succeded, initialize source address for navdata
-    //if (result == 0) {
-     //   result = initialize_src_socket(&socket_id_navdata, &addr_src_navdata, UDP_NAVDATA_PORT);
-   // } else {
-    //    result += 2;
-   // }
+    if (result == 0) {
+        result = initialize_src_socket(&socket_id_navdata, &addr_src_navdata, UDP_NAVDATA_PORT);
+    } else {
+        result += 2;
+    }
 
     // 1 and 2 : error for first socket; 3 and 4 : error for second socket
     // 5 : error for navdata source port
-    return result == 0 ? result : result + 2;
+    return result == 0 ? result : result + 4;
 }
 
 
