@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     commandegen.cpp \
     udp_sender.c \
-    com.c
+    com.c \
+    managewdg.cpp
 
 HEADERS  += mainwindow.h \
     commandegen.h \
     udp_sender.h \
     debug.h \
-    com.h
+    com.h \
+    managewdg.h
 
 FORMS    += mainwindow.ui

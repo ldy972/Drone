@@ -15,6 +15,7 @@
 #include <QCheckBox>
 
 #include "commandegen.h"
+#include "managewdg.h"
 
 namespace Ui {
 class MainWindow;
@@ -49,6 +50,7 @@ public slots :
     void process_layout();
     void process_mission();
     void process_nav_data(bool checked) ;
+    void handle_wdg(int value) ;
 
 private:
     Ui::MainWindow *ui;
@@ -79,6 +81,7 @@ private:
     QIcon *start_icon;
     QLabel *l_background;
     QPixmap *p_background;
+    QLabel *l_wdg ;
 
     QGridLayout *layout;
     QVBoxLayout *v_layout;
@@ -92,6 +95,7 @@ private:
     QWidget *zone;
 
     CommandeGen *gestion_commande ;
+    Managewdg *t_manage_wdg ;
 
     int m_percent ;
     int m_times ;

@@ -142,6 +142,8 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
             sprintf(tmp,"%s",COMMANDE_CLOSE_CONNEC) ;
             printf("closing connection\n") ;
             break ;
+        case CMD_RLD_WDG :
+            break ;
 	}
 	return strdup(tmp) ;
 }
@@ -250,6 +252,10 @@ char* make(cmd_type trg,power_percent_type percent){
                 strcat(commande_result,placer_puissance(CMD_CLOSE_CONNEC,NULL_POWER_VALUE));
                 printf("making close commande") ;
                 break ;
+             case CMD_RLD_WDG :
+                strcat(commande_result,H_AT_COMWDG) ;
+                strcat(commande_result,numSequence) ;
+                break;
 		}
         //result=strdup(commande_result) ;
 	   	PRINT_LOG("Command created : %s", commande_result)
@@ -322,7 +328,9 @@ int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
 	if(cmd==CMD_CLOSE_CONNEC){
         numSeq = 0 ;
         return send_cmd(cmd,percent) ;
-	}
+    }else if (cmd==CMD_RLD_WDG){
+        return send_cmd(cmd,percent);
+    }
 	if(times!=0)
 		 nb_envoie+=times-1;
 		 
@@ -445,5 +453,23 @@ int translate_left(int times,power_percent_type percent){
 	ENTER_FCT()
 	return manage_cmd(CMD_CLOSE_CONNEC,NULL_POWER_VALUE,0) ;
 }
-	 
+
+ int rld_wdg (){
+    ENTER_FCT()
+    return manage_cmd(CMD_RLD_WDG,NULL_POWER_VALUE,0);
+ }
+
+ int send_navdata_config(){
+     ENTER_FCT()
+     char temp_commande_nav_data[] = COMMANDE_AT_GET_NAV_DATA;
+     char temp_coucou[] = "COUCOU" ;
+     if(connectionOpen==0){
+         printf("init socket : %d\n",initialize_sockets());
+         printf("enable nav data \n");
+         connectionOpen=1 ;
+     }
+     send_navdata(temp_coucou) ;
+     DELAY(500)
+     return send_navdata(temp_commande_nav_data) ;
+ }
 

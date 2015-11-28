@@ -67,9 +67,9 @@ void CommandeGen::close() {
 }
 
 void CommandeGen::get_nav_data(){
-    char temp_commande_nav_data[] = COMMANDE_AT_GET_NAV_DATA;
-    m_status = send_navadata(temp_commande_nav_data) ;
+    m_status = send_navdata_config() ;
 }
+
 
 /**
  * @brief CommandeGen::to_percent
@@ -133,4 +133,26 @@ power_percent_type CommandeGen::negate(power_percent_type p){
     }
 
     return percent ;
+}
+
+void CommandeGen::do_mission(int times,int percent){
+    this->taking_off();
+    S_DELAY(10);
+    this->monter(times,percent);
+    S_DELAY(10);
+    this->go_droite(times,percent);
+    this->go_droite(times,percent);
+    this->go_droite(times,percent);
+    S_DELAY(10);
+    this->go_gauche(times,percent);
+    this->go_gauche(times,percent);
+    this->go_droite(times,percent);
+    S_DELAY(3);
+    this->avancer(times,percent);
+    this->avancer(times,percent);
+    DELAY(500);
+    this->reculer(times,percent);
+    S_DELAY(2) ;
+    this->landing();
+
 }
