@@ -437,7 +437,7 @@ int translate_left(int times,power_percent_type percent){
  * @arg : void
  * @return : status 0 = OK
  * **/
-int config_navdata(){
+int send_navdata_config(){
 	ENTER_FCT()
 	return manage_cmd(CMD_CONFIG,NULL_POWER_VALUE,0);
 }
@@ -469,13 +469,43 @@ int send_ack(){
  * **/
 int open_connection(){
 	ENTER_FCT()
+    int result;
+
     if (connectionOpen == 0) {
-        initialize_sockets();
-        return 0;
-    } else {
-        return 1;
+        result = initialize_sockets();
     }
+
+    EXIT_FCT()
+    return result;
 }
 
-	 
 
+/**
+ * initialize_connection_with_drone : Opens the sockets and triggers navdata sending by the drone
+ * @arg : void
+ * @return : status 0 = OK
+ * **/
+int initialize_connection_with_drone()
+{
+    int result;
+    char command[MAX_BUF_LEN];
+
+    result = open_connection();
+
+    if (result == 0) {
+        sprintf(command, NAVDATA_INIT_MSG);
+        result = send_navdata(command);
+        DELAY(40000)
+    }
+
+    if (result == 0) {
+        send_navdata_config();
+        DELAY(40000)
+    }
+
+    if (result == 0) {
+        result = send_ack();
+    }
+
+    return result;
+}

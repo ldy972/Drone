@@ -13,6 +13,12 @@ int main(void)
 {
 	power_percent_type power_percent = POS_POWER_50_ ;
 	int times = 50 ;
+
+    printf("Init navdata\n");
+    initialize_connection_with_drone();
+
+    SEC_DELAY(2);
+
     printf("Décollage\n");
 	taking_off_AT(); 
     printf("Dodo Décollage\n");
