@@ -108,7 +108,7 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
 		break;
 
 	case CMD_ACK:
-		sprintf(tmp,"%s",COMMANDE_AT_WATCHDOG);
+		sprintf(tmp,"%s",COMMANDE_AT_ACK);
 		break;
 	}
 	return strdup(tmp) ;

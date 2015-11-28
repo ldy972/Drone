@@ -9,7 +9,7 @@ static struct sockaddr_in addr_src_navdata;
 
 
 // Initialize the specified socket and the destiation address
-int initialize_dest_socket(int * sock_id, struct sockaddr_in * addr_dest, int port)
+int initialize_target_socket(int * sock_id, struct sockaddr_in * addr_dest, int port)
 {
     // Initalize commands socket
     if((*sock_id = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
@@ -33,7 +33,7 @@ int initialize_dest_socket(int * sock_id, struct sockaddr_in * addr_dest, int po
 
 
 // Initialize the source address
-int initialize_src_socket(int * sock_id, struct sockaddr_in * addr_src, int port)
+int initialize_socket_source(int * sock_id, struct sockaddr_in * addr_src)
 {
     // Initialize source adress structure
     bzero(addr_src, sizeof(struct sockaddr_in));
@@ -56,23 +56,44 @@ int initialize_sockets()
     int result = 0;
 
     // Initialize socket for control commands
-    result = initialize_dest_socket(&socket_id_commands, &addr_dest_commands, UDP_COMMANDS_PORT);
+    result = initialize_commands_socket();
     
     // If succeded, initialize socket for navdata
     if (result == 0) {
-        result = initialize_dest_socket(&socket_id_navdata, &addr_dest_navdata, UDP_NAVDATA_PORT);
-    }
-
-    // If succeded, initialize source address for navdata
-    if (result == 0) {
-        result = initialize_src_socket(&socket_id_navdata, &addr_src_navdata, UDP_NAVDATA_PORT);
-    } else {
-        result += 2;
+        result = initialize_navdata_socket();
     }
 
     // 1 and 2 : error for first socket; 3 and 4 : error for second socket
     // 5 : error for navdata source port
-    return result == 0 ? result : result + 4;
+    return result == 0 ? result : result + 2;
+}
+
+
+int initialize_commands_socket()
+{
+    int result = 0;
+
+    // Initialize socket for control commands
+    result = initialize_target_socket(&socket_id_commands, &addr_dest_commands, UDP_COMMANDS_PORT);
+
+    return result;
+}
+
+
+// Open a socket on port 5554 for navdata
+int initialize_navdata_socket()
+{
+    int result = 0;
+
+    // Initialize socket for navdata
+    result = initialize_target_socket(&socket_id_navdata, &addr_dest_navdata, UDP_NAVDATA_PORT);
+
+    // If succeded, initialize source address for navdata
+    if (result == 0) {
+        result = initialize_socket_source(&socket_id_navdata, &addr_src_navdata);
+    }
+
+    return result == 0 ? result : result + 2;
 }
 
 
@@ -119,10 +140,35 @@ int close_sockets()
     int result;
 
     // Close control commands socket
-    result = close_socket(&socket_id_commands);
+    result = close_commands_socket();
 
     // Close navdata socket
-    result += close_socket(&socket_id_navdata);
+    result += close_navdata_socket();
 
     return result;
 }
+
+
+// Close the commands socket
+int close_commands_socket()
+{
+    int result;
+
+    // Close control commands socket
+    result = close_socket(&socket_id_commands);
+
+    return result;
+}
+
+
+// Close the navdata socket
+int close_navdata_socket()
+{
+    int result;
+
+    // Close control commands socket
+    result = close_socket(&socket_id_navdata);
+
+    return result;
+}
+
