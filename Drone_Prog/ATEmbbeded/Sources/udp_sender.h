@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 
+#include "navdata_structs.h"
 
 #ifdef EMBED
 #define IP_ADRESS   "127.0.0.1"     // localhost for embedded version
@@ -17,6 +18,7 @@
 #endif
 #define UDP_COMMANDS_PORT   5556
 #define UDP_NAVDATA_PORT    5554
+#define UDP_NAVDATA_DEST    5560
 #define MAX_BUF_LEN 1024
 
 // Open both sockets
@@ -33,6 +35,9 @@ int send_message(char* message);
 
 // Send the message to the defined IP adress on port 5554
 int send_navdata(char* message);
+
+// Retrieve navdata
+int recieve_navdata(navdata_t * navdata);
 
 // Close the sockets
 int close_sockets();

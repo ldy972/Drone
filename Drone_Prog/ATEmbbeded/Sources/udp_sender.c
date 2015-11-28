@@ -33,13 +33,13 @@ int initialize_target_socket(int * sock_id, struct sockaddr_in * addr_dest, int 
 
 
 // Initialize the source address
-int initialize_socket_source(int * sock_id, struct sockaddr_in * addr_src)
+int initialize_socket_source(int * sock_id, struct sockaddr_in * addr_src, int port)
 {
     // Initialize source adress structure
     bzero(addr_src, sizeof(struct sockaddr_in));
     addr_src->sin_family = AF_INET;
     addr_src->sin_addr.s_addr = htonl(INADDR_ANY);
-    addr_src->sin_port = htons(0);
+    addr_src->sin_port = htons(port);
 
     if (bind(*sock_id, (struct sockaddr *) addr_src, sizeof(* addr_src)) == -1)
     {
@@ -90,7 +90,7 @@ int initialize_navdata_socket()
 
     // If succeded, initialize source address for navdata
     if (result == 0) {
-        result = initialize_socket_source(&socket_id_navdata, &addr_src_navdata);
+        result = initialize_socket_source(&socket_id_navdata, &addr_src_navdata, UDP_NAVDATA_DEST);
     }
 
     return result == 0 ? result : result + 2;
@@ -120,6 +120,21 @@ int send_navdata(char* message)
 {
     return send_to_socket(message, &socket_id_navdata, &addr_dest_navdata);
 }
+
+
+// Retrieve navdata
+int recieve_navdata(navdata_t * navdata)
+{
+    socklen_t navdata_size = sizeof(navdata_demo_t);
+
+    if (recvfrom(socket_id_navdata, navdata, sizeof(navdata_t), 0, (struct sockaddr *) &addr_dest_navdata, &navdata_size) == 0) {
+        fprintf(stderr, "Erreur de réception");
+        return 1;
+    }
+
+    return 0;
+}
+
 
 
 // Close the specified socket

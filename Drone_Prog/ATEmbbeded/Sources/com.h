@@ -106,7 +106,6 @@ typedef enum power_percent_type{
  * *********************************************************************/
  
 int initialize_connection_with_drone();
-int open_connection();
 int send_navdata_config();
 int send_ack();
 
