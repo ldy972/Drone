@@ -12,7 +12,7 @@ extern "C" {
  /***********************************************************************
  * global defines and macro
  * *********************************************************************/
-#define NB_ESSAI_UDP 5
+#define NB_ESSAI_UDP 1
 #define DELAY(x) {usleep(x);}
 #define POWER_P_SIZE 10	 
 #define TAILLE_COMMANDE 100

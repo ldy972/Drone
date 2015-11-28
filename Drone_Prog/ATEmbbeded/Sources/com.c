@@ -38,59 +38,62 @@ int numSeq=0;
  * @arg : power_percent_type pourcentage voulu ; 
  * @return : char* la chaine de charactère correspondant à la commande voulue
  * **/
- char* convert_power(power_percent_type power_p){
+char * convert_power(power_percent_type power_p){
 	 
-		char tmp[POWER_P_SIZE+1];
-		tmp[POWER_P_SIZE] = '\0' ;
-		switch(power_p){
-			case POS_POWER_5_ :
-				sprintf(tmp,"%i",POS_POWER_5_) ;
-				break;
-			case POS_POWER_10_ :
-				sprintf(tmp,"%i",POS_POWER_10_) ;
-				break;
-			case POS_POWER_20_ :
-				sprintf(tmp,"%i",POS_POWER_20_) ;
-				break;
-			case POS_POWER_25_ :
-				sprintf(tmp,"%i",POS_POWER_25_) ;
-				break;
-			case POS_POWER_50_ :
-				sprintf(tmp,"%i",POS_POWER_50_) ;
-				break;
-			case POS_POWER_75_ :
-				sprintf(tmp,"%i",POS_POWER_75_) ;
-				break;
-			case POS_POWER_100_ :
-				sprintf(tmp,"%i",POS_POWER_100_) ;
-				break;
-			case NEG_POWER_5_ :
-				sprintf(tmp,"%i",NEG_POWER_5_) ;
-				break;
-			case NEG_POWER_10_ :
-				sprintf(tmp,"%i",NEG_POWER_10_) ;
-				break;
-			case NEG_POWER_20_ :
-				sprintf(tmp,"%i",NEG_POWER_20_) ;
-				break;
-			case NEG_POWER_25_ :
-				sprintf(tmp,"%i",NEG_POWER_25_) ;
-				break;
-			case NEG_POWER_50_ :
-				sprintf(tmp,"%i",NEG_POWER_50_) ;
-				break;
-			case NEG_POWER_75_ :
-				sprintf(tmp,"%i",NEG_POWER_75_) ;
-				break;
-			case NEG_POWER_100_ :
-				sprintf(tmp,"%i",NEG_POWER_100_) ;
-				break;
-            case NULL_POWER_VALUE :
-                sprintf(tmp,"%i",NULL_POWER_VALUE) ;
-                break ;
-		}
-		return strdup(tmp) ;
-	 }
+    char tmp[POWER_P_SIZE+1];
+	tmp[POWER_P_SIZE] = '\0' ;
+
+	sprintf(tmp,"%i",power_p) ;
+
+	/*switch(power_p){
+	case POS_POWER_5_ :
+		sprintf(tmp,"%i",POS_POWER_5_) ;
+		break;
+	case POS_POWER_10_ :
+		sprintf(tmp,"%i",POS_POWER_10_) ;
+		break;
+	case POS_POWER_20_ :
+		sprintf(tmp,"%i",POS_POWER_20_) ;
+		break;
+	case POS_POWER_25_ :
+		sprintf(tmp,"%i",POS_POWER_25_) ;
+			break;
+	case POS_POWER_50_ :
+		sprintf(tmp,"%i",POS_POWER_50_) ;
+		break;
+	case POS_POWER_75_ :
+		sprintf(tmp,"%i",POS_POWER_75_) ;
+		break;
+	case POS_POWER_100_ :
+		sprintf(tmp,"%i",POS_POWER_100_) ;
+		break;
+	case NEG_POWER_5_ :
+	    sprintf(tmp,"%i",NEG_POWER_5_) ;
+		break;
+	case NEG_POWER_10_ :
+		sprintf(tmp,"%i",NEG_POWER_10_) ;
+		break;
+	case NEG_POWER_20_ :
+		sprintf(tmp,"%i",NEG_POWER_20_) ;
+		break;
+	case NEG_POWER_25_ :
+	    sprintf(tmp,"%i",NEG_POWER_25_) ;
+		break;
+	case NEG_POWER_50_ :
+		sprintf(tmp,"%i",NEG_POWER_50_) ;
+		break;
+    case NEG_POWER_75_ :
+		sprintf(tmp,"%i",NEG_POWER_75_) ;
+		break;
+	case NEG_POWER_100_ :
+		sprintf(tmp,"%i",NEG_POWER_100_) ;
+		break;
+    case NULL_POWER_VALUE :
+        sprintf(tmp,"%i",NULL_POWER_VALUE) ;
+        break ;
+	}*/
+	return strdup(tmp) ;
+}
 
 /**
  * @overview : placer la puissance au bon endroit dans la payload
@@ -291,7 +294,7 @@ int send_cmd(cmd_type cmd,power_percent_type percent) {
         payload = make(cmd,percent);
         if(payload!=NULL && strlen(payload)<1024){
 			PRINT_LOG("Command to send : %s", payload)
-            printf("CMD envoyée? : %s : ",payload) ;
+            printf("CMD envoyée? : %s : \n",payload) ;
 			if(send_message(payload)==0){
 				connectionOpen=1 ;
                 printf("true \n") ;
@@ -328,7 +331,7 @@ int manage_cmd(cmd_type cmd, power_percent_type percent,int times){
 		 
 	for(cpt=0;cpt<NB_ESSAI_UDP*nb_envoie;cpt++){
 		return_val += send_cmd(generalCommande,percent) ;
-        DELAY(31) ;
+        DELAY(35000) ;
 	}
     EXIT_FCT()
 	return return_val ;

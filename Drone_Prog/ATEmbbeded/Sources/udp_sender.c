@@ -31,16 +31,17 @@ int initialize_dest_socket(int * sock_id, struct sockaddr_in * addr_dest, int po
     return 0;
 }
 
-// Initialize the sourc address
+
+// Initialize the source address
 int initialize_src_socket(int * sock_id, struct sockaddr_in * addr_src, int port)
 {
     // Initialize source adress structure
     bzero(addr_src, sizeof(struct sockaddr_in));
     addr_src->sin_family = AF_INET;
     addr_src->sin_addr.s_addr = htonl(INADDR_ANY);
-    addr_src->sin_port = htons(port);
+    addr_src->sin_port = htons(0);
 
-    if (bind(*sock_id, (struct sockaddr *) addr_src, sizeof(addr_src)) == -1)
+    if (bind(*sock_id, (struct sockaddr *) addr_src, sizeof(* addr_src)) == -1)
     {
         fprintf(stderr, "Echec d'association de l'adresse source au socket\n");
         return 1;
@@ -101,7 +102,7 @@ int send_navdata(char* message)
 
 
 // Close the specified socket
-int close_dest_socket(int * sock_id)
+int close_socket(int * sock_id)
 {
     if(close(*sock_id) == -1)
     {
@@ -118,10 +119,10 @@ int close_sockets()
     int result;
 
     // Close control commands socket
-    result = close_dest_socket(&socket_id_commands);
+    result = close_socket(&socket_id_commands);
 
     // Close navdata socket
-    result += close_dest_socket(&socket_id_navdata);
+    result += close_socket(&socket_id_navdata);
 
     return result;
 }

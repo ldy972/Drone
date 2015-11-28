@@ -12,7 +12,7 @@
 int main(void)
 {
 	power_percent_type power_percent = POS_POWER_50_ ;
-	int times = 500 ;
+	int times = 50 ;
     printf("Décollage\n");
 	taking_off_AT(); 
     printf("Dodo Décollage\n");
