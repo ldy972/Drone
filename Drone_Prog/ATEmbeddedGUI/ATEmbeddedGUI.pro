@@ -17,13 +17,16 @@ SOURCES += main.cpp\
     commandegen.cpp \
     udp_sender.c \
     com.c \
-    managewdg.cpp
+    managewdg.cpp \
+    receivnavdata.cpp
 
 HEADERS  += mainwindow.h \
     commandegen.h \
     udp_sender.h \
     debug.h \
     com.h \
-    managewdg.h
+    managewdg.h \
+    navdata.h \
+    receivnavdata.h
 
 FORMS    += mainwindow.ui
