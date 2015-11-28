@@ -1,7 +1,3 @@
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef UDP_SENDER_H
 #define UDP_SENDER_H
 
@@ -16,7 +12,7 @@ extern "C" {
 
 #ifdef EMBED
 #define IP_ADRESS   "127.0.0.1"     // localhost for embedded version
-#else
+#else 
 #define IP_ADRESS   "192.168.1.1"   // static IP of the drone for non embedded
 #endif
 #define UDP_COMMANDS_PORT   5556
@@ -36,7 +32,3 @@ int send_navdata(char* message);
 int close_sockets();
 
 #endif //UDP_SENDER_H
-
-#ifdef __cplusplus
-}
-#endif
