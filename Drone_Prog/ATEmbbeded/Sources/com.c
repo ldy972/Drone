@@ -142,6 +142,18 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
             sprintf(tmp,"%s",COMMANDE_CLOSE_CONNEC) ;
             printf("closing connection\n") ;
             break ;
+
+	case CMD_CONFIG:
+		sprintf(tmp,"%s",COMMANDE_AT_GET_NAV_DATA);
+		break;
+
+	case CMD_WATCHDOG:
+		sprintf(tmp,"%s",COMMANDE_AT_WATCHDOG);
+		break;
+
+	case CMD_ACK:
+		sprintf(tmp,"%s",COMMANDE_AT_WATCHDOG);
+		break;
 	}
 	return strdup(tmp) ;
 }
@@ -246,6 +258,24 @@ char* make(cmd_type trg,power_percent_type percent){
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_ROTATION_DROITE,percent)) ;
 				break ;
+			case CMD_CONFIG :
+				strcat(commande_result, H_AT_CONFIG);
+				strcat(commande_result, numSequence);
+				strcat(commande_result, placer_puissance(CMD_CONFIG, percent));
+				break ;
+
+			case CMD_WATCHDOG :
+				strcat(commande_result,H_AT_COMWDG);
+				strcat(commande_result, numSequence);
+				strcat(commande_result, placer_puissance(CMD_WATCHDOG, percent));
+				break ;
+
+			case CMD_ACK:
+				strcat(commande_result,H_AT_ACK);
+				strcat(commande_result, numSequence);
+				strcat(commande_result, placer_puissance(CMD_ACK, percent));
+				break ;
+
              case CMD_CLOSE_CONNEC :
                 strcat(commande_result,placer_puissance(CMD_CLOSE_CONNEC,NULL_POWER_VALUE));
                 printf("making close commande") ;
@@ -445,5 +475,46 @@ int translate_left(int times,power_percent_type percent){
 	ENTER_FCT()
 	return manage_cmd(CMD_CLOSE_CONNEC,NULL_POWER_VALUE,0) ;
 }
+
+/**
+ * config_navdata
+ * @arg : void
+ * @return : status 0 = OK
+ * **/
+int config_navdata(){
+	ENTER_FCT()
+	return manage_cmd(CMD_CONFIG,NULL_POWER_VALUE,0);
+}
+
+/**
+ * reload_watchdog
+ * @arg : void
+ * @return : status 0 = OK
+ * **/
+int reload_watchdog(){
+	ENTER_FCT()
+	return manage_cmd(CMD_WATCHDOG,NULL_POWER_VALUE,0);
+}
+
+/**
+ * send_ack
+ * @arg : void
+ * @return : status 0 = OK
+ * **/
+int send_ack(){
+	ENTER_FCT()
+	return manage_cmd(CMD_ACK,NULL_POWER_VALUE,0);
+}
+
+/**
+ * open_connection
+ * @arg : void
+ * @return : status 0 = OK
+ * **/
+int open_connection(){
+	ENTER_FCT()
+	
+}
+
 	 
 

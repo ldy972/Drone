@@ -40,7 +40,9 @@ extern "C" {
 #define COMMANDE_AT_ROTATION_GAUCHE  ",1,0,0,0,-1082130432\r" 
 #define COMMANDE_AT_ROTATION_DROITE  ",1,0,0,0,1065353216\r"
 #define COMMANDE_CLOSE_CONNEC	"end_connection"
-#define COMMANDE_AT_GET_NAV_DATA "AT*CONFIG=\"general:navdata_demo\",\"TRUE\"\r"
+#define COMMANDE_AT_GET_NAV_DATA "\"general:navdata_demo\",\"TRUE\"\r"
+#define COMMANDE_AT_WATCHDOG "%d\r"
+#define COMMANDE_AT_ACK "%d,0\r"
 
 /***********************************************************************
  * HEADER AT defines
@@ -53,6 +55,7 @@ extern "C" {
 #define H_AT_CONFIG_IDS "AT*CONFIG_IDS="
 #define H_AT_COMWDG "AT*COMWDG="
 #define H_AT_CALIB "AT*CALIB="
+#define H_AT_ACK "AT*CTRL="
 
 /***********************************************************************
  * Internal types
@@ -70,7 +73,10 @@ extern "C" {
 	 CMD_BAS,
 	 CMD_ROTATION_GAUCHE,
 	 CMD_ROTATION_DROITE,
-	 CMD_CLOSE_CONNEC
+	 CMD_CONFIG,
+	 CMD_CLOSE_CONNEC,
+	 CMD_WATCHDOG,
+	 CMD_ACK
 } cmd_type ;
 
 /***********************************************************************
@@ -112,6 +118,10 @@ int translate_left(int times,power_percent_type percent) ;
 int emergency_stop() ;
 int no_emergency_stop() ;
 int close_connect() ;
+int config_navdata();
+int reload_watchdog();
+int send_ack();
+int open_connection();
 
 #ifdef __cplusplus
 }
