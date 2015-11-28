@@ -12,11 +12,11 @@ extern "C" {
  /***********************************************************************
  * global defines and macro
  * *********************************************************************/
-#define NB_ESSAI_UDP 5
+#define NB_ESSAI_UDP 1
 #define DELAY(x) {usleep(x);}
 #define POWER_P_SIZE 10	 
 #define TAILLE_COMMANDE 100
-
+#define NAVDATA_INIT_MSG "\x01\x00"
 
 /***********************************************************************
  * global variables
@@ -105,8 +105,14 @@ typedef enum power_percent_type{
  * prototypes definitions
  * *********************************************************************/
  
+int initialize_connection_with_drone();
+int open_connection();
+int send_navdata_config();
+int send_ack();
+
 int taking_off_AT() ;
 int landing_AT() ;
+
 int rising_AT(int times,power_percent_type percent) ;
 int go_down_AT(int times,power_percent_type percent);
 int turn_AT_Right(int times,power_percent_type percent) ;
@@ -115,13 +121,13 @@ int go_forward_AT(int times,power_percent_type percent) ;
 int go_back_AT(int times,power_percent_type percent) ;
 int translate_right(int times,power_percent_type percent) ;
 int translate_left(int times,power_percent_type percent) ;
+
 int emergency_stop() ;
 int no_emergency_stop() ;
+
 int close_connect() ;
-int config_navdata();
+
 int reload_watchdog();
-int send_ack();
-int open_connection();
 
 #ifdef __cplusplus
 }
