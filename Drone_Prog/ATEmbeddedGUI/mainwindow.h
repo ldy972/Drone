@@ -16,6 +16,7 @@
 
 #include "commandegen.h"
 #include "managewdg.h"
+#include "receivnavdata.h"
 
 namespace Ui {
 class MainWindow;
@@ -51,6 +52,11 @@ public slots :
     void process_mission();
     void process_nav_data(bool checked) ;
     void handle_wdg(int value) ;
+    void handle_nav_data(nav_data_type nava_data);
+
+signals:
+   void end_of_copy(bool end_of_copy);
+
 
 private:
     Ui::MainWindow *ui;
@@ -96,6 +102,8 @@ private:
 
     CommandeGen *gestion_commande ;
     Managewdg *t_manage_wdg ;
+    ReceivNavData *t_nav_data_receiver;
+    nav_data_type s__navdata ;
 
     int m_percent ;
     int m_times ;

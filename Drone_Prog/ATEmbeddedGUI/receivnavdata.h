@@ -1,34 +1,37 @@
 #ifndef RECEIVNAVDATA_H
 #define RECEIVNAVDATA_H
 
+#include <QThread>
+#include <QTimer>
 #include "navdata.h"
 
 
-class ReceivNavData
+class ReceivNavData : public QThread
 {
+    void run() : Q_DECL_OVERRIDE{
+
+        init_connection();
+        while(){
+            receive_nav_data();
+            emit copy_nav_data(navdata) ;
+            while(!m_end_of_copy)
+                m_timer->start(50);
+            m_timer->start(m_freq);
+        }
+        close_connection();
+
+    }
 public:
     ReceivNavData();
-
-    uint16_t get_id();                        // Navdata block ('option') identifier
-    uint16_t get_size();                      // set this to the size of this structure
-
-    uint32_t get_ctrl_state();               // Flying state (landed, flying, hovering, etc.) defined in CTRL_STATES enum.
-    uint32_t get_vbat_flying_percentage();   // battery voltage filtered (mV)
-
-    float32_t get_theta();                    // pitch angle in milli-degrees
-    float32_t get_phi();                      // roll  angle
-    float32_t get_psi();                      // yaw   angle
-
-    int32_t get_altitude();                 // altitude in centimeters[??]
-
-    float32_t get_vx();                       // estimated linear velocity
-    float32_t get_vy();                       // estimated linear velocity
-    float32_t get_vz();
+public slots:
+    void end_of_copy(bool copy);
 
 signals:
-    void copy_nav_data(nav_data_type &navdata);
+    void copy_nav_data(navdata);
 private:
-    //nav_data_type nav_data; //définie dans le navdata.h - zone partagée
+    bool m_end_of_copy;
+    QTimer *m_timer ;
+    int m_freq ;
 };
 
 #endif // RECEIVNAVDATA_H

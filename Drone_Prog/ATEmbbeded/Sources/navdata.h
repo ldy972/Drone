@@ -36,3 +36,14 @@ typedef struct _navdata_t {
   navdata_header_t     navdata_header;  // navdata header 
   navdata_demo_t       navdata_option;  // navdata option 
 } navdata_t;
+
+typedef struct nav_data_type{
+    navdata_demo_t nav_data;
+    int is_ready ;
+}nav_data_type;
+
+nav_data_type nav_data;
+
+int close_connection() ;
+int init_connection();
+int receive_nav_data();

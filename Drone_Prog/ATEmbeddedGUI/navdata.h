@@ -44,4 +44,6 @@ typedef struct nav_data_type{
 
 nav_data_type nav_data;
 
-int receiv_from() ;
+int close_connection() ;
+int init_connection();
+int receive_nav_data();

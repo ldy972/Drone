@@ -116,6 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
      * *********************************************************************/
     gestion_commande = new CommandeGen;
     t_manage_wdg = new Managewdg;
+    t_nav_data_receiver = new ReceivNavData;
     zoneAcceuil->setLayout(acceuil_layout);
     zoneCentrale->setLayout(v_layout);
     zone->setLayout(background_layout);
@@ -143,6 +144,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(b_mission,SIGNAL(clicked()),this,SLOT(process_mission())) ;
     QObject::connect(cb_nav_data,SIGNAL(toggled(bool)),this,SLOT(process_nav_data(bool)))  ;
     QObject::connect(t_manage_wdg, SIGNAL(resultReady(int)), this, SLOT(handle_wdg(int)));
+    QObject::connect(t_nav_data_receiver,SIGNAL(copy_nav_data(nav_data_type)),this,SLOT(handle_nav_data(nav_data_type)));
 }
 
 /***********************************************************************
@@ -258,6 +260,11 @@ void MainWindow::process_layout(){
 void MainWindow::handle_wdg(int value){
     l_wdg->setText(QString::number(value));
     t_manage_wdg->start();
+}
+
+void MainWindow::handle_nav_data(nav_data_type navdata){
+    s__navdata=navdata;
+    emit end_of_copy(true) ;
 }
 
 /***********************************************************************

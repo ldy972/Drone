@@ -10,7 +10,7 @@ class Managewdg : public QThread
         Q_OBJECT
     void run()  Q_DECL_OVERRIDE {
          timer->start();
-         rld_wdg() ;
+         reload_watchdog() ;
     }
 public:
     Managewdg();
