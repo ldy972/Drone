@@ -4,34 +4,29 @@
 #include <QThread>
 #include <QTimer>
 #include "navdata.h"
+#include "navdata_structs.h"
 
 
 class ReceivNavData : public QThread
 {
-    void run() : Q_DECL_OVERRIDE{
-
-        init_connection();
-        while(){
-            receive_nav_data();
-            emit copy_nav_data(navdata) ;
-            while(!m_end_of_copy)
-                m_timer->start(50);
-            m_timer->start(m_freq);
-        }
-        close_connection();
-
+        Q_OBJECT
+    void run() Q_DECL_OVERRIDE{
+        m_timer->start();
     }
 public:
-    ReceivNavData();
-public slots:
-    void end_of_copy(bool copy);
+    ReceivNavData() ;
+    void init_navdata() ;
+    void close_navdata() ;
 
+public slots:
+    void process_nav_data() ;
 signals:
-    void copy_nav_data(navdata);
+    void copy_nav_data(nav_data_type);
 private:
-    bool m_end_of_copy;
     QTimer *m_timer ;
     int m_freq ;
+    nav_data_type nav_data ;
+
 };
 
 #endif // RECEIVNAVDATA_H

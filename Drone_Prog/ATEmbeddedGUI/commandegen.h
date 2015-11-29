@@ -1,5 +1,6 @@
 #ifndef COMMANDEGEN_H
 #define COMMANDEGEN_H
+
 #include <QObject>
 #include "com.h"
 
@@ -32,6 +33,7 @@ public:
     void get_nav_data() ;
 
     void do_mission(int times,int percent);
+    void initialise() ;
 
 private:
     int m_status ;

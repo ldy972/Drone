@@ -1,49 +1,46 @@
-#include <netdb.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef float   float32_t;
+#ifndef NAVDATA_H
+#define NAVDATA_H
 
-// navdata header
-typedef struct _navdata_header_t {
-  uint32_t    header;                   // header:55667788 
-  uint32_t    state;                    // the state of the drone 
-  uint32_t    seq;                      // sequence number 
-  uint32_t    vision;                   // vision flag 
-} navdata_header_t;
+#include "navdata_structs.h"
+#include "udp_sender.h"
 
-// navdata option, demo mode
-typedef struct _navdata_demo_t {
-  uint16_t    id;                        // Navdata block ('option') identifier 
-  uint16_t    size;                      // set this to the size of this structure 
-  
-  uint32_t    ctrl_state;               // Flying state (landed, flying, hovering, etc.) defined in CTRL_STATES enum. 
-  uint32_t    vbat_flying_percentage;   // battery voltage filtered (mV) 
-  
-  float32_t   theta;                    // pitch angle in milli-degrees 
-  float32_t   phi;                      // roll  angle
-  float32_t   psi;                      // yaw   angle
-  
-  int32_t     altitude;                 // altitude in centimeters[??] 
-  
-  float32_t   vx;                       // estimated linear velocity
-  float32_t   vy;                       // estimated linear velocity
-  float32_t   vz;                       // estimated linear velocity
-
-  uint32_t    num_frames;               //!< streamed frame index  // Not used -> To integrate in video stage.
-} navdata_demo_t;
-
-// navdata structure
-typedef struct _navdata_t {
-  navdata_header_t     navdata_header;  // navdata header 
-  navdata_demo_t       navdata_option;  // navdata option 
-} navdata_t;
-
+// Structure containing navdata and a flag indicating if it is ready to be copied
 typedef struct nav_data_type{
     navdata_demo_t nav_data;
     int is_ready ;
 }nav_data_type;
 
+
 nav_data_type nav_data;
 
-int close_connection() ;
+
+/**
+ * init_connection : Initialises the navadata socket to recieve packets
+ * @arg : void
+ * @return : 0 upon success
+ */
 int init_connection();
-int receive_nav_data();
+
+/**
+ * receive_nav_data : Retrives a UDP packet containing navdata
+ * @arg : nav_data_type : The structure to fill
+ * @return : 0 upon success
+ */
+int receive_nav_data(nav_data_type * navdata);
+
+/**
+ * close_connection : Closes the navadata socket
+ * @arg : void
+ * @return : 0 upon success
+ */
+int close_connection();
+
+
+#endif //NAVDATA_H
+#ifdef __cplusplus
+}
+#endif

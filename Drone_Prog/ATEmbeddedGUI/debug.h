@@ -1,3 +1,7 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef DEBUG_H
 #define DEBUG_H
 
@@ -14,3 +18,6 @@
 #define ERROR_LOG(mess) fprintf(stderr, "[ERROR] (%s:%d) in function %s : "mess"\n", __FILE__, __LINE__, __FUNCTION__);
 
 #endif //DEBUG_H
+#ifdef __cplusplus
+}
+#endif

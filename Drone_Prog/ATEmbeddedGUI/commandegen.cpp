@@ -70,6 +70,9 @@ void CommandeGen::get_nav_data(){
     m_status = send_navdata_config() ;
 }
 
+void CommandeGen::initialise(){
+    m_status = initialize_connection_with_drone();
+}
 
 /**
  * @brief CommandeGen::to_percent

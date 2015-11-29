@@ -27,6 +27,7 @@ HEADERS  += mainwindow.h \
     com.h \
     managewdg.h \
     navdata.h \
-    receivnavdata.h
+    receivnavdata.h \
+    navdata_structs.h
 
 FORMS    += mainwindow.ui

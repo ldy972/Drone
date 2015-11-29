@@ -53,10 +53,7 @@ public slots :
     void process_nav_data(bool checked) ;
     void handle_wdg(int value) ;
     void handle_nav_data(nav_data_type nava_data);
-
-signals:
-   void end_of_copy(bool end_of_copy);
-
+    void process_init();
 
 private:
     Ui::MainWindow *ui;
@@ -103,12 +100,14 @@ private:
     CommandeGen *gestion_commande ;
     Managewdg *t_manage_wdg ;
     ReceivNavData *t_nav_data_receiver;
-    nav_data_type s__navdata ;
+    nav_data_type s_navdata ;
 
     int m_percent ;
     int m_times ;
     int m_status ;
     int m_acceuil;
+
+    bool m_navdata_init;
 
     void set_m_percent(int percent=-1) ;
     void set_m_times(int times=-1) ;

@@ -123,10 +123,14 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(zone);
     zoneAcceuil->show();
     t_manage_wdg->start();
+    m_navdata_init=true ;
+    t_nav_data_receiver->init_navdata();
+    t_nav_data_receiver->start();
 
     /***********************************************************************
      * Private Connect
      * *********************************************************************/
+    QObject::connect(b_start,SIGNAL(clicked()),this,SLOT(process_init()));
     QObject::connect(b_gauche,SIGNAL(clicked()),this,SLOT(process_gauche())) ;
     QObject::connect(b_droite,SIGNAL(clicked()),this,SLOT(process_droite())) ;
     QObject::connect(b_haut,SIGNAL(clicked()),this,SLOT(process_monter())) ;
@@ -229,14 +233,22 @@ void MainWindow::process_close() {
 }
 
 void MainWindow::process_nav_data(bool checked){
-    if(checked)
+    if(checked && !m_navdata_init){
+        m_navdata_init=true ;
+        t_nav_data_receiver->init_navdata();
         gestion_commande->get_nav_data();
+    }
+
 }
 
 void MainWindow::process_mission(){
     set_m_percent();
     set_m_times();
     gestion_commande->do_mission(m_times,m_percent);
+}
+
+void MainWindow::process_init(){
+    gestion_commande->initialise();
 }
 
 /**
@@ -263,8 +275,8 @@ void MainWindow::handle_wdg(int value){
 }
 
 void MainWindow::handle_nav_data(nav_data_type navdata){
-    s__navdata=navdata;
-    emit end_of_copy(true) ;
+    s_navdata=navdata;
+    t_nav_data_receiver->start();
 }
 
 /***********************************************************************

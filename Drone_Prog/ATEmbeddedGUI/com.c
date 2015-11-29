@@ -108,7 +108,7 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
 		break;
 
 	case CMD_ACK:
-		sprintf(tmp,"%s",COMMANDE_AT_WATCHDOG);
+		sprintf(tmp,"%s",COMMANDE_AT_ACK);
 		break;
 	}
 	return strdup(tmp) ;
@@ -462,23 +462,6 @@ int send_ack(){
 	return manage_cmd(CMD_ACK,NULL_POWER_VALUE,0);
 }
 
-/**
- * open_connection
- * @arg : void
- * @return : status 0 = OK
- * **/
-int open_connection(){
-	ENTER_FCT()
-    int result;
-
-    if (connectionOpen == 0) {
-        result = initialize_sockets();
-    }
-
-    EXIT_FCT()
-    return result;
-}
-
 
 /**
  * initialize_connection_with_drone : Opens the sockets and triggers navdata sending by the drone
@@ -487,25 +470,37 @@ int open_connection(){
  * **/
 int initialize_connection_with_drone()
 {
+    ENTER_FCT()
     int result;
     char command[MAX_BUF_LEN];
 
-    result = open_connection();
+    // Open AT_Commands and navdata socket
+    result = initialize_sockets();
 
+    // If both succeeded, ask the drone to send navdata
     if (result == 0) {
+        // Send special message to navdata port
         sprintf(command, NAVDATA_INIT_MSG);
         result = send_navdata(command);
         DELAY(40000)
+
+        // Set navdata configuration
+        if (result == 0) {
+            send_navdata_config();
+            DELAY(40000)
+        }
+
+        // Send ACK
+        if (result == 0) {
+            result = send_ack();
+        }
+
+        // Close navdata socket
+        if (result == 0) {
+            result = close_navdata_socket();
+        }
     }
 
-    if (result == 0) {
-        send_navdata_config();
-        DELAY(40000)
-    }
-
-    if (result == 0) {
-        result = send_ack();
-    }
-
+    EXIT_FCT();
     return result;
 }

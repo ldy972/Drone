@@ -3,6 +3,9 @@
 extern "C" {
 #endif
 
+#ifndef COM_H
+#define COM_H
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,6 +17,7 @@ extern "C" {
  * *********************************************************************/
 #define NB_ESSAI_UDP 1
 #define DELAY(x) {usleep(x);}
+#define S_DELAY(x) {sleep(x);}
 #define POWER_P_SIZE 10	 
 #define TAILLE_COMMANDE 100
 #define NAVDATA_INIT_MSG "\x01\x00"
@@ -40,9 +44,9 @@ extern "C" {
 #define COMMANDE_AT_ROTATION_GAUCHE  ",1,0,0,0,-1082130432\r" 
 #define COMMANDE_AT_ROTATION_DROITE  ",1,0,0,0,1065353216\r"
 #define COMMANDE_CLOSE_CONNEC	"end_connection"
-#define COMMANDE_AT_GET_NAV_DATA "\"general:navdata_demo\",\"TRUE\"\r"
-#define COMMANDE_AT_WATCHDOG "%d\r"
-#define COMMANDE_AT_ACK "%d,0\r"
+#define COMMANDE_AT_GET_NAV_DATA ",\"general:navdata_demo\",\"TRUE\"\r"
+#define COMMANDE_AT_WATCHDOG "\r"
+#define COMMANDE_AT_ACK ",0\r"
 
 /***********************************************************************
  * HEADER AT defines
@@ -106,7 +110,6 @@ typedef enum power_percent_type{
  * *********************************************************************/
  
 int initialize_connection_with_drone();
-int open_connection();
 int send_navdata_config();
 int send_ack();
 
@@ -128,6 +131,8 @@ int no_emergency_stop() ;
 int close_connect() ;
 
 int reload_watchdog();
+
+#endif
 
 #ifdef __cplusplus
 }

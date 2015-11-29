@@ -1,8 +1,9 @@
 CC = gcc
 CFLAGS = -W -Wall
-EXEC = test_com
+EXEC = test_com test_nav
 
-SRC = $(wildcard *.c)
+TESTS = TestHl1.c test_navdata.c
+SRC = $(filter-out $(TESTS), $(wildcard *.c))
 OBJS = $(SRC:.c=.o)
 
 ifdef DEBUG
@@ -15,7 +16,10 @@ endif
 
 all : $(EXEC)
 
-test_com : $(OBJS)
+test_com : TestHl1.o $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
+
+test_nav : test_navdata.o $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 %.o : %.c $(wildcard %.h) debug.h
