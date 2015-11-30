@@ -128,88 +128,63 @@ char* make(cmd_type trg,power_percent_type percent){
         char commande_result[taille];
         memset(commande_result,0,100);
         commande_result[99]='\0';
-        //size_t taille ;
 		switch(trg){
 			case CMD_DECOLLAGE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DECOLLAGE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_REF) ;
 				strcat(commande_result,numSequence) ;
                 strcat(commande_result,placer_puissance(CMD_DECOLLAGE,percent)) ;
 				break ;
 			case CMD_ATTERISSAGE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_ATTERISSAGE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_REF) ;
 				strcat(commande_result,numSequence) ;
                 strcat(commande_result,placer_puissance(CMD_ATTERISSAGE,percent)) ;
 				break ;
 			case CMD_ARRET_URGENCE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_ARRET_URGENCE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_REF) ;
 				strcat(commande_result,numSequence) ;
                 strcat(commande_result,placer_puissance(CMD_ARRET_URGENCE,percent)) ;
 				break ;
 			case CMD_ANTI_ARRET_URGENCE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_ANTI_ARRET_URGENCE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_REF) ;
 				strcat(commande_result,numSequence) ;
                 strcat(commande_result,placer_puissance(CMD_ANTI_ARRET_URGENCE,percent)) ;
 				break ;
 			case CMD_AVANT :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_AVANT) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_AVANT,percent)) ;
 				break ;
 			case CMD_ARRIERE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_ARRIERE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_ARRIERE,percent)) ;
 				break ;
 			case CMD_GAUCHE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_GAUCHE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;				
 				strcat(commande_result,placer_puissance(CMD_GAUCHE,percent)) ;
 				break ;
 			case CMD_DROITE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_DROITE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_DROITE,percent)) ;
 				break ;
 			case CMD_HAUT :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_HAUT) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_HAUT,percent)) ;
 				break ;
 			case CMD_BAS :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_BAS) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_BAS,percent)) ;
 				break ;
 			case CMD_ROTATION_GAUCHE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_ROTATION_GAUCHE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_ROTATION_GAUCHE,percent)) ;
 				break ;
-			case CMD_ROTATION_DROITE :
-                //taille = strlen(numSequence) + strlen(H_AT_REF) + strlen(COMMANDE_AT_ROTATION_DROITE) ;
-                //commande_result = (char*)malloc(taille*sizeof(char)) ;
+            case CMD_ROTATION_DROITE :
 				strcat(commande_result,H_AT_PCMD) ;
 				strcat(commande_result,numSequence) ;
 				strcat(commande_result,placer_puissance(CMD_ROTATION_DROITE,percent)) ;
@@ -219,27 +194,22 @@ char* make(cmd_type trg,power_percent_type percent){
 				strcat(commande_result, numSequence);
 				strcat(commande_result, placer_puissance(CMD_CONFIG, percent));
 				break ;
-
 			case CMD_WATCHDOG :
 				strcat(commande_result,H_AT_COMWDG);
 				strcat(commande_result, numSequence);
 				strcat(commande_result, placer_puissance(CMD_WATCHDOG, percent));
 				break ;
-
 			case CMD_ACK:
 				strcat(commande_result,H_AT_ACK);
 				strcat(commande_result, numSequence);
 				strcat(commande_result, placer_puissance(CMD_ACK, percent));
 				break ;
-
              case CMD_CLOSE_CONNEC :
                 strcat(commande_result,placer_puissance(CMD_CLOSE_CONNEC,NULL_POWER_VALUE));
                 printf("making close commande") ;
                 break ;
 		}
-        //result=strdup(commande_result) ;
 	   	PRINT_LOG("Command created : %s", commande_result)
-        //free(commande_result) ;
 		EXIT_FCT() ;
         return strdup(commande_result) ;
 	}

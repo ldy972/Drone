@@ -66,9 +66,6 @@ void CommandeGen::close() {
     m_status = close_connect();
 }
 
-void CommandeGen::get_nav_data(){
-    m_status = send_navdata_config() ;
-}
 
 void CommandeGen::initialise(){
     m_status = initialize_connection_with_drone();
@@ -157,5 +154,5 @@ void CommandeGen::do_mission(int times,int percent){
     this->reculer(times,percent);
     S_DELAY(2) ;
     this->landing();
-
+    emit end_of_mission();
 }

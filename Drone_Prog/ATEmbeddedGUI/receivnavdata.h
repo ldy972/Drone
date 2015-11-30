@@ -4,7 +4,7 @@
 #include <QThread>
 #include <QTimer>
 #include "navdata.h"
-#include "navdata_structs.h"
+#include "perform_nav_data.h"
 
 
 class ReceivNavData : public QThread
@@ -15,17 +15,20 @@ class ReceivNavData : public QThread
     }
 public:
     ReceivNavData() ;
+    ~ReceivNavData() ;
     void init_navdata() ;
     void close_navdata() ;
+    void duplicate_nav_data(nav_data_type* navdata) ;
 
 public slots:
     void process_nav_data() ;
+    void end_of_receiv_data() ;
 signals:
-    void copy_nav_data(nav_data_type);
+    void copy_nav_data();
 private:
+    Perform_Nav_Data *t_perform_nav_data;
     QTimer *m_timer ;
     int m_freq ;
-    nav_data_type nav_data ;
 
 };
 

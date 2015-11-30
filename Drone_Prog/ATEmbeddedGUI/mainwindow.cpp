@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
      * Private Attribute
      * *********************************************************************/
     m_acceuil = 0 ;
+    m_mission_end = true ;
+    m_navdata_init = false;
 
     /***********************************************************************
      * Private Button
@@ -70,6 +72,27 @@ MainWindow::MainWindow(QWidget *parent) :
     l_wdg = new QLabel;
     l_wdg->setText(QString::number(0));
 
+    l_nav_altitude = new QLabel;
+    l_nav_altitude->setText(QString::number(0));
+
+    l_nav_phi = new QLabel;
+    l_nav_phi->setText(QString::number(0));
+
+    l_nav_psi = new QLabel;
+    l_nav_psi->setText(QString::number(0));
+
+    l_nav_theta = new QLabel;
+    l_nav_theta->setText(QString::number(0));
+
+    l_nav_vx = new QLabel;
+    l_nav_vx->setText(QString::number(0));
+
+    l_nav_vy = new QLabel;
+    l_nav_vy->setText(QString::number(0));
+
+    l_nav_vz = new QLabel;
+    l_nav_vz->setText(QString::number(0));
+
     /***********************************************************************
      * Private Layout
      * *********************************************************************/
@@ -79,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
     f_layout = new QFormLayout;
     acceuil_layout = new QVBoxLayout;
     background_layout = new QGridLayout;
+    nav_data_layout = new QFormLayout;
 
 
     /***********************************************************************
@@ -108,13 +132,21 @@ MainWindow::MainWindow(QWidget *parent) :
     acceuil_layout->addWidget(l_img_acceuil,0,0);
     acceuil_layout->addWidget(b_start,1,0);
     background_layout->addWidget(l_background,0,0);
-    background_layout->addWidget(l_wdg,1,0);
+    nav_data_layout->addRow("Altitude : ",l_nav_altitude);
+    nav_data_layout->addRow("Phi : ",l_nav_phi);
+    nav_data_layout->addRow("Psi : ",l_nav_psi);
+    nav_data_layout->addRow("Theta",l_nav_theta);
+    nav_data_layout->addRow("vx : ",l_nav_vx);
+    nav_data_layout->addRow("vy : ",l_nav_vy);
+    nav_data_layout->addRow("vz : ",l_nav_vz);
+    background_layout->addLayout(nav_data_layout,1,0);
+    background_layout->addWidget(l_wdg,2,1);
 
 
     /***********************************************************************
      * General Variable __CAREFUL__
      * *********************************************************************/
-    gestion_commande = new CommandeGen;
+    t_gestion_commande = new CommandeGen;
     t_manage_wdg = new Managewdg;
     t_nav_data_receiver = new ReceivNavData;
     zoneAcceuil->setLayout(acceuil_layout);
@@ -123,9 +155,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(zone);
     zoneAcceuil->show();
     t_manage_wdg->start();
-    m_navdata_init=true ;
-    t_nav_data_receiver->init_navdata();
-    t_nav_data_receiver->start();
+    s_navdata=NULL;
 
     /***********************************************************************
      * Private Connect
@@ -148,7 +178,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(b_mission,SIGNAL(clicked()),this,SLOT(process_mission())) ;
     QObject::connect(cb_nav_data,SIGNAL(toggled(bool)),this,SLOT(process_nav_data(bool)))  ;
     QObject::connect(t_manage_wdg, SIGNAL(resultReady(int)), this, SLOT(handle_wdg(int)));
-    QObject::connect(t_nav_data_receiver,SIGNAL(copy_nav_data(nav_data_type)),this,SLOT(handle_nav_data(nav_data_type)));
+    QObject::connect(t_nav_data_receiver,SIGNAL(copy_nav_data()),this,SLOT(handle_nav_data()));
+    QObject::connect(t_gestion_commande,SIGNAL(end_of_mission()),this,SLOT(handle_mission()));
 }
 
 /***********************************************************************
@@ -158,97 +189,103 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::process_gauche(){
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->go_gauche(m_times,m_percent);
+    t_gestion_commande->go_gauche(m_times,m_percent);
 }
 void MainWindow::process_droite() {
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->go_droite(m_times,m_percent);
+    t_gestion_commande->go_droite(m_times,m_percent);
 }
 
 void MainWindow::process_taking_off(){
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->taking_off() ;
+    t_gestion_commande->taking_off() ;
 }
 
 void MainWindow::process_landing(){
     set_m_percent() ;
     set_m_times() ;
-   gestion_commande->landing();
+   t_gestion_commande->landing();
 }
 
 void MainWindow::process_monter() {
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->monter(m_times,m_percent);
+    t_gestion_commande->monter(m_times,m_percent);
 }
 
 void MainWindow::process_descendre(){
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->descendre(m_times,m_percent);
+    t_gestion_commande->descendre(m_times,m_percent);
 }
 
 void MainWindow::process_avancer(){
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->avancer(m_times,m_percent);
+    t_gestion_commande->avancer(m_times,m_percent);
 }
 
 void MainWindow::process_reculer() {
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->reculer(m_times,m_percent);
+    t_gestion_commande->reculer(m_times,m_percent);
 }
 
 void MainWindow::process_trans_right(){
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->trans_right(m_times,m_percent);
+    t_gestion_commande->trans_right(m_times,m_percent);
 }
 
 void MainWindow::process_trans_left(){
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->trans_left(m_times,m_percent);
+    t_gestion_commande->trans_left(m_times,m_percent);
 }
 
 void MainWindow::process_emerg_stop() {
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->emerg_stop();
+    t_gestion_commande->emerg_stop();
 }
 
 void MainWindow::process_no_emerg_stop() {
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->no_emerg_stop();
+    t_gestion_commande->no_emerg_stop();
 }
 
 void MainWindow::process_close() {
     set_m_percent() ;
     set_m_times() ;
-    gestion_commande->close();
+    t_gestion_commande->close();
+    t_nav_data_receiver->close_navdata();
 }
 
 void MainWindow::process_nav_data(bool checked){
     if(checked && !m_navdata_init){
         m_navdata_init=true ;
         t_nav_data_receiver->init_navdata();
-        gestion_commande->get_nav_data();
     }
 
 }
 
 void MainWindow::process_mission(){
-    set_m_percent();
-    set_m_times();
-    gestion_commande->do_mission(m_times,m_percent);
+    if(m_mission_end){
+        set_m_percent();
+        set_m_times();
+        m_mission_end=false;
+        t_gestion_commande->start();
+    }
 }
 
 void MainWindow::process_init(){
-    gestion_commande->initialise();
+    t_gestion_commande->initialise();
+    m_navdata_init=true ;
+    t_nav_data_receiver->init_navdata();
+    t_nav_data_receiver->start();
 }
 
 /**
@@ -264,7 +301,8 @@ void MainWindow::process_layout(){
     }else{
         zoneAcceuil->show();
         zoneCentrale->setHidden(true);
-        gestion_commande->close();
+        t_gestion_commande->close();
+        t_nav_data_receiver->close_navdata();
         m_acceuil=0;
     }
 }
@@ -274,9 +312,14 @@ void MainWindow::handle_wdg(int value){
     t_manage_wdg->start();
 }
 
-void MainWindow::handle_nav_data(nav_data_type navdata){
-    s_navdata=navdata;
+void MainWindow::handle_nav_data(){
+    t_nav_data_receiver->duplicate_nav_data(s_navdata);
     t_nav_data_receiver->start();
+    display_nav_data();
+}
+
+void MainWindow::handle_mission(){
+    m_mission_end = true;
 }
 
 /***********************************************************************
@@ -308,6 +351,16 @@ int MainWindow::get_status_value(){
     return m_status ;
 }
 
+void MainWindow::display_nav_data(){
+    l_nav_altitude->setText(QString(s_navdata->nav_data.altitude));
+    l_nav_phi->setNum(s_navdata->nav_data.phi);
+    l_nav_psi->setNum(s_navdata->nav_data.psi);
+    l_nav_theta->setNum(s_navdata->nav_data.theta);
+
+    l_nav_vx->setNum(s_navdata->nav_data.vx);
+    l_nav_vy->setNum(s_navdata->nav_data.vy);
+    l_nav_vz->setNum(s_navdata->nav_data.vz);
+}
 
 
 /***********************************************************************
@@ -317,7 +370,13 @@ MainWindow::~MainWindow()
 {
     delete ui;
     t_manage_wdg->quit();
-    t_manage_wdg->wait();
+    t_manage_wdg->exit();
+    t_nav_data_receiver->quit();
+    t_nav_data_receiver->exit();
+    t_gestion_commande->quit();
+    //t_gestion_commande->emerg_stop();
+    t_gestion_commande->wait();
     delete t_manage_wdg;
-    delete gestion_commande;
+    delete t_nav_data_receiver;
+    delete t_gestion_commande;
 }

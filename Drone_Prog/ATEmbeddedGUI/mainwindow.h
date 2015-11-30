@@ -17,6 +17,7 @@
 #include "commandegen.h"
 #include "managewdg.h"
 #include "receivnavdata.h"
+#include "navdata_structs.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,8 @@ public:
     int get_power_value() ;
     int get_times_value() ;
     int get_status_value();
+    void display_nav_data();
+
 
     ~MainWindow();
 
@@ -52,8 +55,9 @@ public slots :
     void process_mission();
     void process_nav_data(bool checked) ;
     void handle_wdg(int value) ;
-    void handle_nav_data(nav_data_type nava_data);
+    void handle_nav_data();
     void process_init();
+    void handle_mission() ;
 
 private:
     Ui::MainWindow *ui;
@@ -85,6 +89,14 @@ private:
     QLabel *l_background;
     QPixmap *p_background;
     QLabel *l_wdg ;
+    QLabel *l_nav_altitude;
+    QLabel *l_nav_psi;
+    QLabel *l_nav_phi;
+    QLabel *l_nav_theta;
+    QLabel *l_nav_vx;
+    QLabel *l_nav_vy;
+    QLabel *l_nav_vz;
+
 
     QGridLayout *layout;
     QVBoxLayout *v_layout;
@@ -92,15 +104,16 @@ private:
     QFormLayout *f_layout;
     QVBoxLayout *acceuil_layout;
     QGridLayout *background_layout;
+    QFormLayout *nav_data_layout;
 
     QWidget *zoneCentrale;
     QWidget *zoneAcceuil;
     QWidget *zone;
 
-    CommandeGen *gestion_commande ;
+    CommandeGen *t_gestion_commande ;
     Managewdg *t_manage_wdg ;
     ReceivNavData *t_nav_data_receiver;
-    nav_data_type s_navdata ;
+    nav_data_type *s_navdata ;
 
     int m_percent ;
     int m_times ;
@@ -108,6 +121,7 @@ private:
     int m_acceuil;
 
     bool m_navdata_init;
+    bool m_mission_end;
 
     void set_m_percent(int percent=-1) ;
     void set_m_times(int times=-1) ;

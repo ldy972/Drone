@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     udp_sender.c \
     com.c \
     managewdg.cpp \
-    receivnavdata.cpp
+    receivnavdata.cpp \
+    navdata.c \
+    perform_nav_data.cpp
 
 HEADERS  += mainwindow.h \
     commandegen.h \
@@ -28,6 +30,7 @@ HEADERS  += mainwindow.h \
     managewdg.h \
     navdata.h \
     receivnavdata.h \
-    navdata_structs.h
+    navdata_structs.h \
+    perform_nav_data.h
 
 FORMS    += mainwindow.ui

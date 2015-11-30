@@ -2,11 +2,16 @@
 #define COMMANDEGEN_H
 
 #include <QObject>
+#include <QThread>
 #include "com.h"
 
 
-class CommandeGen
+class CommandeGen : public QThread
 {
+    Q_OBJECT
+   void run()  Q_DECL_OVERRIDE {
+        this->do_mission(1,50);
+    }
 public:
     CommandeGen();
     int get_status() ;
@@ -30,11 +35,10 @@ public:
     void no_emerg_stop() ;
     void close() ;
 
-    void get_nav_data() ;
-
     void do_mission(int times,int percent);
     void initialise() ;
-
+signals :
+    void end_of_mission();
 private:
     int m_status ;
     power_percent_type to_percent(int p) ;
