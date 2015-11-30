@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "com.h"
 #include "navdata.h"
 #include "debug.h"
 
@@ -11,7 +12,7 @@
 int main(void)
 {
     printf("Init navdata socket\n");
-    init_connection();
+    initialize_connection_with_drone();
 
     printf("Get navdata\n");
     int go_on = 1;
@@ -19,8 +20,10 @@ int main(void)
     nav_data_type navdata;
 
     while (go_on < 25) {
+        reload_watchdog();
         //receive data 
         memset( &navdata, '\0', sizeof(navdata)); 
+		printf("Navdata reset\n") ;
         receive_nav_data(&navdata);
 		printf("Nav data received\n") ;
         // printf("decode navdata_struct %d bytes\n",sizeof(navdata_struct));
@@ -36,6 +39,7 @@ int main(void)
         printf("\t%13.3f:%s\n", navdata.nav_data.vz,                     "estimated vz");
         printf("\n\n");
         go_on ++;
+        usleep(500000);       
     }
 
     printf("Close navdata socket\n");

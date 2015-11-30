@@ -18,7 +18,7 @@
 #endif
 #define UDP_COMMANDS_PORT   5556
 #define UDP_NAVDATA_PORT    5554
-#define UDP_NAVDATA_DEST    5560
+#define UDP_NAVDATA_DEST    35666
 #define MAX_BUF_LEN 1024
 
 // Open both sockets

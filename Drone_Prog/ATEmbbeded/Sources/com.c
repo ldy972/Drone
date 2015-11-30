@@ -474,30 +474,41 @@ int initialize_connection_with_drone()
     int result;
     char command[MAX_BUF_LEN];
 
+    PRINT_LOG("Init");
     // Open AT_Commands and navdata socket
     result = initialize_sockets();
+    connectionOpen = 1;
+    PRINT_LOG("Init OK");
 
     // If both succeeded, ask the drone to send navdata
     if (result == 0) {
         // Send special message to navdata port
         sprintf(command, NAVDATA_INIT_MSG);
-        result = send_navdata(command);
+        PRINT_LOG("Send push");
+        result = send_navdata("\x01\x00");
+        PRINT_LOG("Push sent");
         DELAY(40000)
 
         // Set navdata configuration
         if (result == 0) {
+            PRINT_LOG("Send conf");
             send_navdata_config();
+            PRINT_LOG("Conf sent");
             DELAY(40000)
         }
 
         // Send ACK
         if (result == 0) {
+            PRINT_LOG("Send ack");
             result = send_ack();
+            PRINT_LOG("Ack sent");
         }
 
         // Close navdata socket
         if (result == 0) {
+            PRINT_LOG("Close nav");
             result = close_navdata_socket();
+            PRINT_LOG("Close nav");
         }
     }
 
