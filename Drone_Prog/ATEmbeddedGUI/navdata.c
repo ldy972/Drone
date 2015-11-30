@@ -17,8 +17,10 @@ int receive_nav_data()
     int result = 0;
     navdata_t full_navdata;
 
+    printf("starting nav_data update\n");
     result = recieve_navdata(&full_navdata);
     
+    printf("nav_data update\n");
     // If everything went fine, navdata is OK
     if (result == 0) {
         if(nav_data==NULL)

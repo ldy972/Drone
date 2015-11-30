@@ -22,7 +22,7 @@ int main(void)
         //receive data 
         memset( &navdata, '\0', sizeof(navdata)); 
         receive_nav_data(&navdata);
-    
+		printf("Nav data received\n") ;
         // printf("decode navdata_struct %d bytes\n",sizeof(navdata_struct));
         printf("navdata_demo:\n");
         printf("\t%13d:%s\n",   navdata.nav_data.ctrl_state,             "Control State");

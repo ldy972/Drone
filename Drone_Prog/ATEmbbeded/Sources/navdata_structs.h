@@ -46,4 +46,9 @@ typedef struct _navdata_t {
   navdata_demo_t       navdata_option;  // navdata option 
 } navdata_t;
 
+// Structure containing navdata and a flag indicating if it is ready to be copied
+typedef struct nav_data_type{
+    navdata_demo_t nav_data;
+    int is_ready ;
+}nav_data_type;
 #endif // NAVDATA_STRUCTS_H

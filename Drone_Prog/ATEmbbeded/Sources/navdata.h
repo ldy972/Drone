@@ -1,17 +1,15 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef NAVDATA_H
 #define NAVDATA_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "navdata_structs.h"
 #include "udp_sender.h"
 
-// Structure containing navdata and a flag indicating if it is ready to be copied
-typedef struct nav_data_type{
-    navdata_demo_t nav_data;
-    int is_ready ;
-}nav_data_type;
-
-
-nav_data_type nav_data;
 
 
 /**
@@ -26,7 +24,7 @@ int init_connection();
  * @arg : nav_data_type : The structure to fill
  * @return : 0 upon success
  */
-int receive_nav_data(nav_data_type * navdata);
+int receive_nav_data();
 
 /**
  * close_connection : Closes the navadata socket
@@ -35,5 +33,13 @@ int receive_nav_data(nav_data_type * navdata);
  */
 int close_connection();
 
-
+/**
+ * @brief duplicate
+ * @param navdata
+ * @return
+ */
+int duplicate(nav_data_type* navdata);
 #endif //NAVDATA_H
+#ifdef __cplusplus
+}
+#endif
