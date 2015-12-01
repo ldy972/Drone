@@ -9,8 +9,17 @@
 # repo as long as it doesn't invalidate this version
 
 spawn telnet 192.168.1.1
+#sleep 1
 expect "#"
-send "cd data/video\n"
+send "ls\r"
 expect "#"
-send "./howard_cc.elf\n"
+send "cd data/video\r"
+expect "#"
+send "ls\r"
+expect "#"
+send "./howard_cc.elf\r"
+expect "#"
+send "ls\r"
+expect "#"
+send "exit\r"
 
