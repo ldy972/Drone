@@ -3,6 +3,7 @@
  * http://ardrone-ailab-u-tokyo.blogspot.fr/2012/06/12-receive-navigation-data.html *
  * Also, most of our work concerning navdata has been directly inspired by his work *
  ***********************************************************************************/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -55,6 +56,7 @@ typedef struct nav_data_type{
     int is_ready ;
 }nav_data_type;
 #endif // NAVDATA_STRUCTS_H
+
 #ifdef __cplusplus
 }
 #endif

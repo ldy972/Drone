@@ -16,11 +16,9 @@ int receive_nav_data()
 {
     int result = 0;
     navdata_t full_navdata;
-
-    printf("starting nav_data update\n");
+    printf("starting nav data\n");
     result = recieve_navdata(&full_navdata);
-    
-    printf("nav_data update\n");
+    printf("nav data upadted\n");
     // If everything went fine, navdata is OK
     if (result == 0) {
         if(nav_data==NULL)
@@ -44,5 +42,6 @@ int duplicate(nav_data_type* navdata){
         navdata=(nav_data_type*)malloc(sizeof(nav_data_type));
     navdata->is_ready=0 ;
     memcpy(navdata,nav_data, sizeof(nav_data_type));
+    navdata->is_ready=1 ;
     return 0 ;
 }

@@ -39,33 +39,15 @@ int initialize_socket_source(int * sock_id, struct sockaddr_in * addr_src, int p
     bzero(addr_src, sizeof(struct sockaddr_in));
     addr_src->sin_family = AF_INET;
     addr_src->sin_addr.s_addr = htonl(INADDR_ANY);
-    addr_src->sin_port = htons(port);
+    addr_src->sin_port = htons(UDP_NAVDATA_DEST);
 
-    if (bind(*sock_id, (struct sockaddr *) addr_src, sizeof(* addr_src)) == -1)
+    if (bind(*sock_id, (struct sockaddr *) addr_src, sizeof(* addr_src)) != 0)
     {
         fprintf(stderr, "Echec d'association de l'adresse source au socket\n");
         return 1;
     }
 
     return 0;
-}
-
-
-int initialize_sockets()
-{
-    int result = 0;
-
-    // Initialize socket for control commands
-    result = initialize_commands_socket();
-    
-    // If succeded, initialize socket for navdata
-    if (result == 0) {
-        result = initialize_navdata_socket();
-    }
-
-    // 1 and 2 : error for first socket; 3 and 4 : error for second socket
-    // 5 : error for navdata source port
-    return result == 0 ? result : result + 2;
 }
 
 
@@ -80,7 +62,6 @@ int initialize_commands_socket()
 }
 
 
-// Open a socket on port 5554 for navdata
 int initialize_navdata_socket()
 {
     int result = 0;
@@ -93,6 +74,25 @@ int initialize_navdata_socket()
         result = initialize_socket_source(&socket_id_navdata, &addr_src_navdata, UDP_NAVDATA_DEST);
     }
 
+    return result == 0 ? result : result + 2;
+}
+
+
+// Open a socket on port 5554 for navdata
+int initialize_sockets()
+{
+    int result = 0;
+
+    // Initialize socket for control commands
+    result = initialize_commands_socket();
+    
+    // If succeded, initialize socket for navdata
+    if (result == 0) {
+        result = initialize_navdata_socket();
+    }
+
+    // 1 and 2 : error for first socket; 3 and 4 : error for second socket
+    // 5 : error for navdata source port
     return result == 0 ? result : result + 2;
 }
 

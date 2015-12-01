@@ -5,7 +5,7 @@
 #include <QThread>
 #include "com.h"
 
-
+#define S_DELAY(x) {sleep(x);}
 class CommandeGen : public QThread
 {
     Q_OBJECT

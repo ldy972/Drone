@@ -122,6 +122,7 @@ private:
 
     bool m_navdata_init;
     bool m_mission_end;
+    bool m_wdg_started;
 
     void set_m_percent(int percent=-1) ;
     void set_m_times(int times=-1) ;
