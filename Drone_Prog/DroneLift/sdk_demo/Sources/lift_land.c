@@ -11,18 +11,22 @@ DEFINE_THREAD_ROUTINE( lift_land, nomParams )
   for (i = 0; i < 10; i++) {
     ardrone_tool_set_ui_pad_start(1);
     usleep(1000);
+    printf("On décolle\n");
   }
 
   printf("YOLO\n");
+  usleep(10000000);
 
 
   // Tentative de rotation
   // TODO A faire marcher
-  for (i = 0; i < 50; i++) { 
-    ardrone_at_set_progress_cmd(0b01,0.5,0.2,1,1);
+  for (i = 0; i < 100; i++) {
+    ardrone_at_set_progress_cmd(0,0,0,0.0,1);
     usleep(30000);
+    printf("Up %d\n", i);
   }
-  ardrone_at_set_progress_cmd(0b00,0,0,0,0);
+  ardrone_at_set_progress_cmd(0,0,0,0.0,0.0);
+  printf("Stahp !\n");
 
 
   usleep(5000000);
@@ -33,5 +37,8 @@ usleep(5000000);
   // TODO Utiliser les données de navigation pour déterminer que le drone a bien aterri
     ardrone_tool_set_ui_pad_start(0);
     usleep(1000);
+    printf("Land\n");
   }
+
+  return C_OK;
 }
