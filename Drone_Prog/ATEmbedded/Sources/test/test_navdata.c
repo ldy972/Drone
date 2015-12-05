@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "com.h"
-#include "navdata.h"
-#include "debug.h"
+#include "../core/com.h"
+#include "../core/navdata.h"
+#include "../core/debug.h"
 
 
 #define SEC_DELAY(x) {sleep(x);}

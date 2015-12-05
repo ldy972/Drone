@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "com.h"
-#include "udp_sender.h"
-#include "debug.h"
+#include "../core/com.h"
+#include "../core/udp_sender.h"
+#include "../core/debug.h"
 
 
 #define SEC_DELAY(x) {sleep(x);}
