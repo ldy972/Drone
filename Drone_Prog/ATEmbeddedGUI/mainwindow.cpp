@@ -136,7 +136,7 @@ MainWindow::MainWindow(QWidget *parent) :
     nav_data_layout->addRow("Altitude : ",l_nav_altitude);
     nav_data_layout->addRow("Phi : ",l_nav_phi);
     nav_data_layout->addRow("Psi : ",l_nav_psi);
-    nav_data_layout->addRow("Theta",l_nav_theta);
+    nav_data_layout->addRow("Theta : ",l_nav_theta);
     nav_data_layout->addRow("vx : ",l_nav_vx);
     nav_data_layout->addRow("vy : ",l_nav_vy);
     nav_data_layout->addRow("vz : ",l_nav_vz);
