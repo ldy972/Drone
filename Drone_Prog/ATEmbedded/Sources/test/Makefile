@@ -9,7 +9,7 @@ OBJDIR =  $(BUILDDIR)/test
 EXECDIR = $(BUILDDIR)/Test_Exec
 TEST_EXEC =  $(patsubst %,$(EXECDIR)/%,$(EXEC))
 
-CORE =  $(wildcard $(COREDIR)/*.o)
+CORE =  $(filter-out $(COREDIR)/com2.o,$(wildcard $(COREDIR)/*.o))
 SRC = $(wildcard *.c)
 OBJS = $(patsubst %.c,$(OBJDIR)/%.o,$(SRC))
 

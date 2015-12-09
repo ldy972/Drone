@@ -1,9 +1,10 @@
 #include "navdata.h"
 
 /*******************************************************************************
- * GLOBALES VARIABLES
+ * GLOBAL VARIABLES
  * *****************************************************************************/
-nav_data_type* nav_data ;
+
+navdata_t * navdata = NULL;
 
 
 int init_connection()
@@ -15,18 +16,36 @@ int init_connection()
 int receive_nav_data()
 {
     int result = 0;
+
+    if (navdata == NULL) {
+        navdata = malloc(sizeof(navdata_t));
+    }
+
     navdata_t full_navdata;
 
-    result = recieve_navdata(&full_navdata);
+    result = recieve_navdata(navdata);
     
-    // If everything went fine, navdata is OK
-    if (result == 0) {
-        if(nav_data==NULL)
-            nav_data=(nav_data_type*)malloc(sizeof(nav_data_type));
+    unsigned int i;
+    const unsigned char * const px = (unsigned char*)&navdata;
 
-        memcpy(&(nav_data->nav_data), &(full_navdata.navdata_option), sizeof(navdata_demo_t));
-        nav_data->is_ready = 1 ;
+    printf("Dump navdata_t :\n");
+    for (i = 0; i < sizeof(navdata_t); i++) {
+        printf("%02X", px[i]);
+        if (((i+1) % 2) == 0)
+            printf(" ");
+        if (((i+1) % 12) == 0)
+            printf("\n"); 
     }
+    printf("\nDump navdata_t OK\n");
+
+    /*/ If everything went fine, navdata is OK
+    if (result == 0) {
+        if ( == NULL) {
+            fprintf(stderr, "Navdata copy error");
+            return 1;
+        }
+        nav_data->is_ready = 1 ;
+    }*/
 
     return result;
 }
@@ -37,10 +56,10 @@ int close_connection()
     return close_navdata_socket();
 }
 
-int duplicate(nav_data_type* navdata){
+/*int duplicate(nav_data_type* navdata){
     if(navdata==NULL)
         navdata=(nav_data_type*)malloc(sizeof(nav_data_type));
     navdata->is_ready=0 ;
     memcpy(navdata,nav_data, sizeof(nav_data_type));
     return 0 ;
-}
+}*/

@@ -1,5 +1,10 @@
 #include "udp_sender.h"
 
+
+/******************************************************************************
+ * Global variables declarations
+ *****************************************************************************/
+
 static int socket_id_commands;
 static struct sockaddr_in addr_dest_commands;
 
@@ -7,6 +12,21 @@ static int socket_id_navdata;
 static struct sockaddr_in addr_dest_navdata;
 static struct sockaddr_in addr_src_navdata;
 
+
+/******************************************************************************
+ * Local functions protypes
+ *****************************************************************************/
+
+int initialize_target_socket(int * sock_id, struct sockaddr_in * addr_dest, int port);
+int initialize_socket_source(int * sock_id, struct sockaddr_in * addr_src, int port);
+int send_to_socket(char * message, int * sock_id, struct sockaddr_in * addr_dest);
+int close_socket(int * sock_id);
+
+
+
+/******************************************************************************
+ * UDP Sender functions declaration
+ *****************************************************************************/
 
 // Initialize the specified socket and the destiation address
 int initialize_target_socket(int * sock_id, struct sockaddr_in * addr_dest, int port)
