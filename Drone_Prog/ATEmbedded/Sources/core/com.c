@@ -110,6 +110,9 @@ char* placer_puissance(cmd_type cmd, power_percent_type percent){
 	case CMD_ACK:
 		sprintf(tmp,"%s",COMMANDE_AT_ACK);
 		break;
+	case CMD_FTRIM:
+		sprintf(tmp,"%s",COMMANDE_AT_FTRIM);
+		break;
 	}
 	return strdup(tmp) ;
 }
@@ -236,6 +239,11 @@ char* make(cmd_type trg,power_percent_type percent){
                 strcat(commande_result,placer_puissance(CMD_CLOSE_CONNEC,NULL_POWER_VALUE));
                 printf("making close commande") ;
                 break ;
+             case CMD_FTRIM :
+				strcat(commande_result,H_AT_FTRIM);
+				strcat(commande_result, numSequence);
+				strcat(commande_result,placer_puissance(CMD_FTRIM,percent));
+				break;
 		}
         //result=strdup(commande_result) ;
 	   	PRINT_LOG("Command created : %s", commande_result)
@@ -462,7 +470,15 @@ int send_ack(){
 	return manage_cmd(CMD_ACK,NULL_POWER_VALUE,0);
 }
 
-
+/**
+ * send_ftrim
+ * @arg : void
+ * @return : status 0 = OK
+ * **/
+int send_ftrim(){
+	ENTER_FCT()
+	return manage_cmd(CMD_FTRIM,NULL_POWER_VALUE,0);
+}
 /**
  * initialize_connection_with_drone : Opens the sockets and triggers navdata sending by the drone
  * @arg : void
@@ -503,7 +519,11 @@ int initialize_connection_with_drone()
             result = send_ack();
             PRINT_LOG("Ack sent");
         }
-
+		if (result == 0) {
+            PRINT_LOG("Send ftrim");
+            result = send_ftrim();
+            PRINT_LOG("Ack ftrim");
+        }
         // Close navdata socket
         if (result == 0) {
             PRINT_LOG("Close nav");

@@ -43,6 +43,7 @@ extern "C" {
 #define COMMANDE_AT_GET_NAV_DATA ",\"general:navdata_demo\",\"TRUE\"\r"
 #define COMMANDE_AT_WATCHDOG "\r"
 #define COMMANDE_AT_ACK ",0\r"
+#define COMMANDE_AT_FTRIM "\r"
 
 /***********************************************************************
  * HEADER AT defines
@@ -76,7 +77,8 @@ extern "C" {
 	 CMD_CONFIG,
 	 CMD_CLOSE_CONNEC,
 	 CMD_WATCHDOG,
-	 CMD_ACK
+	 CMD_ACK,
+	 CMD_FTRIM
 } cmd_type ;
 
 /***********************************************************************
@@ -108,6 +110,7 @@ typedef enum power_percent_type{
 int initialize_connection_with_drone();
 int send_navdata_config();
 int send_ack();
+int send_ftrim();
 
 int taking_off_AT() ;
 int landing_AT() ;

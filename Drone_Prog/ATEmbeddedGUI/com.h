@@ -17,7 +17,6 @@ extern "C" {
  * *********************************************************************/
 #define NB_ESSAI_UDP 1
 #define DELAY(x) {usleep(x);}
-#define S_DELAY(x) {sleep(x);}
 #define POWER_P_SIZE 10	 
 #define TAILLE_COMMANDE 100
 #define NAVDATA_INIT_MSG "\x01\x00"

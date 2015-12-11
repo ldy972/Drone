@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "udp_sender.h"
+#include "../core/udp_sender.h"
 
 
 int main ()
 {
-    printf("Testing UDP_sender for IP adress: %s and port: %d\n", IP_ADRESS, UDP_PORT);
+    printf("Testing UDP_sender for IP adress: %s and port: %d\n", IP_ADRESS, UDP_COMMANDS_PORT);
 
     printf("Opening socket\n");
-    if (initialize_socket() != 0)
+    if (initialize_commands_socket() != 0)
     {
         printf("Fail INIT\n");
         return 1;
@@ -33,7 +33,7 @@ int main ()
     }
 
     printf("Closing socket\n");
-    if (close_socket() != 0)
+    if (close_commands_socket() != 0)
     {
         printf("Fail INIT\n");
         return 3;

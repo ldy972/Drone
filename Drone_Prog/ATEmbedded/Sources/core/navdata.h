@@ -38,8 +38,10 @@ int close_connection();
  * @param navdata
  * @return
  */
-int duplicate(nav_data_type* navdata);
+//int duplicate(nav_data_type* navdata);
+
 #endif //NAVDATA_H
+
 #ifdef __cplusplus
 }
 #endif

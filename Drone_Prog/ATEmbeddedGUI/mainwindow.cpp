@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_acceuil = 0 ;
     m_mission_end = true ;
     m_navdata_init = false;
+    m_wdg_started = false ;
 
     /***********************************************************************
      * Private Button
@@ -51,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     e_num_times = new QSpinBox() ;
     e_num_times->setMinimum(0);
     e_num_times->setMaximum(100);
-    e_num_times->setValue(20);
+    e_num_times->setValue(2);
 
     cb_nav_data = new QCheckBox ;
 
@@ -135,7 +136,7 @@ MainWindow::MainWindow(QWidget *parent) :
     nav_data_layout->addRow("Altitude : ",l_nav_altitude);
     nav_data_layout->addRow("Phi : ",l_nav_phi);
     nav_data_layout->addRow("Psi : ",l_nav_psi);
-    nav_data_layout->addRow("Theta",l_nav_theta);
+    nav_data_layout->addRow("Theta : ",l_nav_theta);
     nav_data_layout->addRow("vx : ",l_nav_vx);
     nav_data_layout->addRow("vy : ",l_nav_vy);
     nav_data_layout->addRow("vz : ",l_nav_vz);
@@ -154,7 +155,6 @@ MainWindow::MainWindow(QWidget *parent) :
     zone->setLayout(background_layout);
     setCentralWidget(zone);
     zoneAcceuil->show();
-    t_manage_wdg->start();
     s_navdata=NULL;
 
     /***********************************************************************
@@ -178,7 +178,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(b_mission,SIGNAL(clicked()),this,SLOT(process_mission())) ;
     QObject::connect(cb_nav_data,SIGNAL(toggled(bool)),this,SLOT(process_nav_data(bool)))  ;
     QObject::connect(t_manage_wdg, SIGNAL(resultReady(int)), this, SLOT(handle_wdg(int)));
-    QObject::connect(t_nav_data_receiver,SIGNAL(copy_nav_data()),this,SLOT(handle_nav_data()));
+    //QObject::connect(t_nav_data_receiver,SIGNAL(copy_nav_data()),this,SLOT(handle_nav_data()));
     QObject::connect(t_gestion_commande,SIGNAL(end_of_mission()),this,SLOT(handle_mission()));
 }
 
@@ -286,6 +286,8 @@ void MainWindow::process_init(){
     m_navdata_init=true ;
     t_nav_data_receiver->init_navdata();
     t_nav_data_receiver->start();
+    m_wdg_started=true;
+    t_manage_wdg->start();
 }
 
 /**
@@ -307,6 +309,10 @@ void MainWindow::process_layout(){
     }
 }
 
+
+/************************************************************************
+ * Handler
+ * **********************************************************************/
 void MainWindow::handle_wdg(int value){
     l_wdg->setText(QString::number(value));
     t_manage_wdg->start();
@@ -352,14 +358,16 @@ int MainWindow::get_status_value(){
 }
 
 void MainWindow::display_nav_data(){
-    l_nav_altitude->setText(QString(s_navdata->nav_data.altitude));
-    l_nav_phi->setNum(s_navdata->nav_data.phi);
-    l_nav_psi->setNum(s_navdata->nav_data.psi);
-    l_nav_theta->setNum(s_navdata->nav_data.theta);
+    if(s_navdata!=NULL){
+        l_nav_altitude->setNum(s_navdata->nav_data.altitude);
+        l_nav_phi->setNum(s_navdata->nav_data.phi);
+        l_nav_psi->setNum(s_navdata->nav_data.psi);
+        l_nav_theta->setNum(s_navdata->nav_data.theta);
 
-    l_nav_vx->setNum(s_navdata->nav_data.vx);
-    l_nav_vy->setNum(s_navdata->nav_data.vy);
-    l_nav_vz->setNum(s_navdata->nav_data.vz);
+        l_nav_vx->setNum(s_navdata->nav_data.vx);
+        l_nav_vy->setNum(s_navdata->nav_data.vy);
+        l_nav_vz->setNum(s_navdata->nav_data.vz);
+    }
 }
 
 

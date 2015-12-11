@@ -1,6 +1,8 @@
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 #ifndef UDP_SENDER_H
 #define UDP_SENDER_H
@@ -22,7 +24,7 @@ extern "C" {
 #endif
 #define UDP_COMMANDS_PORT   5556
 #define UDP_NAVDATA_PORT    5554
-#define UDP_NAVDATA_DEST    5560
+#define UDP_NAVDATA_DEST    35666
 #define MAX_BUF_LEN 1024
 
 // Open both sockets
@@ -53,6 +55,7 @@ int close_commands_socket();
 int close_navdata_socket();
 
 #endif //UDP_SENDER_H
+
 #ifdef __cplusplus
 }
 #endif

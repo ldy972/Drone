@@ -2,7 +2,7 @@
 
 Managewdg::Managewdg()
 {
-    m_test_value=0 ;
+    m_test_value = 0 ;
     timer = new QTimer ;
 
     timer->setInterval(1000);
