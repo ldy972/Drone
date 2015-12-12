@@ -133,7 +133,12 @@ int send_to_socket(char * message, int * sock_id, struct sockaddr_in * addr_dest
 
 int send_message(char* message)
 {
-    return send_to_socket(message, &socket_id_commands, &addr_dest_commands);
+    int result = 0;
+
+    result =  send_to_socket(message, &socket_id_commands, &addr_dest_commands);
+    usleep(35000);
+
+    return result;
 }
 
 int send_navdata(char* message)
@@ -143,16 +148,17 @@ int send_navdata(char* message)
 
 
 // Retrieve navdata
-int recieve_navdata(navdata_t * navdata)
+int recieve_navdata(int * navdata)
 {
-    socklen_t navdata_size = sizeof(navdata_demo_t);
+    socklen_t navdata_size = sizeof(addr_dest_navdata);
+    int result = 0;
 
-    if (recvfrom(socket_id_navdata, navdata, sizeof(navdata_t), 0, (struct sockaddr *) &addr_dest_navdata, &navdata_size) == 0) {
+    result = recvfrom(socket_id_navdata, navdata, sizeof(1024 * sizeof(int)), 0, (struct sockaddr *) &addr_dest_navdata, &navdata_size);
+    if (result == 0) {
         fprintf(stderr, "Erreur de réception");
-        return 1;
     }
 
-    return 0;
+    return result;
 }
 
 
