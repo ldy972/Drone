@@ -2,14 +2,28 @@
 
 /*******************************************************************************
  * GLOBAL VARIABLES
- * *****************************************************************************/
+ * ****************************************************************************/
 
-navdata_t * navdata = NULL;
+pthread_cond_t navdata_initialised = PTHREAD_COND_INITIALIZER;
+navdata_t * navdata_struct = NULL;
 
 
-int init_connection()
+int init_navdata_reception()
 {
-    return initialize_navdata_socket();
+    int result = 0;
+    result = initialize_navdata_socket();
+
+    send_navdata("\x01\x00");
+
+    result = receive_nav_data();
+
+    if (result != 0) {
+        if (navdata_struct->navdata_header.state == ARDRONE_NAVDATA_BOOTSTRAP) {
+            printf("plop\n");
+        }
+    }
+
+    return result;
 }
 
 
@@ -17,35 +31,32 @@ int receive_nav_data()
 {
     int result = 0;
 
-    if (navdata == NULL) {
-        navdata = malloc(sizeof(navdata_t));
+    if (navdata_struct == NULL) {
+        navdata_struct = malloc(sizeof(navdata_t));
     }
 
-    navdata_t full_navdata;
+    int tab_navdata[1024];
+    memset(tab_navdata, '\0', sizeof(tab_navdata)); 
 
-    result = recieve_navdata(navdata);
+    result = recieve_navdata(tab_navdata);
+    printf("Recieved %d bytes\n", result);
     
-    unsigned int i;
-    const unsigned char * const px = (unsigned char*)&navdata;
+    memcpy(navdata_struct, tab_navdata, sizeof(navdata_t));
+
+    int i;
+//    const unsigned char * const px = (unsigned char*)&navdata;
+
+    printf("Head : %X\n", navdata_struct->navdata_header.seq);
 
     printf("Dump navdata_t :\n");
-    for (i = 0; i < sizeof(navdata_t); i++) {
-        printf("%02X", px[i]);
-        if (((i+1) % 2) == 0)
-            printf(" ");
+    for (i = 0; i < result/sizeof(int); i++) {
+        printf("%X ", tab_navdata[i]);
         if (((i+1) % 12) == 0)
             printf("\n"); 
     }
     printf("\nDump navdata_t OK\n");
 
-    /*/ If everything went fine, navdata is OK
-    if (result == 0) {
-        if ( == NULL) {
-            fprintf(stderr, "Navdata copy error");
-            return 1;
-        }
-        nav_data->is_ready = 1 ;
-    }*/
+    // If everything went fine, navdata is OK
 
     return result;
 }

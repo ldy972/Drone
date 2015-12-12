@@ -7,9 +7,10 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "shared.h"
 #include "navdata_structs.h"
 #include "udp_sender.h"
-
 
 
 /**
@@ -17,7 +18,7 @@ extern "C" {
  * @arg : void
  * @return : 0 upon success
  */
-int init_connection();
+int init_navdata_reception();
 
 /**
  * receive_nav_data : Retrives a UDP packet containing navdata
