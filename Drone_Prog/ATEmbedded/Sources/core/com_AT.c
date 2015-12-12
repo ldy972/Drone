@@ -142,7 +142,7 @@ char* build_AT_CONFIG(void)
  * @arg : Pas d'options pour le moment, une seule config.
  * @return : 
  * **/
-char * build_AT_ACK(void)
+char * build_AT_CTRL()
 {
 	char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
@@ -217,6 +217,38 @@ int no_emergency_stop(void){
     free(command);
     return result;
 }
+
+int configure_navdata()
+{
+    int result;
+    char * command = build_AT_CONFIG();
+
+    result = send_message(command);
+    free(command);
+    return result;
+}
+
+int send_ack_message()
+{
+    int result;
+    char * command = build_AT_CTRL();
+
+    result = send_message(command);
+    free(command);
+    return result;
+}
+
+int trim_sensors()
+{
+    int result;
+    char * command = build_AT_FTRIM();
+
+    result = send_message(command);
+    free(command);
+    return result;
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

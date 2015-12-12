@@ -11,17 +11,42 @@ navdata_t * navdata_struct = NULL;
 int init_navdata_reception()
 {
     int result = 0;
-    result = initialize_navdata_socket();
+    int ok = 0;
+    
+    result = initialize_commands_socket();
 
-    send_navdata("\x01\x00");
+    if ( result == 0) {
+        result = initialize_navdata_socket();
+    }
 
-    result = receive_nav_data();
+    if ( result == 0) {
+        send_navdata("\x01\x00");
+    }
 
-    if (result != 0) {
-        if (navdata_struct->navdata_header.state == ARDRONE_NAVDATA_BOOTSTRAP) {
-            printf("plop\n");
+    while (!ok) {
+        result = receive_nav_data();
+
+        if (result != 0) {
+            if (navdata_struct->navdata_header.state & ARDRONE_NAVDATA_BOOTSTRAP) {
+                ok = 1;
+            }
         }
     }
+
+    configure_navdata();
+
+    while (!ok) {
+        result = receive_nav_data();
+
+        if (result != 0) {
+            if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
+                printf("Config OK\n");
+                ok = 1;
+            }
+        }
+    }
+
+    send_ack_message();
 
     return result;
 }

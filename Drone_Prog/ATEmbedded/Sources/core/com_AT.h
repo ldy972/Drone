@@ -128,6 +128,10 @@ int down(int power, int time);
 int emergency_stop(void);
 int no_emergency_stop(void);
 
+int configure_navdata();
+int send_ack_message();
+int trim_sensors();
+
 int initialize_connection_with_drone(void);
 
 

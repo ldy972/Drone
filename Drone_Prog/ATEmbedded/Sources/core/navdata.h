@@ -9,6 +9,7 @@ extern "C" {
 #include <stdlib.h>
 
 #include "shared.h"
+#include "com_AT.h"
 #include "navdata_structs.h"
 #include "udp_sender.h"
 
