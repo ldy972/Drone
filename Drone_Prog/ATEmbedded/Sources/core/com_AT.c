@@ -177,27 +177,52 @@ int land(void){
 }
 
 int reload_watchdog(void){
-	return send_message(build_AT_COMWDG());
+	int result;
+	char * command = build_AT_COMWDG();
+
+	result =  send_message(command);
+	free(command);
+	return result ;
 }
 
 // pitch
 int move_forward(power_percent power){
-	return send_message(build_AT_PCMD(1,0,power,0,0));
+	int result;
+	char * command = build_AT_PCMD(1,0,power,0,0);
+
+	result = send_message(command);
+	free(command);
+	return result;
 }
 
 // yaw
 int move_rotate(power_percent power){
-	return send_message(build_AT_PCMD(1,0,0,0,power));
+	int result;
+	char * command = build_AT_PCMD(1,0,0,0,power);
+
+	result = send_message(command);
+	free(command);
+	return result;
 }
 
 // roll : negative to translate left, positive to translate right
 int move_translate(power_percent power){
-	return send_message(build_AT_PCMD(1,power,0,0,0));
+	int result;
+	char * command = build_AT_PCMD(1,power,0,0,0);
+	
+	result = send_message(command);
+	free(command);
+	return result;
 }
 
 // gaz : positive = up, negative = down
 int move_up_down(power_percent power){
-	return send_message(build_AT_PCMD(1,0,0,power,0));
+	int result;
+	char * command = build_AT_PCMD(1,0,0,power,0);
+
+	result = send_message(command);
+	free(command);
+	return result;
 }
 
 int emergency_stop(void){
@@ -255,11 +280,21 @@ int trim_sensors()
 // ENVOI DE MESSAGES AU DRONE
 
 int send_navdata_config(void){
-	return send_message(build_AT_CONFIG());
+	int result;
+	char * command = build_AT_CONFIG();
+
+	result = send_message(command);
+	free(command);
+	return result;
 }
 
 int send_ack(void){
-	return send_message(build_AT_ACK());
+	int result;
+	char * command = built_AT_ACK();
+	
+	result = send_message(command);
+	free(command);
+	return result;	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
