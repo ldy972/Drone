@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "navdata_structs.h"
 
@@ -20,6 +21,7 @@
 #define UDP_NAVDATA_PORT    5554
 #define UDP_NAVDATA_DEST    35666
 #define MAX_BUF_LEN 1024
+
 
 // Open both sockets
 int initialize_sockets();
@@ -37,7 +39,7 @@ int send_message(char* message);
 int send_navdata(char* message);
 
 // Retrieve navdata
-int recieve_navdata(navdata_t * navdata);
+int recieve_navdata(int * navdata);
 
 // Close the sockets
 int close_sockets();
