@@ -415,12 +415,84 @@ int translate_left(int power, int time){
 
 /**
  *forward : move forward
- *@arg : speed : the speed to be reach by the drone
+ *@arg : int power, int time : power of the command, number of command to send
  *@return : status = 0 : OK
 **/
 
-int forward(int speed){
-	
+int forward(int power, int time){
+	int i = time;
+        power_percent pow;
+        switch (power){
+                case 0 : pow = NULL_POWER_VALUE; break;
+                case 5 : pow = POS_POWER_5_; break;
+                case 10 : pow = POS_POWER_10_; break;
+                case 20 : pow = POS_POWER_20_; break;
+                case 25 : pow = POS_POWER_25_; break;
+                case 50 : pow = POS_POWER_50_; break;
+                case 75 : pow = POS_POWER_75_; break;
+                case 100 : pow = POS_POWER_100_; break;
+                default : pow = NULL_POWER_VALUE; break;
+        }
 
+        while (i>=0){
+                move_forward(pow);       
+                i--;
+        }
+        return 0;
+}
 
+/**
+ *up : move up
+ *@arg : int power, int time : power of the command, number of command to send
+ *@return : status = 0 : OK
+**/
+
+int up(int power, int time){
+        int i = time;
+        power_percent pow;
+        switch (power){
+                case 0 : pow = NULL_POWER_VALUE; break;
+                case 5 : pow = POS_POWER_5_; break;
+                case 10 : pow = POS_POWER_10_; break;
+                case 20 : pow = POS_POWER_20_; break;
+                case 25 : pow = POS_POWER_25_; break;
+                case 50 : pow = POS_POWER_50_; break;
+                case 75 : pow = POS_POWER_75_; break;
+                case 100 : pow = POS_POWER_100_; break;
+                default : pow = NULL_POWER_VALUE; break;
+        }
+
+        while (i>=0){
+                move_up_down(pow);       
+                i--;
+        }
+        return 0;
+}
+
+/**
+ *down : move down
+ *@arg : int power, int time : power of the command, number of command to send
+ *@return : status = 0 : OK
+**/
+
+int down(int power, int time){
+        int i = time;
+        power_percent pow;
+        switch (power){
+                case 0 : pow = NULL_POWER_VALUE; break;
+                case 5 : pow = NEG_POWER_5_; break;
+                case 10 : pow = NEG_POWER_10_; break;
+                case 20 : pow = NEG_POWER_20_; break;
+                case 25 : pow = NEG_POWER_25_; break;
+                case 50 : pow = NEG_POWER_50_; break;
+                case 75 : pow = NEG_POWER_75_; break;
+                case 100 : pow = NEG_POWER_100_; break;
+                default : pow = NULL_POWER_VALUE; break;
+        }
+
+        while (i>=0){
+                move_up_down(pow);       
+                i--;
+        }
+        return 0;
 }

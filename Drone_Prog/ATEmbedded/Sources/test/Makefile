@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -W -Wall
-EXEC = test_udp test_AT_commands test_navdata
+EXEC = test_udp test_AT_commands2
 
 SRCDIR = ../core
 BUILDDIR = ../../Build
@@ -9,7 +9,7 @@ OBJDIR =  $(BUILDDIR)/test
 EXECDIR = $(BUILDDIR)/Test_Exec
 TEST_EXEC =  $(patsubst %,$(EXECDIR)/%,$(EXEC))
 
-CORE =  $(filter-out $(COREDIR)/com2.o,$(wildcard $(COREDIR)/*.o))
+CORE =  $(wildcard $(COREDIR)/*.o)
 SRC = $(wildcard *.c)
 OBJS = $(patsubst %.c,$(OBJDIR)/%.o,$(SRC))
 

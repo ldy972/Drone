@@ -120,7 +120,10 @@ int rotate_right(int power, int time);
 int rotate_left(int power, int time);
 int translate_right(int power, int time);
 int translate_left(int power, int time); 
-int forward(int speed);
+int forward(int power, int time);
+int up(int power, int time);
+int down(int power, int time);
+
 
 int emergency_stop(void);
 int no_emergency_stop(void);

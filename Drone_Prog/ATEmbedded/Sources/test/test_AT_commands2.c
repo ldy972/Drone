@@ -23,6 +23,9 @@ int main(void)
 	take_off(); 
     printf("Dodo Décollage\n");
     	DELAY(6000000)
+    printf("Up Up !!\n");
+    	up(power_percent,2* times);
+    	DELAY(2000000);
     printf("Rotation droite ! \n");
     	rotate_right(power_percent, times);
     printf("Dodo\n");
