@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -W -Wall
-EXEC = test_udp test_AT_commands2
+EXEC = test_udp test_AT_commands2 test_navdata
 
 SRCDIR = ../core
 BUILDDIR = ../../Build

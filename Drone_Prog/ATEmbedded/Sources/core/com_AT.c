@@ -3,12 +3,12 @@
 //#define DEBUG
 
 /*************************************************************************
-* Global Variables
-***************************************************************************/
+ * Global Variables
+ ***************************************************************************/
 char maxSeqReach=0; // incrémenté si le numéro de séquence dépasse 9999
 int16_t connectionOpen=0; // flag de connection au drone
-char *numSequence = NULL; //ascii 48 = '0'
 int numSeq=0;		  // numéro de séquence à fournir à chaque envoi de commande AT
+pthread_mutex_t mutex_seq_num = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * @overview : gestion du numéro de séquence
@@ -16,22 +16,18 @@ int numSeq=0;		  // numéro de séquence à fournir à chaque envoi de commande 
  * @return :
  * @TODO : num sequence peut être une pointeur realloc, a chaque appel
  * */
- void inc_num_sequence(void){
-     ENTER_FCT()
-     int taille = 0 ;
-     if(numSeq==9999){
-         maxSeqReach++ ;
-         numSeq=0 ;
-     }
-     if(numSequence!=NULL)
-        free(numSequence) ;
-    numSequence = (char*)calloc(5,sizeof(char)) ;
-    numSequence[4]='\0' ; // Null terminating string
-	sprintf(numSequence,"%d",++numSeq) ;
-    taille = strlen(numSequence);
-    numSequence = (char*)realloc(numSequence,taille*sizeof(char)) ;
-	EXIT_FCT()
- }
+void inc_num_sequence(void){
+    ENTER_FCT()
+    pthread_mutex_lock(&mutex_seq_num);
+    if (numSeq == 9999) {
+        maxSeqReach++ ;
+        numSeq=0 ;
+    } else {
+        numSeq++;
+    }
+    pthread_mutex_unlock(&mutex_seq_num);
+    EXIT_FCT()
+}
 
 /**
  * @overview : convertir le type power_percent en string null terminating
@@ -39,13 +35,13 @@ int numSeq=0;		  // numéro de séquence à fournir à chaque envoi de commande 
  * @return : char* la chaine de charactère correspondant à la commande voulue
  * **/
 char * convert_power(power_percent power_p){
-	 
+
     char tmp[POWER_P_SIZE+1];
-	tmp[POWER_P_SIZE] = '\0' ;
+    tmp[POWER_P_SIZE] = '\0' ;
 
-	sprintf(tmp,"%i",power_p) ;
+    sprintf(tmp,"%i",power_p) ;
 
-	return strdup(tmp) ;
+    return strdup(tmp) ;
 }
 
 /**
@@ -55,26 +51,26 @@ char * convert_power(power_percent power_p){
  * **/
 char * build_AT_REF (AT_REF_cmd cmd)
 {
-	char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
-    numSeq ++;
-	switch(cmd){
-		case REF_TAKE_OFF:
-		sprintf(returned_cmd, "%s%i,290718208\r", H_AT_REF, numSeq);
-		break;
+    inc_num_sequence();
+    switch(cmd){
+        case REF_TAKE_OFF:
+            sprintf(returned_cmd, "%s%i,290718208\r", H_AT_REF, numSeq);
+            break;
 
-		case REF_LAND:
-		sprintf(returned_cmd, "%s%i,290717696\r", H_AT_REF, numSeq);
-		break;
+        case REF_LAND:
+            sprintf(returned_cmd, "%s%i,290717696\r", H_AT_REF, numSeq);
+            break;
 
-		case REF_EMERGENCY_STOP:
-		sprintf(returned_cmd, "%s%i,290717952\r", H_AT_REF, numSeq);
-		break;
+        case REF_EMERGENCY_STOP:
+            sprintf(returned_cmd, "%s%i,290717952\r", H_AT_REF, numSeq);
+            break;
 
-		case REF_NO_EMERGENCY:
-		sprintf(returned_cmd, "%s%i,290717696\r", H_AT_REF, numSeq);
-		break;}
-	return returned_cmd;
+        case REF_NO_EMERGENCY:
+            sprintf(returned_cmd, "%s%i,290717696\r", H_AT_REF, numSeq);
+            break;}
+    return returned_cmd;
 }
 
 
@@ -85,11 +81,11 @@ char * build_AT_REF (AT_REF_cmd cmd)
  * **/
 char * build_AT_PCMD(int flag, power_percent roll, power_percent pitch, power_percent gaz, power_percent yaw)
 {
-	char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
-    numSeq++;
-	sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw);
-	return returned_cmd;
+    inc_num_sequence();
+    sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw);
+    return returned_cmd;
 }
 
 
@@ -100,11 +96,11 @@ char * build_AT_PCMD(int flag, power_percent roll, power_percent pitch, power_pe
  * **/
 char * build_AT_FTRIM()
 {
-	char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
-    numSeq++;
-	sprintf(returned_cmd, "%s%i\r",H_AT_FTRIM, numSeq);
-	return returned_cmd;
+    inc_num_sequence();
+    sprintf(returned_cmd, "%s%i\r",H_AT_FTRIM, numSeq);
+    return returned_cmd;
 }
 
 
@@ -115,11 +111,11 @@ char * build_AT_FTRIM()
  * **/
 char * build_AT_COMWDG(void)
 {
-	char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
-    numSeq++;
-	sprintf(returned_cmd, "AT*COMWDG=%i\r", numSeq);
-	return returned_cmd;
+    inc_num_sequence();
+    sprintf(returned_cmd, "AT*COMWDG=%i\r", numSeq);
+    return returned_cmd;
 }
 
 
@@ -128,13 +124,13 @@ char * build_AT_COMWDG(void)
  * @arg : Pas d'options pour le moment, une seule config.
  * @return : 
  * **/
-char* build_AT_CONFIG(void)
+char* build_AT_CONFIG(char * config)
 {
-	char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
-    numSeq++;
-	sprintf(returned_cmd, "AT*CONFIG=%i,%s", numSeq, COMMANDE_AT_GET_NAV_DATA);
-	return returned_cmd;
+    inc_num_sequence();
+    sprintf(returned_cmd, "AT*CONFIG=%i,%s\r", numSeq, config);
+    return returned_cmd;
 } 
 
 /**
@@ -144,11 +140,11 @@ char* build_AT_CONFIG(void)
  * **/
 char * build_AT_CTRL()
 {
-	char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
-    numSeq++;
-	sprintf(returned_cmd, "AT*CTRL=%d,0\r", numSeq);
-	return returned_cmd;
+    inc_num_sequence();
+    sprintf(returned_cmd, "AT*CTRL=%d,0\r", numSeq);
+    return returned_cmd;
 } 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,52 +173,52 @@ int land(void){
 }
 
 int reload_watchdog(void){
-	int result;
-	char * command = build_AT_COMWDG();
+    int result;
+    char * command = build_AT_COMWDG();
 
-	result =  send_message(command);
-	free(command);
-	return result ;
+    result =  send_message(command);
+    free(command);
+    return result ;
 }
 
 // pitch
 int move_forward(power_percent power){
-	int result;
-	char * command = build_AT_PCMD(1,0,power,0,0);
+    int result;
+    char * command = build_AT_PCMD(1,0,power,0,0);
 
-	result = send_message(command);
-	free(command);
-	return result;
+    result = send_message(command);
+    free(command);
+    return result;
 }
 
 // yaw
 int move_rotate(power_percent power){
-	int result;
-	char * command = build_AT_PCMD(1,0,0,0,power);
+    int result;
+    char * command = build_AT_PCMD(1,0,0,0,power);
 
-	result = send_message(command);
-	free(command);
-	return result;
+    result = send_message(command);
+    free(command);
+    return result;
 }
 
 // roll : negative to translate left, positive to translate right
 int move_translate(power_percent power){
-	int result;
-	char * command = build_AT_PCMD(1,power,0,0,0);
-	
-	result = send_message(command);
-	free(command);
-	return result;
+    int result;
+    char * command = build_AT_PCMD(1,power,0,0,0);
+
+    result = send_message(command);
+    free(command);
+    return result;
 }
 
 // gaz : positive = up, negative = down
 int move_up_down(power_percent power){
-	int result;
-	char * command = build_AT_PCMD(1,0,0,power,0);
+    int result;
+    char * command = build_AT_PCMD(1,0,0,power,0);
 
-	result = send_message(command);
-	free(command);
-	return result;
+    result = send_message(command);
+    free(command);
+    return result;
 }
 
 int emergency_stop(void){
@@ -246,9 +242,12 @@ int no_emergency_stop(void){
 int configure_navdata()
 {
     int result;
-    char * command = build_AT_CONFIG();
+    char * config = malloc(TAILLE_COMMANDE * sizeof(char));
+    sprintf(config, "%s", NAVDATA_DEMO_CONFIG);
+    char * command = build_AT_CONFIG(config);
 
     result = send_message(command);
+    free(config);
     free(command);
     return result;
 }
@@ -276,30 +275,6 @@ int trim_sensors()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ENVOI DE MESSAGES AU DRONE
-
-int send_navdata_config(void){
-	int result;
-	char * command = build_AT_CONFIG();
-
-	result = send_message(command);
-	free(command);
-	return result;
-}
-
-int send_ack(void){
-	int result;
-	char * command = built_AT_ACK();
-	
-	result = send_message(command);
-	free(command);
-	return result;	
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 /**
  * initialize_connection_with_drone : Opens the sockets and triggers navdata sending by the drone
@@ -310,45 +285,12 @@ int initialize_connection_with_drone(void)
 {
     ENTER_FCT()
     int result;
-    char command[MAX_BUF_LEN];
 
     PRINT_LOG("Init");
     // Open AT_Commands and navdata socket
-    result = initialize_sockets();
+    result = initialize_commands_socket();
     connectionOpen = 1;
     PRINT_LOG("Init OK");
-
-    // If both succeeded, ask the drone to send navdata
-    if (result == 0) {
-        // Send special message to navdata port
-        sprintf(command, NAVDATA_INIT_MSG);
-        PRINT_LOG("Send push");
-        result = send_navdata("\x01\x00");
-        PRINT_LOG("Push sent");
-        DELAY(40000)
-
-        // Set navdata configuration
-        if (result == 0) {
-            PRINT_LOG("Send conf");
-            send_navdata_config();
-            PRINT_LOG("Conf sent");
-            DELAY(40000)
-        }
-
-        // Send ACK
-        if (result == 0) {
-            PRINT_LOG("Send ack");
-            result = send_ack();
-            PRINT_LOG("Ack sent");
-        }
-
-        // Close navdata socket
-        if (result == 0) {
-            PRINT_LOG("Close nav");
-            result = close_navdata_socket();
-            PRINT_LOG("Close nav");
-        }
-    }
 
     EXIT_FCT();
     return result;
@@ -358,9 +300,9 @@ int initialize_connection_with_drone(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
-	Fonctions globales a utiliser par la commande finale
+   Fonctions globales a utiliser par la commande finale
 
-*/
+ */
 
 
 /**
@@ -368,28 +310,28 @@ int initialize_connection_with_drone(void)
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
  *@arg : int time : number of rotation
  *@return : status = 0 : OK 
-**/
+ **/
 
 int rotate_right(int power, int time){
-	int i = time;
-	power_percent pow;
-	switch (power){
-		case 0 : pow = NULL_POWER_VALUE; break;
-		case 5 : pow = POS_POWER_5_; break;
-		case 10 : pow = POS_POWER_10_; break;
-		case 20 : pow = POS_POWER_20_; break;
-		case 25 : pow = POS_POWER_25_; break;
-		case 50 : pow = POS_POWER_50_; break;
-		case 75 : pow = POS_POWER_75_; break;
-		case 100 : pow = POS_POWER_100_; break;
-		default : pow = NULL_POWER_VALUE; break;
-	}
-	
-	while (i>=0){
-		move_rotate(pow);	
-		i--;
-	}
-	return 0;
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = POS_POWER_5_; break;
+        case 10 : pow = POS_POWER_10_; break;
+        case 20 : pow = POS_POWER_20_; break;
+        case 25 : pow = POS_POWER_25_; break;
+        case 50 : pow = POS_POWER_50_; break;
+        case 75 : pow = POS_POWER_75_; break;
+        case 100 : pow = POS_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
+
+    while (i>=0){
+        move_rotate(pow);	
+        i--;
+    }
+    return 0;
 }
 
 /**
@@ -397,28 +339,28 @@ int rotate_right(int power, int time){
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
  *@arg : int time : number of rotation
  *@return : status = 0 : OK 
-**/
+ **/
 
 int rotate_left(int power, int time){
-        int i = time;
-        power_percent pow;
-        switch (power){
-                case 0 : pow = NULL_POWER_VALUE; break;
-                case 5 : pow = NEG_POWER_5_; break;
-                case 10 : pow = NEG_POWER_10_; break;
-                case 20 : pow = NEG_POWER_20_; break;
-                case 25 : pow = NEG_POWER_25_; break;
-                case 50 : pow = NEG_POWER_50_; break;
-                case 75 : pow = NEG_POWER_75_; break;
-                case 100 : pow = NEG_POWER_100_; break;
-                default : pow = NULL_POWER_VALUE; break;
-        }
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = NEG_POWER_5_; break;
+        case 10 : pow = NEG_POWER_10_; break;
+        case 20 : pow = NEG_POWER_20_; break;
+        case 25 : pow = NEG_POWER_25_; break;
+        case 50 : pow = NEG_POWER_50_; break;
+        case 75 : pow = NEG_POWER_75_; break;
+        case 100 : pow = NEG_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
 
-        while (i>=0){
-                move_rotate(pow);       
-                i--;
-        }
-        return 0;
+    while (i>=0){
+        move_rotate(pow);       
+        i--;
+    }
+    return 0;
 }
 
 
@@ -427,28 +369,28 @@ int rotate_left(int power, int time){
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
  *@arg : int time : number of translation
  *@return : status = 0 : OK 
-**/
+ **/
 
 int translate_right(int power, int time){
-        int i = time;
-        power_percent pow;
-        switch (power){
-                case 0 : pow = NULL_POWER_VALUE; break;
-                case 5 : pow = POS_POWER_5_; break;
-                case 10 : pow = POS_POWER_10_; break;
-                case 20 : pow = POS_POWER_20_; break;
-                case 25 : pow = POS_POWER_25_; break;
-                case 50 : pow = POS_POWER_50_; break;
-                case 75 : pow = POS_POWER_75_; break;
-                case 100 : pow = POS_POWER_100_; break;
-                default : pow = NULL_POWER_VALUE; break;
-        }
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = POS_POWER_5_; break;
+        case 10 : pow = POS_POWER_10_; break;
+        case 20 : pow = POS_POWER_20_; break;
+        case 25 : pow = POS_POWER_25_; break;
+        case 50 : pow = POS_POWER_50_; break;
+        case 75 : pow = POS_POWER_75_; break;
+        case 100 : pow = POS_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
 
-        while (i>=0){
-                move_translate(pow);       
-                i--;
-        }
-        return 0;
+    while (i>=0){
+        move_translate(pow);       
+        i--;
+    }
+    return 0;
 }
 
 /**
@@ -456,110 +398,138 @@ int translate_right(int power, int time){
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
  *@arg : int time : number of translation
  *@return : status = 0 : OK 
-**/
+ **/
 
 int translate_left(int power, int time){
-        int i = time;
-        power_percent pow;
-        switch (power){
-                case 0 : pow = NULL_POWER_VALUE; break;
-                case 5 : pow = NEG_POWER_5_; break;
-                case 10 : pow = NEG_POWER_10_; break;
-                case 20 : pow = NEG_POWER_20_; break;
-                case 25 : pow = NEG_POWER_25_; break;
-                case 50 : pow = NEG_POWER_50_; break;
-                case 75 : pow = NEG_POWER_75_; break;
-                case 100 : pow = NEG_POWER_100_; break;
-                default : pow = NULL_POWER_VALUE; break;
-        }
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = NEG_POWER_5_; break;
+        case 10 : pow = NEG_POWER_10_; break;
+        case 20 : pow = NEG_POWER_20_; break;
+        case 25 : pow = NEG_POWER_25_; break;
+        case 50 : pow = NEG_POWER_50_; break;
+        case 75 : pow = NEG_POWER_75_; break;
+        case 100 : pow = NEG_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
 
-        while (i>=0){
-                move_translate(pow);       
-                i--;
-        }
-        return 0;
+    while (i>=0){
+        move_translate(pow);       
+        i--;
+    }
+    return 0;
 }
 
 /**
  *forward : move forward
  *@arg : int power, int time : power of the command, number of command to send
  *@return : status = 0 : OK
-**/
+ **/
 
 int forward(int power, int time){
-	int i = time;
-        power_percent pow;
-        switch (power){
-                case 0 : pow = NULL_POWER_VALUE; break;
-                case 5 : pow = POS_POWER_5_; break;
-                case 10 : pow = POS_POWER_10_; break;
-                case 20 : pow = POS_POWER_20_; break;
-                case 25 : pow = POS_POWER_25_; break;
-                case 50 : pow = POS_POWER_50_; break;
-                case 75 : pow = POS_POWER_75_; break;
-                case 100 : pow = POS_POWER_100_; break;
-                default : pow = NULL_POWER_VALUE; break;
-        }
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = NEG_POWER_5_; break;
+        case 10 : pow = NEG_POWER_10_; break;
+        case 20 : pow = NEG_POWER_20_; break;
+        case 25 : pow = NEG_POWER_25_; break;
+        case 50 : pow = NEG_POWER_50_; break;
+        case 75 : pow = NEG_POWER_75_; break;
+        case 100 : pow = NEG_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
 
-        while (i>=0){
-                move_forward(pow);       
-                i--;
-        }
-        return 0;
+    while (i>=0){
+        move_forward(pow);       
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *backward : move backwards
+ *@arg : int power, int time : power of the command, number of command to send
+ *@return : status = 0 : OK
+ **/
+
+int backward(int power, int time){
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = POS_POWER_5_; break;
+        case 10 : pow = POS_POWER_10_; break;
+        case 20 : pow = POS_POWER_20_; break;
+        case 25 : pow = POS_POWER_25_; break;
+        case 50 : pow = POS_POWER_50_; break;
+        case 75 : pow = POS_POWER_75_; break;
+        case 100 : pow = POS_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
+
+    while (i>=0){
+        move_forward(pow);       
+        i--;
+    }
+    return 0;
 }
 
 /**
  *up : move up
  *@arg : int power, int time : power of the command, number of command to send
  *@return : status = 0 : OK
-**/
+ **/
 
 int up(int power, int time){
-        int i = time;
-        power_percent pow;
-        switch (power){
-                case 0 : pow = NULL_POWER_VALUE; break;
-                case 5 : pow = POS_POWER_5_; break;
-                case 10 : pow = POS_POWER_10_; break;
-                case 20 : pow = POS_POWER_20_; break;
-                case 25 : pow = POS_POWER_25_; break;
-                case 50 : pow = POS_POWER_50_; break;
-                case 75 : pow = POS_POWER_75_; break;
-                case 100 : pow = POS_POWER_100_; break;
-                default : pow = NULL_POWER_VALUE; break;
-        }
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = POS_POWER_5_; break;
+        case 10 : pow = POS_POWER_10_; break;
+        case 20 : pow = POS_POWER_20_; break;
+        case 25 : pow = POS_POWER_25_; break;
+        case 50 : pow = POS_POWER_50_; break;
+        case 75 : pow = POS_POWER_75_; break;
+        case 100 : pow = POS_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
 
-        while (i>=0){
-                move_up_down(pow);       
-                i--;
-        }
-        return 0;
+    while (i>=0){
+        move_up_down(pow);       
+        i--;
+    }
+    return 0;
 }
 
 /**
  *down : move down
  *@arg : int power, int time : power of the command, number of command to send
  *@return : status = 0 : OK
-**/
+ **/
 
 int down(int power, int time){
-        int i = time;
-        power_percent pow;
-        switch (power){
-                case 0 : pow = NULL_POWER_VALUE; break;
-                case 5 : pow = NEG_POWER_5_; break;
-                case 10 : pow = NEG_POWER_10_; break;
-                case 20 : pow = NEG_POWER_20_; break;
-                case 25 : pow = NEG_POWER_25_; break;
-                case 50 : pow = NEG_POWER_50_; break;
-                case 75 : pow = NEG_POWER_75_; break;
-                case 100 : pow = NEG_POWER_100_; break;
-                default : pow = NULL_POWER_VALUE; break;
-        }
+    int i = time;
+    power_percent pow;
+    switch (power){
+        case 0 : pow = NULL_POWER_VALUE; break;
+        case 5 : pow = NEG_POWER_5_; break;
+        case 10 : pow = NEG_POWER_10_; break;
+        case 20 : pow = NEG_POWER_20_; break;
+        case 25 : pow = NEG_POWER_25_; break;
+        case 50 : pow = NEG_POWER_50_; break;
+        case 75 : pow = NEG_POWER_75_; break;
+        case 100 : pow = NEG_POWER_100_; break;
+        default : pow = NULL_POWER_VALUE; break;
+    }
 
-        while (i>=0){
-                move_up_down(pow);       
-                i--;
-        }
-        return 0;
+    while (i>=0){
+        move_up_down(pow);       
+        i--;
+    }
+    return 0;
 }

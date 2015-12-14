@@ -9,8 +9,8 @@ extern "C" {
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include "shared.h"
 #include "udp_sender.h"
-#include "debug.h"
 
  /***********************************************************************
  * global defines and macro
@@ -30,22 +30,7 @@ extern "C" {
 /***********************************************************************
  * AT defines __USELESS __Examples for commande at max power
  * *********************************************************************/
-#define COMMANDE_AT_DECOLLAGE    ",290718208\r" 
-#define COMMANDE_AT_ATTERISSAGE    ",290717696\r" 
-#define COMMANDE_AT_ARRET_URGENCE    ",290717952\r"
-#define COMMANDE_AT_ANTI_ARRET_URGENCE    ",290717696\r"
-#define COMMANDE_AT_AVANT    ",1,0,-1082130432,0,0\r" 
-#define COMMANDE_AT_ARRIERE  ",1,0,1065353216,0,0\r" 
-#define COMMANDE_AT_GAUCHE   ",1,-1082130432,0,0,0\r"
-#define COMMANDE_AT_DROITE   ",1,1065353216,0,0,0\r" 
-#define COMMANDE_AT_HAUT ",1,0,0,1065353216,0\r" 
-#define COMMANDE_AT_BAS  ",1,0,0,-1082130432,0\r"
-#define COMMANDE_AT_ROTATION_GAUCHE  ",1,0,0,0,-1082130432\r" 
-#define COMMANDE_AT_ROTATION_DROITE  ",1,0,0,0,1065353216\r"
-#define COMMANDE_CLOSE_CONNEC	"end_connection"
-#define COMMANDE_AT_GET_NAV_DATA "\"general:navdata_demo\",\"TRUE\"\r"
-#define COMMANDE_AT_WATCHDOG "\r"
-#define COMMANDE_AT_ACK ",0\r"
+#define NAVDATA_DEMO_CONFIG "\"general:navdata_demo\",\"TRUE\""
 
 /***********************************************************************
  * HEADER AT defines
@@ -121,6 +106,7 @@ int rotate_left(int power, int time);
 int translate_right(int power, int time);
 int translate_left(int power, int time); 
 int forward(int power, int time);
+int backward(int power, int time);
 int up(int power, int time);
 int down(int power, int time);
 

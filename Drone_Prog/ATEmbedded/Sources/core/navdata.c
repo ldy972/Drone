@@ -5,6 +5,8 @@
  * ****************************************************************************/
 
 pthread_cond_t navdata_initialised = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutex_navdata_cond = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_navdata_struct = PTHREAD_MUTEX_INITIALIZER;
 navdata_t * navdata_struct = NULL;
 
 
@@ -24,7 +26,7 @@ int init_navdata_reception()
     }
 
     while (!ok) {
-        result = receive_nav_data();
+        result = update_navdata();
 
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_NAVDATA_BOOTSTRAP) {
@@ -35,12 +37,12 @@ int init_navdata_reception()
 
     configure_navdata();
 
+    ok = 0;
     while (!ok) {
-        result = receive_nav_data();
+        result = update_navdata();
 
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
-                printf("Config OK\n");
                 ok = 1;
             }
         }
@@ -48,38 +50,46 @@ int init_navdata_reception()
 
     send_ack_message();
 
+    ok = 0;
+    while (!ok) {
+        result = update_navdata();
+
+        if (result != 0) {
+            if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
+                ok = 1;
+            }
+        }
+    }
+
+    trim_sensors();
+
+    pthread_mutex_lock(&mutex_navdata_cond);
+    pthread_cond_signal(&navdata_initialised);
+    pthread_mutex_unlock(&mutex_navdata_cond);
+
     return result;
 }
 
 
-int receive_nav_data()
+int update_navdata()
 {
     int result = 0;
-
-    if (navdata_struct == NULL) {
-        navdata_struct = malloc(sizeof(navdata_t));
-    }
 
     int tab_navdata[1024];
     memset(tab_navdata, '\0', sizeof(tab_navdata)); 
 
     result = recieve_navdata(tab_navdata);
-    printf("Recieved %d bytes\n", result);
     
-    memcpy(navdata_struct, tab_navdata, sizeof(navdata_t));
-
-    int i;
-//    const unsigned char * const px = (unsigned char*)&navdata;
-
-    printf("Head : %X\n", navdata_struct->navdata_header.seq);
-
-    printf("Dump navdata_t :\n");
-    for (i = 0; i < result/sizeof(int); i++) {
-        printf("%X ", tab_navdata[i]);
-        if (((i+1) % 12) == 0)
-            printf("\n"); 
+    printf("[NAV] Prise mutex\n");
+    pthread_mutex_lock(&mutex_navdata_struct);
+    if (navdata_struct == NULL) {
+        navdata_struct = malloc(sizeof(navdata_t));
     }
-    printf("\nDump navdata_t OK\n");
+
+    memcpy(navdata_struct, tab_navdata, sizeof(navdata_t));
+    printf("[NAV] Relache mutex\n");
+    pthread_mutex_unlock(&mutex_navdata_struct);
+    printf("[NAV] Mutex libre\n");
 
     // If everything went fine, navdata is OK
 
@@ -89,13 +99,9 @@ int receive_nav_data()
 
 int close_connection()
 {
+    pthread_mutex_lock(&mutex_navdata_struct);
+    free(navdata_struct);
+    pthread_mutex_unlock(&mutex_navdata_struct);
     return close_navdata_socket();
 }
 
-/*int duplicate(nav_data_type* navdata){
-    if(navdata==NULL)
-        navdata=(nav_data_type*)malloc(sizeof(nav_data_type));
-    navdata->is_ready=0 ;
-    memcpy(navdata,nav_data, sizeof(nav_data_type));
-    return 0 ;
-}*/

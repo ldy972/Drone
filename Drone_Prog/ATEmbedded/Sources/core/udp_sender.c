@@ -153,7 +153,7 @@ int recieve_navdata(int * navdata)
     socklen_t navdata_size = sizeof(addr_dest_navdata);
     int result = 0;
 
-    result = recvfrom(socket_id_navdata, navdata, sizeof(1024 * sizeof(int)), 0, (struct sockaddr *) &addr_dest_navdata, &navdata_size);
+    result = recvfrom(socket_id_navdata, navdata, 1024 * sizeof(int), 0, (struct sockaddr *) &addr_dest_navdata, &navdata_size);
     if (result == 0) {
         fprintf(stderr, "Erreur de réception");
     }

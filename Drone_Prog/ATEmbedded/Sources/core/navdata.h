@@ -26,21 +26,15 @@ int init_navdata_reception();
  * @arg : nav_data_type : The structure to fill
  * @return : 0 upon success
  */
-int receive_nav_data();
+int update_navdata();
 
 /**
  * close_connection : Closes the navadata socket
  * @arg : void
  * @return : 0 upon success
  */
-int close_connection();
+int close_navdata_connection();
 
-/**
- * @brief duplicate
- * @param navdata
- * @return
- */
-//int duplicate(nav_data_type* navdata);
 
 #endif //NAVDATA_H
 
