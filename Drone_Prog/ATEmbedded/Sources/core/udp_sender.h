@@ -35,6 +35,9 @@ int initialize_navdata_socket();
 // Send the message to the defined IP adress on port 5556
 int send_message(char* message);
 
+// Send the message to the defined IP adress on port 5556
+int send_message_no_delay(char* message);
+
 // Send the message to the defined IP adress on port 5554
 int send_navdata(char* message);
 

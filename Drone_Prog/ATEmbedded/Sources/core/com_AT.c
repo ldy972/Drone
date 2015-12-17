@@ -154,12 +154,28 @@ char * build_AT_CTRL()
  * @return : 
  * **/
 
-int take_off(void){
+int send_AT_REF(AT_REF_cmd cmd){
     int result;
-    char * command = build_AT_REF(REF_TAKE_OFF);
+    char * command = build_AT_REF(cmd);
 
     result = send_message(command);
     free(command);
+    return result;
+}
+
+int take_off(void){
+    int result = 0;
+    int took_off = 0;
+
+    while (!took_off) {
+        result = send_AT_REF(REF_TAKE_OFF);
+        pthread_mutex_lock(&mutex_navdata_struct);
+        if (navdata_struct->navdata_option.altitude != 0) {
+            took_off = 1;
+        }
+        pthread_mutex_unlock(&mutex_navdata_struct);
+    }
+
     return result;
 }
 
@@ -176,7 +192,7 @@ int reload_watchdog(void){
     int result;
     char * command = build_AT_COMWDG();
 
-    result =  send_message(command);
+    result = send_message_no_delay(command);
     free(command);
     return result ;
 }

@@ -133,10 +133,18 @@ int send_to_socket(char * message, int * sock_id, struct sockaddr_in * addr_dest
 
 int send_message(char* message)
 {
+    int result = send_message_no_delay(message);
+
+    usleep(35000);
+
+    return result;
+}
+
+int send_message_no_delay(char* message)
+{
     int result = 0;
 
-    result =  send_to_socket(message, &socket_id_commands, &addr_dest_commands);
-    usleep(35000);
+    result = send_to_socket(message, &socket_id_commands, &addr_dest_commands);
 
     return result;
 }
