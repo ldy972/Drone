@@ -7,7 +7,7 @@ CFLAGS = -W -Wall -pthread -D_REENTRANT
 BUILDDIR = ../../Build
 OBJDIR = $(BUILDDIR)/core
 EXECDIR =  $(BUILDDIR)
-EXEC = $(EXECDIR)/controller
+EXEC = $(EXECDIR)/howard
 SRC = $(filter-out controller.c,$(wildcard *.c))
 OBJS = $(patsubst %.c,$(OBJDIR)/%.o,$(SRC))
 
