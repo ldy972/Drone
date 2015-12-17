@@ -97,7 +97,7 @@ int update_navdata()
 }
 
 
-int close_connection()
+int close_navdata_connection()
 {
     pthread_mutex_lock(&mutex_navdata_struct);
     free(navdata_struct);

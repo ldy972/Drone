@@ -29,43 +29,43 @@ int main()
 
     initialize_connection_with_drone();
 
-    /*pthread_create(&th_navdata, NULL, navdata_thread, NULL);
+    pthread_create(&th_navdata, NULL, navdata_thread, NULL);
 
     pthread_mutex_lock(&mutex_navdata_cond);
     pthread_cond_wait(&navdata_initialised, &mutex_navdata_cond);
     pthread_mutex_unlock(&mutex_navdata_cond);
-*/
-    result = init_navdata_reception();
+
+    /*result = init_navdata_reception();
     if (result != 0) {
         result = 1;
         printf("[NAV] Ready\n");
         // Navdata reception loop
             printf("[NAV] Update\n");
             result = update_navdata();
-    }
+    }*/
     printf("It's on\n");
-  //  sleep(5);
+    sleep(5);
 
     int took_off = 0;
     while (!took_off) {
         take_off();
-    /*    printf("[MAIN] Prise mutex\n");
+        printf("[MAIN] Prise mutex\n");
         pthread_mutex_lock(&mutex_navdata_struct);
-      */  printf("[MAIN] \t%13d:%s\n",  (int) navdata_struct->navdata_option.altitude,               "altitude");
+        printf("[MAIN] \t%13d:%s\n",  (int) navdata_struct->navdata_option.altitude,               "altitude");
         if (navdata_struct->navdata_option.altitude != 0) {
             printf("[MAIN] I believe\n");
             took_off = 1;
         }
-        /*printf("[MAIN] Relachement mutex\n");
+        printf("[MAIN] Relachement mutex\n");
         pthread_mutex_unlock(&mutex_navdata_struct);
-        sleep(1);*/
+        sleep(1);
 
-    if (result != 0) {
+    /*if (result != 0) {
         printf("[NAV] Ready\n");
         // Navdata reception loop
             printf("[NAV] Update\n");
             result = update_navdata();
-    }
+    }*/
     }
     sleep(5);
 

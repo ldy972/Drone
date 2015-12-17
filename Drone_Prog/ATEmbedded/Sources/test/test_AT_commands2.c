@@ -27,11 +27,11 @@ int main(void)
     up(power_percent, times);
     DELAY(4000000);
     printf("Rotation droite ! \n");
-    rotate_right(power_percent, 6 * times);
+    rotate_right(power_percent, 8 * times);
     printf("Dodo\n");
     DELAY(4000000)
-    //printf("Rotation gauche !\n");
-    //rotate_left(power_percent,times) ;
+    printf("Rotation gauche !\n");
+    rotate_left(power_percent,times) ;
     //printf("En avant Gingamp !\n");
     //forward(power_percent,times) ;
     printf("Dodo\n");

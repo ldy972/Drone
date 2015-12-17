@@ -4,7 +4,7 @@
 
 #include "../core/com_AT.h"
 #include "../core/navdata.h"
-#include "../core/debug.h"
+#include "../core/shared.h"
 
 
 #define SEC_DELAY(x) {sleep(x);}
@@ -18,11 +18,11 @@ int main(void)
     printf("Get navdata\n");
     int go_on = 1;
 
-    while (go_on < 25) {
+    while (go_on < 50) {
         reload_watchdog();
         //receive data 
 		printf("Navdata reset\n") ;
-        receive_nav_data();
+        update_navdata();
 		printf("Nav data received\n") ;
         // printf("decode navdata_struct %d bytes\n",sizeof(navdata_struct));
         printf("navdata_demo:\n");
@@ -41,7 +41,7 @@ int main(void)
     }
 
     printf("Close navdata socket\n");
-    close_connection();
+    close_navdata_connection();
 
     return 0;
 }

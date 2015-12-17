@@ -12,6 +12,10 @@ SRC = $(filter-out controller.c,$(wildcard *.c))
 OBJS = $(patsubst %.c,$(OBJDIR)/%.o,$(SRC))
 
 ifdef DEBUG
+    CFLAGS += -g
+endif
+
+ifdef PRINT_DEBUG
     CFLAGS += -DDEBUG
 endif
 
@@ -39,6 +43,8 @@ $(EXECDIR)/% : $(OBJDIR)/%.o $(OBJS)
 # Create each .o if the corresponding .c or .h file has been edited
 $(OBJDIR)/%.o : %.c $(wildcard %.h) shared.h
 	$(CC) $(CFLAGS) -c $< -o $@
+
+.PRECIOUS : $(OBJDIR)/%.o
 
 clean :
 	rm -rf $(OBJS)
