@@ -51,6 +51,7 @@ clean :
 
 mrproper : clean
 	rm -rf $(OBJDIR)
+	rm -rf $(EXEC)
 
 # For debug purposes : Prints a variable
 print-% : ; @echo $* = $($*)

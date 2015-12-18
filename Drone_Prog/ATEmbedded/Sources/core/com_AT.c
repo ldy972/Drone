@@ -8,7 +8,7 @@
 char maxSeqReach=0; // incrémenté si le numéro de séquence dépasse 9999
 int16_t connectionOpen=0; // flag de connection au drone
 int numSeq=0;		  // numéro de séquence à fournir à chaque envoi de commande AT
-pthread_mutex_t mutex_seq_num = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_AT_commands = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * @overview : gestion du numéro de séquence
@@ -18,14 +18,12 @@ pthread_mutex_t mutex_seq_num = PTHREAD_MUTEX_INITIALIZER;
  * */
 void inc_num_sequence(void){
     ENTER_FCT()
-    pthread_mutex_lock(&mutex_seq_num);
     if (numSeq == 9999) {
         maxSeqReach++ ;
         numSeq=0 ;
     } else {
         numSeq++;
     }
-    pthread_mutex_unlock(&mutex_seq_num);
     EXIT_FCT()
 }
 
@@ -156,9 +154,12 @@ char * build_AT_CTRL()
 
 int send_AT_REF(AT_REF_cmd cmd){
     int result;
+
+    pthread_mutex_lock(&mutex_AT_commands);
     char * command = build_AT_REF(cmd);
 
     result = send_message(command);
+    pthread_mutex_unlock(&mutex_AT_commands);
     free(command);
     return result;
 }
@@ -180,11 +181,18 @@ int take_off(void){
 }
 
 int land(void){
-    int result;
-    char * command = build_AT_REF(REF_LAND);
+    int result = 0;
+    int landed = 0;
 
-    result = send_message(command);
-    free(command);
+    while (!landed) {
+        result = send_AT_REF(REF_LAND);
+        pthread_mutex_lock(&mutex_navdata_struct);
+        if (navdata_struct->navdata_option.altitude == 0) {
+            landed = 1;
+        }
+        pthread_mutex_unlock(&mutex_navdata_struct);
+    }
+
     return result;
 }
 
@@ -197,62 +205,60 @@ int reload_watchdog(void){
     return result ;
 }
 
-// pitch
-int move_forward(power_percent power){
+int send_AT_PCMD(int flag, power_percent roll, power_percent pitch, power_percent gaz, power_percent yaw)
+{
     int result;
-    char * command = build_AT_PCMD(1,0,power,0,0);
+    char * command = build_AT_PCMD(flag, roll, pitch, gaz, yaw);
 
     result = send_message(command);
     free(command);
+    return result;
+}
+
+// pitch
+int move_forward(power_percent power){
+    int result;
+
+    result = send_AT_PCMD(1, 0, power, 0, 0);
+
     return result;
 }
 
 // yaw
 int move_rotate(power_percent power){
     int result;
-    char * command = build_AT_PCMD(1,0,0,0,power);
 
-    result = send_message(command);
-    free(command);
+    result = send_AT_PCMD(1, 0, 0, 0, power);
+
     return result;
 }
 
 // roll : negative to translate left, positive to translate right
 int move_translate(power_percent power){
     int result;
-    char * command = build_AT_PCMD(1,power,0,0,0);
 
-    result = send_message(command);
-    free(command);
+    result = send_AT_PCMD(1, power, 0, 0, 0);
+
     return result;
 }
 
 // gaz : positive = up, negative = down
 int move_up_down(power_percent power){
     int result;
-    char * command = build_AT_PCMD(1,0,0,power,0);
 
-    result = send_message(command);
-    free(command);
+    result = send_AT_PCMD(1, 0, 0, power, 0);
+
     return result;
 }
 
+// Enter and exit emergency mode
+// TODO : Maybe check Emergency mode flag in navdata state
 int emergency_stop(void){
-    int result;
-    char * command = build_AT_REF(REF_EMERGENCY_STOP);
-
-    result = send_message(command);
-    free(command);
-    return result;
+    return send_AT_REF(REF_EMERGENCY_STOP);
 }
 
 int no_emergency_stop(void){
-    int result;
-    char * command = build_AT_REF(REF_NO_EMERGENCY);
-
-    result = send_message(command);
-    free(command);
-    return result;
+    return send_AT_REF(REF_NO_EMERGENCY);
 }
 
 int configure_navdata()

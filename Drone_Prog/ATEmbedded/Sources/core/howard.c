@@ -52,14 +52,7 @@ int main()
     pthread_mutex_unlock(&mutex_navdata_cond);
 
     pthread_create(&th_watchdog, NULL, watchdog_thread, NULL);
-    /*result = init_navdata_reception();
-    if (result != 0) {
-        result = 1;
-        printf("[NAV] Ready\n");
-        // Navdata reception loop
-            printf("[NAV] Update\n");
-            result = update_navdata();
-    }*/
+
     printf("It's on\n");
     sleep(2);
 
@@ -67,17 +60,6 @@ int main()
     sleep(2);
 
     land();
-
-    /*int landed = 0;
-    while (!landed) {
-        land();
-        pthread_mutex_lock(&mutex_navdata_struct);
-        if (navdata_struct->navdata_option.altitude == 0) {
-            printf("[MAIN] I can fly\n");
-            landed = 1;
-        }
-        pthread_mutex_unlock(&mutex_navdata_struct);
-    }*/
 
     close_commands_socket();
     return 0;

@@ -24,11 +24,11 @@ extern "C" {
 /***********************************************************************
  * global variables
  * *********************************************************************/
- extern char maxSeqReach;
- extern int16_t connectionOpen;
+char maxSeqReach;
+int16_t connectionOpen;
  
 /***********************************************************************
- * AT defines __USELESS __Examples for commande at max power
+ * Navdata configuration strings
  * *********************************************************************/
 #define NAVDATA_DEMO_CONFIG "\"general:navdata_demo\",\"TRUE\""
 

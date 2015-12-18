@@ -7,7 +7,7 @@
 #include "debug.h"
 
 /******************************************************************************
- * AT_Commands socket related
+ * AT_Commands related
  *****************************************************************************/
 extern pthread_mutex_t mutex_seq_num;
  
