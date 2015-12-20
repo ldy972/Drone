@@ -14,8 +14,8 @@ Below is an overview of the structure of this project:
 ├── Makefile (not yet working)
 ├── NOTES
 └── Sources
-    ├── core
-    └── test
+├── core
+└── test
 
 The source code is in the Source directory, divided in two parts : 
     - The core directory contains the source code of ATEmbedded
