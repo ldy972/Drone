@@ -5,6 +5,7 @@ ATEmbedded is the core of our application. Its goal is to allow us to generate a
 ## Organisation
 
 Below is an overview of the structure of this project:  
+```
 .  
 ├── Build  
 │   ├── core  
@@ -16,6 +17,7 @@ Below is an overview of the structure of this project:
 └── Sources  
     ├── core  
     └── test  
+```
 
 The source code is in the Source directory, divided in two parts : 
 - The core directory contains the source code of ATEmbedded
@@ -31,7 +33,7 @@ To compile the program, run the make command from the Sources/core directory.
 To compile the tests, run the make command from the Sources/test directory.
 
 ## core detailed
-
+```
 .  
 └── Sources  
     └── core  
@@ -43,12 +45,14 @@ To compile the tests, run the make command from the Sources/test directory.
         ├── navdata_structs.h  
         ├── shared.h  
         └── udp_sender.c/h  
+```
 
 ### udp_sender:
 Communicate with the drone through UDP. Offered functionnalities:
 - creating/closing UDP sockets
 - send messages through these sockets
 - receive messages through the sockets
+
 2 UDP sockets are used:
 - port 5554, to ask for navdata and receive it
 - port 5556, to send AT commands
@@ -61,7 +65,7 @@ Create and send AT commands to the drone. Available commands:
 - AT CONFIG: Set the configuration of the drone. In our case, mostly used for navdata configuration
 - AT CTRL: Ack command. Used when establishing navdata communication
 - AT COMWG: Watchdog. The drone considers the connection lost after 2 seconds with no received message.
-- Some more coming
+- Some more coming  
 These commands are wrapped under a higher level interface, with simple functions like take_off(), turn_right()...
 Navdata are being integrated to provide easy control of the drone.
 
@@ -75,7 +79,7 @@ Provides an interface to:
 - TODO : change navdata configuration
 
 ### controller:
-NOT YET IMPLEMETED
+NOT YET IMPLEMETED  
 This will provide an algorithm to pilot the drone
 
 ### shared:
