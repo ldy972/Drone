@@ -4,22 +4,22 @@ ATEmbedded is the core of our application. Its goal is to allow us to generate a
 
 ## Organisation
 
-Below is an overview of the structure of this project:
-.
-|---Build
-|   ├── core
-|   ├── howard
-|   ├── test
-|   └── Test_Exec
-|── Makefile (not yet working)
-|── NOTES
-└── Sources
-    ├── core
-    └── test
+Below is an overview of the structure of this project:  
+.  
+├── Build  
+│   ├── core  
+│   ├── howard  
+│   ├── test  
+│   └── Test_Exec  
+├── Makefile (not yet working)  
+├── NOTES  
+└── Sources  
+    ├── core  
+    └── test  
 
 The source code is in the Source directory, divided in two parts : 
-    - The core directory contains the source code of ATEmbedded
-    - The test directory contains tests programs, for specific parts of the program. THESE MAY BECOME OUTDATED
+- The core directory contains the source code of ATEmbedded
+- The test directory contains tests programs, for specific parts of the program. THESE MAY BECOME OUTDATED
 
 The NOTES directory contains some of our notes.
 
@@ -27,22 +27,22 @@ The Build directory is created at compile time and contains the executable (howa
 
 ## Compiling
 
-To compile the program, run the make command from the Sources/core directory.
+To compile the program, run the make command from the Sources/core directory.  
 To compile the tests, run the make command from the Sources/test directory.
 
 ## core detailed
 
-.
-└── Sources
-    └── core
-        ├── com_AT.c/h
-        ├── controller.c/h
-        ├── debug.h
-        ├── howard.c
-        ├── navdata.c/h
-        ├── navdata_structs.h
-        ├── shared.h
-        └── udp_sender.c/h
+.  
+└── Sources  
+    └── core  
+        ├── com_AT.c/h  
+        ├── controller.c/h  
+        ├── debug.h  
+        ├── howard.c  
+        ├── navdata.c/h  
+        ├── navdata_structs.h  
+        ├── shared.h  
+        └── udp_sender.c/h  
 
 ### udp_sender:
 Communicate with the drone through UDP. Offered functionnalities:
