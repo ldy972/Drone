@@ -6,16 +6,16 @@ ATEmbedded is the core of our application. Its goal is to allow us to generate a
 
 Below is an overview of the structure of this project:
 .
-├── Build
-│   ├── core
-│   ├── howard
-│   ├── test
-│   └── Test_Exec
-├── Makefile (not yet working)
-├── NOTES
+|---Build
+|   ├── core
+|   ├── howard
+|   ├── test
+|   └── Test_Exec
+|── Makefile (not yet working)
+|── NOTES
 └── Sources
-├── core
-└── test
+    ├── core
+    └── test
 
 The source code is in the Source directory, divided in two parts : 
     - The core directory contains the source code of ATEmbedded
