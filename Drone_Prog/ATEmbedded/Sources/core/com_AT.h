@@ -62,23 +62,23 @@ static char H_AT_ACK[] = "AT*CTRL=";
  * *********************************************************************/
 
 // Power Percentage
-typedef enum power_percent{
-    POS_POWER_5_ = 1028443341,
-    POS_POWER_10_ = 1036831949,
-    POS_POWER_20_ = 1045220557,
-    POS_POWER_25_ = 1048576000,
-    POS_POWER_50_ = 1056964608,
-    POS_POWER_75_ = 1061158912,
-    POS_POWER_100_ = 1065353216,
-    NEG_POWER_5_ = -1119040307,
-    NEG_POWER_10_ = -1110651699,
-    NEG_POWER_20_ = -1102263091,
-    NEG_POWER_25_ = -1098907648,
-    NEG_POWER_50_ = -1090519040,
-    NEG_POWER_75_ = -1086324736,
-    NEG_POWER_100_ = -1082130432,
+typedef enum power_percentage_{
+    POS_POWER_5 = 1028443341,
+    POS_POWER_10 = 1036831949,
+    POS_POWER_20 = 1045220557,
+    POS_POWER_25 = 1048576000,
+    POS_POWER_50 = 1056964608,
+    POS_POWER_75 = 1061158912,
+    POS_POWER_100 = 1065353216,
+    NEG_POWER_5 = -1119040307,
+    NEG_POWER_10 = -1110651699,
+    NEG_POWER_20 = -1102263091,
+    NEG_POWER_25 = -1098907648,
+    NEG_POWER_50 = -1090519040,
+    NEG_POWER_75 = -1086324736,
+    NEG_POWER_100 = -1082130432,
     NULL_POWER_VALUE = 0
-} power_percent ;
+} power_percentage ;
 
 // AT*REF commands
 typedef enum {
@@ -96,10 +96,10 @@ typedef enum {
 int take_off(void);
 int land(void);
 int reload_watchdog(void);
-int move_forward(power_percent power);
-int move_rotate(power_percent power);
-int move_translate(power_percent power);
-int move_up_down(power_percent power);
+int move_forward(power_percentage power);
+int move_rotate(power_percentage power);
+int move_translate(power_percentage power);
+int move_up_down(power_percentage power);
 
 int rotate_right(int power, int time);
 int rotate_left(int power, int time);

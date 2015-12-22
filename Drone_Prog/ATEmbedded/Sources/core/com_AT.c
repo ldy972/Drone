@@ -5,7 +5,7 @@
 /*************************************************************************
  * Global Variables
  ***************************************************************************/
-char maxSeqReach=0; // incrémenté si le numéro de séquence dépasse 9999
+char maxSeqReached=0; // incrémenté si le numéro de séquence dépasse 9999
 int16_t connectionOpen=0; // flag de connection au drone
 int numSeq=0;		  // numéro de séquence à fournir à chaque envoi de commande AT
 pthread_mutex_t mutex_AT_commands = PTHREAD_MUTEX_INITIALIZER;
@@ -19,7 +19,7 @@ pthread_mutex_t mutex_AT_commands = PTHREAD_MUTEX_INITIALIZER;
 void inc_num_sequence(void){
     ENTER_FCT()
     if (numSeq == 9999) {
-        maxSeqReach++ ;
+        maxSeqReached++ ;
         numSeq=0 ;
     } else {
         numSeq++;
@@ -28,11 +28,11 @@ void inc_num_sequence(void){
 }
 
 /**
- * @overview : convertir le type power_percent en string null terminating
- * @arg : power_percent pourcentage de puissance voulu ; 
+ * @overview : convertir le type power_percentage en string null terminating
+ * @arg : power_percentage pourcentage de puissance voulu ; 
  * @return : char* la chaine de charactère correspondant à la commande voulue
  * **/
-char * convert_power(power_percent power_p){
+char * convert_power(power_percentage power_p){
 
     char tmp[POWER_P_SIZE+1];
     tmp[POWER_P_SIZE] = '\0' ;
@@ -77,7 +77,7 @@ char * build_AT_REF (AT_REF_cmd cmd)
  * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
  * @return : 
  * **/
-char * build_AT_PCMD(int flag, power_percent roll, power_percent pitch, power_percent gaz, power_percent yaw)
+char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw)
 {
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
@@ -205,7 +205,7 @@ int reload_watchdog(void){
     return result ;
 }
 
-int send_AT_PCMD(int flag, power_percent roll, power_percent pitch, power_percent gaz, power_percent yaw)
+int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw)
 {
     int result;
     char * command = build_AT_PCMD(flag, roll, pitch, gaz, yaw);
@@ -216,7 +216,7 @@ int send_AT_PCMD(int flag, power_percent roll, power_percent pitch, power_percen
 }
 
 // pitch
-int move_forward(power_percent power){
+int move_forward(power_percentage power){
     int result;
 
     result = send_AT_PCMD(1, 0, power, 0, 0);
@@ -225,7 +225,7 @@ int move_forward(power_percent power){
 }
 
 // yaw
-int move_rotate(power_percent power){
+int move_rotate(power_percentage power){
     int result;
 
     result = send_AT_PCMD(1, 0, 0, 0, power);
@@ -234,7 +234,7 @@ int move_rotate(power_percent power){
 }
 
 // roll : negative to translate left, positive to translate right
-int move_translate(power_percent power){
+int move_translate(power_percentage power){
     int result;
 
     result = send_AT_PCMD(1, power, 0, 0, 0);
@@ -243,7 +243,7 @@ int move_translate(power_percent power){
 }
 
 // gaz : positive = up, negative = down
-int move_up_down(power_percent power){
+int move_up_down(power_percentage power){
     int result;
 
     result = send_AT_PCMD(1, 0, 0, power, 0);
@@ -321,9 +321,64 @@ int initialize_connection_with_drone(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+power_percentage get_power(int power)
+{
+    power_percentage result;
+
+    switch (power) {
+    case -100:
+        result = NEG_POWER_100;
+        break;
+    case -75:
+        result = NEG_POWER_75;
+        break;
+    case -50:
+        result = NEG_POWER_50;
+        break;
+    case -25:
+        result = NEG_POWER_25;
+        break;
+    case -20:
+        result = NEG_POWER_20;
+        break;
+    case -10:
+        result = NEG_POWER_10;
+        break;
+    case -5:
+        result = NEG_POWER_5;
+        break;
+    case 5:
+        result = POS_POWER_5;
+        break;
+    case 10:
+        result = POS_POWER_10;
+        break;
+    case 20:
+        result = POS_POWER_20;
+        break;
+    case 25:
+        result = POS_POWER_25;
+        break;
+    case 50:
+        result = POS_POWER_50;
+        break;
+    case 75:
+        result = POS_POWER_75;
+        break;
+    case 100:
+        result = POS_POWER_100;
+        break;
+    default:
+        result = NULL_POWER_VALUE;
+        break;
+    }
+
+    return result;
+}
+
+
 /*
    Fonctions globales a utiliser par la commande finale
-
  */
 
 
@@ -336,18 +391,7 @@ int initialize_connection_with_drone(void)
 
 int rotate_right(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = POS_POWER_5_; break;
-        case 10 : pow = POS_POWER_10_; break;
-        case 20 : pow = POS_POWER_20_; break;
-        case 25 : pow = POS_POWER_25_; break;
-        case 50 : pow = POS_POWER_50_; break;
-        case 75 : pow = POS_POWER_75_; break;
-        case 100 : pow = POS_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(power);
 
     while (i>=0){
         move_rotate(pow);	
@@ -365,18 +409,7 @@ int rotate_right(int power, int time){
 
 int rotate_left(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = NEG_POWER_5_; break;
-        case 10 : pow = NEG_POWER_10_; break;
-        case 20 : pow = NEG_POWER_20_; break;
-        case 25 : pow = NEG_POWER_25_; break;
-        case 50 : pow = NEG_POWER_50_; break;
-        case 75 : pow = NEG_POWER_75_; break;
-        case 100 : pow = NEG_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(-power);
 
     while (i>=0){
         move_rotate(pow);       
@@ -395,18 +428,7 @@ int rotate_left(int power, int time){
 
 int translate_right(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = POS_POWER_5_; break;
-        case 10 : pow = POS_POWER_10_; break;
-        case 20 : pow = POS_POWER_20_; break;
-        case 25 : pow = POS_POWER_25_; break;
-        case 50 : pow = POS_POWER_50_; break;
-        case 75 : pow = POS_POWER_75_; break;
-        case 100 : pow = POS_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(power);
 
     while (i>=0){
         move_translate(pow);       
@@ -424,18 +446,7 @@ int translate_right(int power, int time){
 
 int translate_left(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = NEG_POWER_5_; break;
-        case 10 : pow = NEG_POWER_10_; break;
-        case 20 : pow = NEG_POWER_20_; break;
-        case 25 : pow = NEG_POWER_25_; break;
-        case 50 : pow = NEG_POWER_50_; break;
-        case 75 : pow = NEG_POWER_75_; break;
-        case 100 : pow = NEG_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(-power);
 
     while (i>=0){
         move_translate(pow);       
@@ -452,18 +463,7 @@ int translate_left(int power, int time){
 
 int forward(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = NEG_POWER_5_; break;
-        case 10 : pow = NEG_POWER_10_; break;
-        case 20 : pow = NEG_POWER_20_; break;
-        case 25 : pow = NEG_POWER_25_; break;
-        case 50 : pow = NEG_POWER_50_; break;
-        case 75 : pow = NEG_POWER_75_; break;
-        case 100 : pow = NEG_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(-power);
 
     while (i>=0){
         move_forward(pow);       
@@ -480,18 +480,7 @@ int forward(int power, int time){
 
 int backward(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = POS_POWER_5_; break;
-        case 10 : pow = POS_POWER_10_; break;
-        case 20 : pow = POS_POWER_20_; break;
-        case 25 : pow = POS_POWER_25_; break;
-        case 50 : pow = POS_POWER_50_; break;
-        case 75 : pow = POS_POWER_75_; break;
-        case 100 : pow = POS_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(power);
 
     while (i>=0){
         move_forward(pow);       
@@ -508,18 +497,7 @@ int backward(int power, int time){
 
 int up(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = POS_POWER_5_; break;
-        case 10 : pow = POS_POWER_10_; break;
-        case 20 : pow = POS_POWER_20_; break;
-        case 25 : pow = POS_POWER_25_; break;
-        case 50 : pow = POS_POWER_50_; break;
-        case 75 : pow = POS_POWER_75_; break;
-        case 100 : pow = POS_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(power);
 
     while (i>=0){
         move_up_down(pow);       
@@ -536,18 +514,7 @@ int up(int power, int time){
 
 int down(int power, int time){
     int i = time;
-    power_percent pow;
-    switch (power){
-        case 0 : pow = NULL_POWER_VALUE; break;
-        case 5 : pow = NEG_POWER_5_; break;
-        case 10 : pow = NEG_POWER_10_; break;
-        case 20 : pow = NEG_POWER_20_; break;
-        case 25 : pow = NEG_POWER_25_; break;
-        case 50 : pow = NEG_POWER_50_; break;
-        case 75 : pow = NEG_POWER_75_; break;
-        case 100 : pow = NEG_POWER_100_; break;
-        default : pow = NULL_POWER_VALUE; break;
-    }
+    power_percentage pow = get_power(-power);
 
     while (i>=0){
         move_up_down(pow);       
