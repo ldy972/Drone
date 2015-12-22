@@ -14,7 +14,6 @@ pthread_mutex_t mutex_AT_commands = PTHREAD_MUTEX_INITIALIZER;
  * @overview : gestion du numéro de séquence
  * @arg :
  * @return :
- * @TODO : num sequence peut être une pointeur realloc, a chaque appel
  * */
 void inc_num_sequence(void){
     ENTER_FCT()
@@ -122,12 +121,12 @@ char * build_AT_COMWDG(void)
  * @arg : Pas d'options pour le moment, une seule config.
  * @return : 
  * **/
-char* build_AT_CONFIG(char * config)
+char* build_AT_CONFIG(char * parameter, char * value)
 {
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*CONFIG=%i,%s\r", numSeq, config);
+    sprintf(returned_cmd, "AT*CONFIG=%i,\"%s\",\"%s\"\r", numSeq, parameter, value);
     return returned_cmd;
 } 
 
@@ -144,6 +143,16 @@ char * build_AT_CTRL()
     sprintf(returned_cmd, "AT*CTRL=%d,0\r", numSeq);
     return returned_cmd;
 } 
+
+char * build_AT_CALIB(int device_id)
+{
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+
+    inc_num_sequence();
+    sprintf(returned_cmd, "AT*CALIB=%d,%d\r", numSeq, device_id);
+    return returned_cmd;
+
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -261,16 +270,47 @@ int no_emergency_stop(void){
     return send_AT_REF(REF_NO_EMERGENCY);
 }
 
-int configure_navdata()
+
+int configure_navdata(char * parameter, char * value)
 {
     int result;
-    char * config = malloc(TAILLE_COMMANDE * sizeof(char));
-    sprintf(config, "%s", NAVDATA_DEMO_CONFIG);
-    char * command = build_AT_CONFIG(config);
+    char * command = build_AT_CONFIG(parameter, value);
 
     result = send_message(command);
-    free(config);
     free(command);
+
+    return result;
+}
+
+
+int configure_navdata_demo()
+{
+    int result;
+    char * param = malloc(TAILLE_COMMANDE * sizeof(char));
+    char * value = malloc(TAILLE_COMMANDE * sizeof(char));
+    sprintf(param, "%s", NAVDATA_DEMO_PARAM);
+    sprintf(value, "%s", NAVDATA_DEMO_VALUE);
+
+    result = configure_navdata(param, value);
+
+    free(param);
+    free(value);
+    return result;
+}
+
+int configure_navdata_magneto()
+{
+    int result;
+    char * param = malloc(TAILLE_COMMANDE * sizeof(char));
+    char * value = malloc(TAILLE_COMMANDE * sizeof(char));
+    int options = 0x01 << option_demo | 0x01 << option_magneto;
+    sprintf(param, "%s", NAVDATA_MAGNETO_PARAM);
+    sprintf(value, "%d", options);
+
+    result = configure_navdata(param, value);
+
+    free(param);
+    free(value);
     return result;
 }
 
@@ -294,6 +334,15 @@ int trim_sensors()
     return result;
 }
 
+int calibrate_magnetometer()
+{
+    int result;
+    char * command = build_AT_CALIB(0);
+
+    result = send_message(command);
+    free(command);
+    return result;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

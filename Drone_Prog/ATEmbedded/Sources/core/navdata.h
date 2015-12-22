@@ -36,39 +36,34 @@ int update_navdata();
 int close_navdata_connection();
 
 /**
- * get_altitude : Returns the current alitude of the drone
+ * get_altitude : Returns the current alitude of the drone in centimeters
  * @arg : void
  * @return : altitude field of the current navdata
  */
 int32_t get_altitude();
 
 /**
- * get_pitch : Returns the current pitch of the drone
+ * get_pitch : Returns the current pitch of the drone in degrees
  * @arg : void
- * @return : altitude field of the current navdata
+ * @return : pitch field of the current navdata
  */
-float32_t get_pitch()
+float32_t get_pitch();
 
 /**
- * get_roll: Returns the current roll of the drone
+ * get_roll: Returns the current roll of the drone in degrees
  * @arg : void
- * @return : altitude field of the current navdata
+ * @return : roll field of the current navdata
  */
-float32_t get_roll()
+float32_t get_roll();
 
 /**
- * get_roll : Returns the current roll of the drone
+ * get_roll : Returns the current roll of the drone in degrees
  * @arg : void
- * @return : altitude field of the current navdata
+ * @return : yaw field of the current navdata
  */
-float32_t get_roll()
+float32_t get_yaw();
 
-#endif //NAVDATA_H
-
-#ifdef __cplusplus
-}
-#endif
-float32_t get_yaw()
+float get_heading();
 
 #endif //NAVDATA_H
 

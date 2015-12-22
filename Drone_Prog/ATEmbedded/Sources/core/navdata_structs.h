@@ -95,6 +95,40 @@ typedef enum {
 } def_ardrone_state_mask_t;
 
 
+// Navdata options flags, used to determine which navdata should be sent by the drone
+// Retreived from navdata_keys.h file in the AR Drone SDK
+enum option_tag {
+    option_demo = 0,
+    option_time,
+    option_raw_measures,
+    option_phys_measures,
+    option_gyros_offsets,
+    option_euler_angles,
+    option_references,
+    option_trims,
+    option_rc_references,
+    option_pwm,
+    option_altitude,
+    option_vision_raw,
+    option_vision_off,
+    option_vision,
+    option_vision_perf,
+    option_trackers_send,
+    option_vision_detect,
+    option_watchdog,
+    option_adc_data_frame,
+    option_video_stream,
+    option_games,
+    option_pressure_raw,
+    option_magneto,
+    option_wind,
+    option_kalman_pressure,
+    option_hdvideo_stream,
+    option_wifi,
+    option_cks = 0xFFFF
+};
+
+
 typedef float   float32_t;
 
 // navdata header

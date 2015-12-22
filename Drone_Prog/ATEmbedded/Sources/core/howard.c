@@ -17,7 +17,6 @@ int navdata_thread()
         printf("[NAV] Ready\n");
         // Navdata reception loop
         while (result) {
-            printf("[NAV] Update\n");
             result = update_navdata();
         }
     }
@@ -59,10 +58,38 @@ int main()
     take_off();
     sleep(2);
 
+    calibrate_magnetometer();
+    sleep(5);
+
+    // Test for heading : turns a bit once a second for 5 seconds
     int i;
-    for (i = 0; i < 100; i++) {
+    for (i = 0; i < 50; i++) {
         printf("Altitude : %d\n", (int) get_altitude());
+        printf("Cap : %f\n", get_heading());
         usleep(100000);
+
+        if (i % 10 == 0) {
+            rotate_right(50, 1);
+        }
+    }
+
+    // Test for full rotation
+    // BE CAREFUL : the drone derives quite easily
+    //float32_t base_yaw = get_yaw();
+    //rotate_right(75, 10);
+    //while (abs((float) base_yaw - (float) get_yaw()) > 1.0) {
+        //rotate_right(75,1);
+    //}
+
+    // Test for altitude : goes up once every second for 5 seconds
+    for (i = 0; i < 50; i++) {
+        printf("Altitude : %d\n", (int) get_altitude());
+        printf("Cap : %f\n", get_heading());
+        usleep(100000);
+
+        if (i % 10 == 0) {
+            up(50, 1);
+        }
     }
 
     land();

@@ -35,7 +35,7 @@ int init_navdata_reception()
         }
     }
 
-    configure_navdata();
+    configure_navdata_demo();
 
     ok = 0;
     while (!ok) {
@@ -61,6 +61,8 @@ int init_navdata_reception()
         }
     }
 
+    configure_navdata_magneto();
+
     trim_sensors();
 
     pthread_mutex_lock(&mutex_navdata_cond);
@@ -80,16 +82,13 @@ int update_navdata()
 
     result = recieve_navdata(tab_navdata);
     
-    printf("[NAV] Prise mutex\n");
     pthread_mutex_lock(&mutex_navdata_struct);
     if (navdata_struct == NULL) {
         navdata_struct = malloc(sizeof(navdata_t));
     }
 
     memcpy(navdata_struct, tab_navdata, sizeof(navdata_t));
-    printf("[NAV] Relache mutex\n");
     pthread_mutex_unlock(&mutex_navdata_struct);
-    printf("[NAV] Mutex libre\n");
 
     // If everything went fine, navdata is OK
 
@@ -122,7 +121,7 @@ float32_t get_pitch()
     float32_t pitch;
 
     pthread_mutex_lock(&mutex_navdata_struct);
-    altitude = navdata_struct->navdata_option.theta;
+    pitch = navdata_struct->navdata_option.theta / 1000.0;
     pthread_mutex_unlock(&mutex_navdata_struct);
 
     return pitch;
@@ -133,7 +132,7 @@ float32_t get_roll()
     float32_t roll;
 
     pthread_mutex_lock(&mutex_navdata_struct);
-    altitude = navdata_struct->navdata_option.phi;
+    roll = navdata_struct->navdata_option.phi / 1000.0;
     pthread_mutex_unlock(&mutex_navdata_struct);
 
     return roll;
@@ -144,8 +143,19 @@ float32_t get_yaw()
     float32_t yaw;
 
     pthread_mutex_lock(&mutex_navdata_struct);
-    altitude = navdata_struct->navdata_option.psi;
+    yaw = navdata_struct->navdata_option.psi / 1000.0;
     pthread_mutex_unlock(&mutex_navdata_struct);
 
     return yaw;
+}
+
+float get_heading()
+{
+    float heading;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    heading = navdata_struct->navdata_magneto.heading_fusion_unwrapped;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return heading;
 }

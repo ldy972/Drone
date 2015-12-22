@@ -30,7 +30,9 @@ int16_t connectionOpen;
 /***********************************************************************
  * Navdata configuration strings
  * *********************************************************************/
-#define NAVDATA_DEMO_CONFIG "\"general:navdata_demo\",\"TRUE\""
+#define NAVDATA_DEMO_PARAM "general:navdata_demo"
+#define NAVDATA_DEMO_VALUE "TRUE"
+#define NAVDATA_MAGNETO_PARAM "general:navdata_option"
 
 /***********************************************************************
  * HEADER AT defines
@@ -114,9 +116,11 @@ int down(int power, int time);
 int emergency_stop(void);
 int no_emergency_stop(void);
 
-int configure_navdata();
+int configure_navdata_demo();
+int configure_navdata_magneto();
 int send_ack_message();
 int trim_sensors();
+int calibrate_magnetometer();
 
 int initialize_connection_with_drone(void);
 
