@@ -126,10 +126,49 @@ typedef struct _navdata_demo_t {
     uint32_t    num_frames;                 //!< streamed frame index  // Not used -> To integrate in video stage.
 } navdata_demo_t;
 
+
+
+typedef struct _vector31_t {
+    union {
+        float v[3];
+        struct {
+            float x;
+            float y;
+            float z;
+        };
+    };
+} vector31_t;
+
+/* @brief The magneto structure
+ */
+typedef struct _navdata_magneto_t {
+    uint16_t      tag;
+    uint16_t      size;
+
+    int16_t       mx;
+    int16_t       my;
+    int16_t       mz;
+    vector31_t    magneto_raw;       // magneto in the body frame, in mG
+    vector31_t    magneto_rectified;
+    vector31_t    magneto_offset;
+    float         heading_unwrapped;
+    float         heading_gyro_unwrapped;
+    //!< heading_fusion_unwrapped seems to provide a usable value in degrees
+    float         heading_fusion_unwrapped; /*!< Warning, the range is [0°,180+heading_unwrapped]U[-180+heading_unwrapped,0°] */
+    char          magneto_calibration_ok;
+    uint32_t      magneto_state;
+    float         magneto_radius;
+    float         error_mean;
+    float         error_var;
+
+} navdata_magneto_t;
+
+
 // navdata structure
 typedef struct _navdata_t {
-    navdata_header_t     navdata_header;    // navdata header 
-    navdata_demo_t       navdata_option;    // navdata option 
+    navdata_header_t    navdata_header;     // navdata header 
+    navdata_demo_t      navdata_option;     // navdata demo : basic information
+    navdata_magneto_t   navdata_magneto;    // navdata magneto : magnetomer information
 } navdata_t;
 
 #endif // NAVDATA_STRUCTS_H

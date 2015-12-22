@@ -59,6 +59,12 @@ int main()
     take_off();
     sleep(2);
 
+    int i;
+    for (i = 0; i < 100; i++) {
+        printf("Altitude : %d\n", (int) get_altitude());
+        usleep(100000);
+    }
+
     land();
 
     close_commands_socket();

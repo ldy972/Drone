@@ -105,3 +105,47 @@ int close_navdata_connection()
     return close_navdata_socket();
 }
 
+
+int32_t get_altitude()
+{
+    int32_t altitude;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    altitude = navdata_struct->navdata_option.altitude;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return altitude;
+}
+
+float32_t get_pitch()
+{
+    float32_t pitch;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    altitude = navdata_struct->navdata_option.theta;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return pitch;
+}
+
+float32_t get_roll()
+{
+    float32_t roll;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    altitude = navdata_struct->navdata_option.phi;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return roll;
+}
+
+float32_t get_yaw()
+{
+    float32_t yaw;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    altitude = navdata_struct->navdata_option.psi;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return yaw;
+}
