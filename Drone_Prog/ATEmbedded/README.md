@@ -71,6 +71,9 @@ Navdata are being integrated to provide easy control of the drone.
 
 ### navdata_structs:
 Definition of the structures used to store navdata.
+- navdata header : Contains the header (always 55667788), the state of the drone, the sequence number and a flag for the vision
+- navdata demo : contains the most basic data, such as battery level, angular positions (pitch, roll, yaw) in MILLIDEGREES, altitude in ?? and an estimation of linear velocities
+- navdata magneto : NOT YET USED. Information related to the magnetometer
 
 ### navdata:
 Provides an interface to:
