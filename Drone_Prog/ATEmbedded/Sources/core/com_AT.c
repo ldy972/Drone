@@ -2,13 +2,46 @@
 
 //#define DEBUG
 
-/*************************************************************************
- * Global Variables
- ***************************************************************************/
+/******************************************************************************
+ * Global Variables                                                           *
+ *****************************************************************************/
+
 char maxSeqReached=0; // incrémenté si le numéro de séquence dépasse 9999
 int16_t connectionOpen=0; // flag de connection au drone
 int numSeq=0;		  // numéro de séquence à fournir à chaque envoi de commande AT
 pthread_mutex_t mutex_AT_commands = PTHREAD_MUTEX_INITIALIZER;
+
+
+/******************************************************************************
+ * Local functions prototypes                                                 *
+ *****************************************************************************/
+
+// Misc functions
+void inc_num_sequence();
+int convert_power(float power);
+int convert_angle_to_power(float angle);
+power_percentage get_power(int power);
+
+// AT Commands builders
+char * build_AT_REF(AT_REF_cmd cmd);
+char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw);
+char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy);
+char * build_AT_FTRIM();
+char * build_AT_COMWDG();
+char * build_AT_CONFIG();
+char * build_AT_CTRL();
+char * build_AT_CALIB(int device_id);
+
+// AT Commands senders
+int send_AT_REF(AT_REF_cmd cmd);
+int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw);
+int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw);
+int configure_navdata(char * parameter, char * value);
+
+
+/******************************************************************************
+ * Local functions declarations : Misc                                        *
+ *****************************************************************************/
 
 /**
  * @overview : gestion du numéro de séquence
@@ -26,20 +59,85 @@ void inc_num_sequence(void){
     EXIT_FCT()
 }
 
-/**
- * @overview : convertir le type power_percentage en string null terminating
- * @arg : power_percentage pourcentage de puissance voulu ; 
- * @return : char* la chaine de charactère correspondant à la commande voulue
- * **/
-char * convert_power(power_percentage power_p){
-
-    char tmp[POWER_P_SIZE+1];
-    tmp[POWER_P_SIZE] = '\0' ;
-
-    sprintf(tmp,"%i",power_p) ;
-
-    return strdup(tmp) ;
+// Converts a float value in range [-1.0;1.0] to the corresponding value for AT commands
+int convert_power(float power)
+{
+    if (abs(power) > 1.0)
+    {
+        // Invalid input, set result to 0
+        return 0;
+    } else {
+        // Get the content of power, interpreted as an int instead of a float
+        return *(int *) (&power);
+    }
 }
+
+
+// Converts an angle in range [-180°;180°] to the corresponding value for AT commands
+int convert_angle_to_power(float angle)
+{
+    return convert_power(angle / 180.0);
+}
+
+// Converts a power value between -100 and 100 t the corresponding power percentage
+power_percentage get_power(int power)
+{
+    power_percentage result;
+
+    switch (power) {
+    case -100:
+        result = NEG_POWER_100;
+        break;
+    case -75:
+        result = NEG_POWER_75;
+        break;
+    case -50:
+        result = NEG_POWER_50;
+        break;
+    case -25:
+        result = NEG_POWER_25;
+        break;
+    case -20:
+        result = NEG_POWER_20;
+        break;
+    case -10:
+        result = NEG_POWER_10;
+        break;
+    case -5:
+        result = NEG_POWER_5;
+        break;
+    case 5:
+        result = POS_POWER_5;
+        break;
+    case 10:
+        result = POS_POWER_10;
+        break;
+    case 20:
+        result = POS_POWER_20;
+        break;
+    case 25:
+        result = POS_POWER_25;
+        break;
+    case 50:
+        result = POS_POWER_50;
+        break;
+    case 75:
+        result = POS_POWER_75;
+        break;
+    case 100:
+        result = POS_POWER_100;
+        break;
+    default:
+        result = NULL_POWER_VALUE;
+        break;
+    }
+
+    return result;
+}
+
+/******************************************************************************
+ * Local functions declarations : AT Builders                                 *
+ *****************************************************************************/
 
 /**
  * @overview : constructeur de commandes AT*REF : decollage, aterrissage, arret d'urgence, anti-urgence
@@ -82,6 +180,21 @@ char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, po
 
     inc_num_sequence();
     sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw);
+    return returned_cmd;
+}
+
+
+/**
+ * @overview : constructeur de commandes AT*PCMD : déplacements du drone
+ * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
+ * @return : 
+ * **/
+char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy)
+{
+    char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
+
+    inc_num_sequence();
+    sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_angle_to_power(heading), convert_power(heading_accuracy));
     return returned_cmd;
 }
 
@@ -154,7 +267,11 @@ char * build_AT_CALIB(int device_id)
 
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/******************************************************************************
+ * Local functions declarations : AT Senders                                  *
+ *****************************************************************************/
+
 /**
  * @overview : commandes du drone
  * @arg : la puissance de la commande
@@ -173,46 +290,6 @@ int send_AT_REF(AT_REF_cmd cmd){
     return result;
 }
 
-int take_off(void){
-    int result = 0;
-    int took_off = 0;
-
-    while (!took_off) {
-        result = send_AT_REF(REF_TAKE_OFF);
-        pthread_mutex_lock(&mutex_navdata_struct);
-        if (navdata_struct->navdata_option.altitude != 0) {
-            took_off = 1;
-        }
-        pthread_mutex_unlock(&mutex_navdata_struct);
-    }
-
-    return result;
-}
-
-int land(void){
-    int result = 0;
-    int landed = 0;
-
-    while (!landed) {
-        result = send_AT_REF(REF_LAND);
-        pthread_mutex_lock(&mutex_navdata_struct);
-        if (navdata_struct->navdata_option.altitude == 0) {
-            landed = 1;
-        }
-        pthread_mutex_unlock(&mutex_navdata_struct);
-    }
-
-    return result;
-}
-
-int reload_watchdog(void){
-    int result;
-    char * command = build_AT_COMWDG();
-
-    result = send_message_no_delay(command);
-    free(command);
-    return result ;
-}
 
 int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw)
 {
@@ -223,6 +300,36 @@ int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_
     free(command);
     return result;
 }
+
+int send_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy)
+{
+    int result;
+    char * command = build_AT_PCMD_MAG(flag, roll, pitch, gaz, yaw, heading, heading_accuracy);
+
+    result = send_message(command);
+    free(command);
+    return result;
+}
+
+
+int configure_navdata(char * parameter, char * value)
+{
+    int result;
+    char * command = build_AT_CONFIG(parameter, value);
+
+    result = send_message(command);
+    free(command);
+
+    return result;
+}
+
+
+
+/******************************************************************************
+ * Functions declarations                                                     *
+ *****************************************************************************/
+
+// Intermediary functions
 
 // pitch
 int move_forward(power_percentage power){
@@ -260,6 +367,50 @@ int move_up_down(power_percentage power){
     return result;
 }
 
+// Taking off, landing and emregency mode
+
+/**
+ *take_off : Makes the drone take off
+ *@arg :
+ *@return : status = 0 : OK
+ **/
+int take_off(void){
+    int result = 0;
+    int took_off = 0;
+
+    while (!took_off) {
+        result = send_AT_REF(REF_TAKE_OFF);
+        pthread_mutex_lock(&mutex_navdata_struct);
+        if (navdata_struct->navdata_option.altitude != 0) {
+            took_off = 1;
+        }
+        pthread_mutex_unlock(&mutex_navdata_struct);
+    }
+
+    return result;
+}
+
+/**
+ *land : Makes the drone land
+ *@arg :
+ *@return : status = 0 : OK
+ **/
+int land(void){
+    int result = 0;
+    int landed = 0;
+
+    while (!landed) {
+        result = send_AT_REF(REF_LAND);
+        pthread_mutex_lock(&mutex_navdata_struct);
+        if (navdata_struct->navdata_option.altitude == 0) {
+            landed = 1;
+        }
+        pthread_mutex_unlock(&mutex_navdata_struct);
+    }
+
+    return result;
+}
+
 // Enter and exit emergency mode
 // TODO : Maybe check Emergency mode flag in navdata state
 int emergency_stop(void){
@@ -270,18 +421,267 @@ int no_emergency_stop(void){
     return send_AT_REF(REF_NO_EMERGENCY);
 }
 
-
-int configure_navdata(char * parameter, char * value)
-{
+/**
+ *reload_watchdog : Reloads the watchdog
+ *@arg :
+ *@return : status = 0 : OK
+ **/
+int reload_watchdog(void){
     int result;
-    char * command = build_AT_CONFIG(parameter, value);
+    char * command = build_AT_COMWDG();
 
-    result = send_message(command);
+    result = send_message_no_delay(command);
     free(command);
-
-    return result;
+    return result ;
 }
 
+
+// Classic controls
+
+/**
+ *rotate_right : rotate the drone to the right
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of rotation
+ *@return : status = 0 : OK 
+ **/
+int rotate_right(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        move_rotate(pow);	
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *rotate_left : rotate the drone to the left
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of rotation
+ *@return : status = 0 : OK 
+ **/
+int rotate_left(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(-power);
+
+    while (i>=0){
+        move_rotate(pow);       
+        i--;
+    }
+    return 0;
+}
+
+
+/**
+ *translate_right : translate the drone to the right
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of translation
+ *@return : status = 0 : OK 
+ **/
+int translate_right(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        move_translate(pow);       
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *translate_left : translate the drone to the left
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of translation
+ *@return : status = 0 : OK 
+ **/
+int translate_left(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(-power);
+
+    while (i>=0){
+        move_translate(pow);       
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *forward : move forward
+ *@arg : int power, int time : power of the command, number of command to send
+ *@return : status = 0 : OK
+ **/
+int forward(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(-power);
+
+    while (i>=0){
+        move_forward(pow);       
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *backward : move backwards
+ *@arg : int power, int time : power of the command, number of command to send
+ *@return : status = 0 : OK
+ **/
+int backward(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        move_forward(pow);       
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *up : move up
+ *@arg : int power, int time : power of the command, number of command to send
+ *@return : status = 0 : OK
+ **/
+int up(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        move_up_down(pow);       
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *down : move down
+ *@arg : int power, int time : power of the command, number of command to send
+ *@return : status = 0 : OK
+ **/
+int down(int power, int time){
+    int i = time;
+    power_percentage pow = get_power(-power);
+
+    while (i>=0){
+        move_up_down(pow);       
+        i--;
+    }
+    return 0;
+}
+
+// Controls with magnetometer
+
+/**
+ *rotate_right_mag : rotate the drone to the right
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of rotation
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK 
+ **/
+int rotate_right_mag(int power, int time, float heading){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        send_AT_PCMD_MAG(3, 0, 0, 0, pow, heading, 0.2);
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *rotate_left_mag : rotate the drone to the left
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of rotation
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK 
+ **/
+int rotate_left_mag(int power, int time, float heading){
+    int i = time;
+    power_percentage pow = get_power(-power);
+
+    while (i>=0){
+        send_AT_PCMD_MAG(3, 0, 0, 0, pow, heading, 0.2);
+        i--;
+    }
+    return 0;
+}
+
+
+/**
+ *translate_right_mag : translate the drone to the right
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of translation
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK 
+ **/
+int translate_right_mag(int power, int time, float heading){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        send_AT_PCMD_MAG(3, pow, 0, 0, 0, heading, 0.2);
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *translate_left_mag : translate the drone to the left
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of translation
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK 
+ **/
+int translate_left_mag(int power, int time, float heading){
+    int i = time;
+    power_percentage pow = get_power(-power);
+
+    while (i>=0){
+        send_AT_PCMD_MAG(3, pow, 0, 0, 0, heading, 0.2);
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *forward_mag : move forward
+ *@arg : int power, int time : power of the command, number of command to send
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK
+ **/
+int forward_mag(int power, int time, float heading){
+    int i = time;
+    power_percentage pow = get_power(-power);
+
+    while (i>=0){
+        send_AT_PCMD_MAG(3, 0, pow, 0, 0, heading, 0.2);
+        i--;
+    }
+    return 0;
+}
+
+/**
+ *backward_mag : move backwards
+ *@arg : int power, int time : power of the command, number of command to send
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK
+ **/
+int backward_mag(int power, int time, float heading){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        send_AT_PCMD_MAG(3, 0, pow, 0, 0, heading, 0.2);
+        i--;
+    }
+    return 0;
+}
+
+
+// Messages used for initialization
 
 int configure_navdata_demo()
 {
@@ -344,8 +744,6 @@ int calibrate_magnetometer()
     return result;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /**
  * initialize_connection_with_drone : Opens the sockets and triggers navdata sending by the drone
@@ -367,207 +765,3 @@ int initialize_connection_with_drone(void)
     return result;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-power_percentage get_power(int power)
-{
-    power_percentage result;
-
-    switch (power) {
-    case -100:
-        result = NEG_POWER_100;
-        break;
-    case -75:
-        result = NEG_POWER_75;
-        break;
-    case -50:
-        result = NEG_POWER_50;
-        break;
-    case -25:
-        result = NEG_POWER_25;
-        break;
-    case -20:
-        result = NEG_POWER_20;
-        break;
-    case -10:
-        result = NEG_POWER_10;
-        break;
-    case -5:
-        result = NEG_POWER_5;
-        break;
-    case 5:
-        result = POS_POWER_5;
-        break;
-    case 10:
-        result = POS_POWER_10;
-        break;
-    case 20:
-        result = POS_POWER_20;
-        break;
-    case 25:
-        result = POS_POWER_25;
-        break;
-    case 50:
-        result = POS_POWER_50;
-        break;
-    case 75:
-        result = POS_POWER_75;
-        break;
-    case 100:
-        result = POS_POWER_100;
-        break;
-    default:
-        result = NULL_POWER_VALUE;
-        break;
-    }
-
-    return result;
-}
-
-
-/*
-   Fonctions globales a utiliser par la commande finale
- */
-
-
-/**
- *rotate_right : rotate the drone to the right
- *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of rotation
- *@return : status = 0 : OK 
- **/
-
-int rotate_right(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(power);
-
-    while (i>=0){
-        move_rotate(pow);	
-        i--;
-    }
-    return 0;
-}
-
-/**
- *rotate_left : rotate the drone to the left
- *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of rotation
- *@return : status = 0 : OK 
- **/
-
-int rotate_left(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(-power);
-
-    while (i>=0){
-        move_rotate(pow);       
-        i--;
-    }
-    return 0;
-}
-
-
-/**
- *translate_right : translate the drone to the right
- *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of translation
- *@return : status = 0 : OK 
- **/
-
-int translate_right(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(power);
-
-    while (i>=0){
-        move_translate(pow);       
-        i--;
-    }
-    return 0;
-}
-
-/**
- *translate_left : translate the drone to the left
- *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of translation
- *@return : status = 0 : OK 
- **/
-
-int translate_left(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(-power);
-
-    while (i>=0){
-        move_translate(pow);       
-        i--;
-    }
-    return 0;
-}
-
-/**
- *forward : move forward
- *@arg : int power, int time : power of the command, number of command to send
- *@return : status = 0 : OK
- **/
-
-int forward(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(-power);
-
-    while (i>=0){
-        move_forward(pow);       
-        i--;
-    }
-    return 0;
-}
-
-/**
- *backward : move backwards
- *@arg : int power, int time : power of the command, number of command to send
- *@return : status = 0 : OK
- **/
-
-int backward(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(power);
-
-    while (i>=0){
-        move_forward(pow);       
-        i--;
-    }
-    return 0;
-}
-
-/**
- *up : move up
- *@arg : int power, int time : power of the command, number of command to send
- *@return : status = 0 : OK
- **/
-
-int up(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(power);
-
-    while (i>=0){
-        move_up_down(pow);       
-        i--;
-    }
-    return 0;
-}
-
-/**
- *down : move down
- *@arg : int power, int time : power of the command, number of command to send
- *@return : status = 0 : OK
- **/
-
-int down(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(-power);
-
-    while (i>=0){
-        move_up_down(pow);       
-        i--;
-    }
-    return 0;
-}

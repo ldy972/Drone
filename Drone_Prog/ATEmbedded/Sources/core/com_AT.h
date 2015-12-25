@@ -95,14 +95,22 @@ typedef enum {
  * prototypes definitions
  * *********************************************************************/
 
+// Taking off, landing and emregency mode
 int take_off(void);
 int land(void);
+int emergency_stop(void);
+int no_emergency_stop(void);
+
+// Watchdog
 int reload_watchdog(void);
+
+// Intermediary functions
 int move_forward(power_percentage power);
 int move_rotate(power_percentage power);
 int move_translate(power_percentage power);
 int move_up_down(power_percentage power);
 
+// Classic controls
 int rotate_right(int power, int time);
 int rotate_left(int power, int time);
 int translate_right(int power, int time);
@@ -112,10 +120,15 @@ int backward(int power, int time);
 int up(int power, int time);
 int down(int power, int time);
 
+// Controls with magnetometer
+int rotate_right_mag(int power, int time, float heading);
+int rotate_left_mag(int power, int time, float heading);
+int translate_right_mag(int power, int time, float heading);
+int translate_left_mag(int power, int time, float heading); 
+int forward_mag(int power, int time, float heading);
+int backward_mag(int power, int time, float heading);
 
-int emergency_stop(void);
-int no_emergency_stop(void);
-
+// Messages used for initialization
 int configure_navdata_demo();
 int configure_navdata_magneto();
 int send_ack_message();
@@ -123,7 +136,6 @@ int trim_sensors();
 int calibrate_magnetometer();
 
 int initialize_connection_with_drone(void);
-
 
 #endif // COM_H
 
