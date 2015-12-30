@@ -194,7 +194,7 @@ char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_angle_to_power(heading), convert_power(heading_accuracy));
+    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_power(heading), convert_power(heading_accuracy));
     return returned_cmd;
 }
 
@@ -306,6 +306,7 @@ int send_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, po
     int result;
     char * command = build_AT_PCMD_MAG(flag, roll, pitch, gaz, yaw, heading, heading_accuracy);
 
+    printf("Sending %s\n", command);
     result = send_message(command);
     free(command);
     return result;
@@ -585,7 +586,7 @@ int rotate_right_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, 0, 0, pow, heading, 0.2);
+        send_AT_PCMD_MAG(5, 0, 0, 0, pow, heading, 0.02);
         i--;
     }
     return 0;
@@ -603,7 +604,7 @@ int rotate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, 0, 0, pow, heading, 0.2);
+        send_AT_PCMD_MAG(5, 0, 0, 0, pow, heading, 0.02);
         i--;
     }
     return 0;
@@ -622,7 +623,7 @@ int translate_right_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, pow, 0, 0, 0, heading, 0.2);
+        send_AT_PCMD_MAG(5, pow, 0, 0, 0, heading, 0.02);
         i--;
     }
     return 0;
@@ -640,7 +641,7 @@ int translate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, pow, 0, 0, 0, heading, 0.2);
+        send_AT_PCMD_MAG(5, pow, 0, 0, 0, heading, 0.02);
         i--;
     }
     return 0;
@@ -657,7 +658,7 @@ int forward_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, pow, 0, 0, heading, 0.2);
+        send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
         i--;
     }
     return 0;
@@ -674,7 +675,7 @@ int backward_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, pow, 0, 0, heading, 0.2);
+        send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
         i--;
     }
     return 0;
