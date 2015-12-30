@@ -111,14 +111,15 @@ int move_translate(power_percentage power);
 int move_up_down(power_percentage power);
 
 // Classic controls
-int rotate_right(int power, int time);
-int rotate_left(int power, int time);
-int translate_right(int power, int time);
-int translate_left(int power, int time); 
-int forward(int power, int time);
-int backward(int power, int time);
-int up(int power, int time);
-int down(int power, int time);
+int rotate_right(int power, float aimed_angle) ;
+int rotate_left(int power, float aimed_angle) ;
+int translate_right(int power, float aimed_distance) ;
+int translate_left(int power, float aimed_distance) ;
+int forward(int power, float aimed_distance) ;
+int backward(int power, float aimed_distance) ;
+int up(int power, float aimed_height) ;
+int down(int power, float aimed_height) ;
+float GET_CURRENT_TIME() ;
 
 // Controls with magnetometer
 int rotate_right_mag(int power, int time, float heading);
