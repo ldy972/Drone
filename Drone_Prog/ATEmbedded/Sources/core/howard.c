@@ -55,7 +55,16 @@ int main()
     printf("It's on\n");
     sleep(2);
 
+ 
+	/*int i;
+	for (i=0; i<100; i++){
+		printf("Yaw : %d\n", (int)get_yaw());
+		printf("Cap : %d\n", (int)get_heading());
+		sleep(1);
+	}*/
+    float cap;
     take_off();
+    printf("First Altitude : %d\n", (int) get_altitude());
     sleep(2);
 
     calibrate_magnetometer();
@@ -73,6 +82,29 @@ int main()
         }
     }
 
+    cap = get_heading();
+    printf("\nCAP A ATTEINDRE SA MERE : %f\n", cap);
+    sleep(2);
+   
+    //On revient à la position initiale
+    for (i=0; i<50; i++){
+	printf("Cap : %f\n", get_heading());
+        usleep(100000);
+        if (i%10 == 0){
+		rotate_left(50,1);		
+	}
+    }
+	
+    sleep(3);
+
+    //On revient vers le cap
+
+    while((cap-get_heading())<0.01){
+	rotate_right(50,1);
+    }
+
+    printf("\nCAP ATTEINT SA MERE : %f\n", get_heading());
+
     // Test for full rotation
     // BE CAREFUL : the drone derives quite easily
     //float32_t base_yaw = get_yaw();
@@ -80,17 +112,6 @@ int main()
     //while (abs((float) base_yaw - (float) get_yaw()) > 1.0) {
         //rotate_right(75,1);
     //}
-
-    // Test for altitude : goes up once every second for 5 seconds
-    for (i = 0; i < 50; i++) {
-        printf("Altitude : %d\n", (int) get_altitude());
-        printf("Cap : %f\n", get_heading());
-        usleep(100000);
-
-        if (i % 10 == 0) {
-            up(50, 1);
-        }
-    }
 
     land();
 
