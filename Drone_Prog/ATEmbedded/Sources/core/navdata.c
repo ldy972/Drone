@@ -164,3 +164,37 @@ float get_heading()
 
     return heading;
 }
+
+float get_vx()
+{
+    float vx;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    vx = navdata_struct->navdata_option.vx;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return vx;
+}
+
+float get_vy()
+{
+    float vy;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    vy = navdata_struct->navdata_option.vy;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return vy;
+}
+
+float get_vz()
+{
+    float vz;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    vz = navdata_struct->navdata_option.vx;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return vz;
+}
+
