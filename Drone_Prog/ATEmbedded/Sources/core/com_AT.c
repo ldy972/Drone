@@ -511,12 +511,6 @@ int rotate_left(int power, float aimed_angle)
  *@return : status = 0 : OK
  **/
 
-float GET_CURRENT_TIME() //Simulate the system time
-{
-   return 0.0 ;
-}
-
-//TODO : récupérer un delta t en fonction de l'heure système.
 
 int translate_right(int power, float aimed_distance)
 {
@@ -653,15 +647,10 @@ int down(int power, float aimed_height)
  *@arg : float heading : the heading the drone must follow
  *@return : status = 0 : OK 
  **/
-int rotate_right_mag(int power, int time, float heading){
-    int i = time;
-    power_percentage pow = get_power(power);
-
-    while (i>=0){
-        send_AT_PCMD_MAG(5, 0, 0, 0, pow, heading, 0.02);
-        i--;
-    }
-    return 0;
+int rotate_right_mag(int power, float aimed_heading)
+{
+   ;
+    
 }
 
 /**
