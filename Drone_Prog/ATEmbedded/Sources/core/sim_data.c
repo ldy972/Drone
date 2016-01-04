@@ -3,23 +3,28 @@
 #include <stdio.h>
 #include "sim_data.h"
 
+static float* sim_cap_array=NULL;
+static int* sim_rssi_array=NULL;
 
+// LOCAL
 
 /**
  * @overview : génère un tableau contenant data_range  valeur de cap, prises tous les step degrés
  * @arg :
  * @return : pointeur sur le tableau
  * */
-float* sim_cap(void){
+void sim_cap(void){
 	int i =0;
 	int data_range = 360/step;
-	float* sim_cap_array=(float *) malloc(data_range * sizeof(float));
+	sim_cap_array=(float *) malloc(data_range * sizeof(float));
+	sim_rssi_array=(int *) malloc(data_range * sizeof(int));
+	
 
 	for (i=0; i<data_range; i++)
 		{
 			sim_cap_array[i] = ((step*i)-180)/180;
 		}
-	return sim_cap_array;
+	
 }
 
 
@@ -30,8 +35,6 @@ float* sim_cap(void){
  * */
 int sim_get_heading_pos(void){
 
-	float* sim_cap_array=(float *) malloc(data_range * sizeof(float));
-	sim_cap_array = sim_cap();
 
 	float min = 1000.0;
 	int i =0;
@@ -49,27 +52,20 @@ int sim_get_heading_pos(void){
 	return heading_pos;
 }
 
-float sim_get_heading(void){
-	float* sim_cap_array =sim_cap();
-	return sim_cap_array[sim_get_heading_pos()];
-}
-		
-
-
 /**
  * @overview : génère un tableau contenant data_range (36) mesures de rssi normalisée (0 à 100), calculée en fonction de la valeur du cap cible (-1 à 1)
  * @arg :
  * @return : pointeur sur le tableau
  * */		
-int* sim_rssi(float target){
+void sim_rssi(float target){
 
 	int max_rssi = 180;
 	int min = 1000;
 	int i,j = 0;
-	float* sim_cap_array = sim_cap();
+	
 	int size_cap_array = (sizeof(sim_cap_array)/sizeof(float));
 
-	int* sim_rssi_array=(int *) malloc(data_range * sizeof(int));
+	
 	int size_rssi_array =(sizeof(sim_rssi_array)/sizeof(int));
 	float delta;
 	
@@ -95,13 +91,34 @@ int* sim_rssi(float target){
 			sim_rssi_array[j] = max_rssi -(10*(j-i));
 		}
 
-	return sim_rssi_array;
+	
 	
 }
 
+
+// GLOBAL
+void init_simu(float target){
+	sim_cap();
+	sim_rssi(target);
+}
+
+float sim_get_heading(void){
+	
+	return sim_cap_array[sim_get_heading_pos()];
+}
+		
+
+
 int sim_get_power(void){
-	int* sim_rssi_array = sim_rssi(get_heading());
+	
 	return sim_rssi_array[sim_get_heading_pos()];
+}
+
+void close_simu(void){
+	free (sim_cap_array);
+	sim_cap_array = NULL;
+	free (sim_rssi_array);
+	sim_rssi_array = NULL;
 }
 	
 int main (void)
