@@ -206,6 +206,6 @@ float get_magneto_radius()
     radius = navdata_struct->navdata_magneto.magneto_radius;
     pthread_mutex_unlock(&mutex_navdata_struct);
 
-    return heading;
+    return radius;
 }
 
