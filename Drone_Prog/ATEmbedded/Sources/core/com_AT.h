@@ -11,6 +11,7 @@ extern "C" {
 #include <string.h>
 #include "shared.h"
 #include "udp_sender.h"
+#include "time.h"
 
  /***********************************************************************
  * global defines and macro
