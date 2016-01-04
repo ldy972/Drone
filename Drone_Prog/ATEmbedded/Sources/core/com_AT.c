@@ -1,5 +1,5 @@
 #include "com_AT.h"
-#include "navdata.h"
+
 
 //#define DEBUG
 
@@ -448,27 +448,17 @@ int reload_watchdog(void){
  *@return : status = 0 : OK 
  **/
 
-int rotate_right(int power, float aimed_angle)
+int rotate_right(int power, float aimed_angle) // aimed_angle = angle absolu que je veux atteindre
 {
-    int yaw = (int)get_yaw() ;
+    float current_angle = get_yaw() ;
     power_percentage pow = get_power(power) ;
 
-    if(aimed_angle > 0)
-    { //antitrigo
-	while(yaw<aimed_angle)
-        {
-            move_rotate(pow) ;
-            yaw = (int)get_yaw() ;
-        }
-    }
-    else
-    {
-        while(yaw>aimed_angle)
-        {
-            move_rotate(pow) ;
-            yaw = (int)get_yaw() ;
-        }
-    }
+    while(abs(aimed_angle - current_angle) >= 2.0)
+    {   
+        move_rotate(pow) ;
+        current_angle = get_yaw() ;
+    } 
+
     return 0 ;
 }
 
@@ -481,25 +471,16 @@ int rotate_right(int power, float aimed_angle)
 
 int rotate_left(int power, float aimed_angle)
 {
-    float yaw = get_yaw() ;
+    float current_angle = get_yaw() ;
     power_percentage pow = get_power(-power);
 
-    if(aimed_angle < 0)
-    { //trigo
-	while(yaw>aimed_angle)
-        {
-            move_rotate(pow) ;
-            yaw = get_yaw() ;
-        }
-    }
-    else
+    while(abs(aimed_angle-current_angle) >= 2.0)
     {
-        while(yaw<aimed_angle)
-        {
-            move_rotate(pow) ;
-            yaw = get_yaw() ;
-	}
+        move_rotate(pow) ;
+        current_angle = get_yaw() ;
     }
+
+   
     return 0 ;
 }
 

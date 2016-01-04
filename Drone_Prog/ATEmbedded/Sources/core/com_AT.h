@@ -12,6 +12,8 @@ extern "C" {
 #include "shared.h"
 #include "udp_sender.h"
 #include "time.h"
+#include "math.h"
+#include "navdata.h"
 
  /***********************************************************************
  * global defines and macro
@@ -120,7 +122,6 @@ int forward(int power, float aimed_distance) ;
 int backward(int power, float aimed_distance) ;
 int up(int power, float aimed_height) ;
 int down(int power, float aimed_height) ;
-float GET_CURRENT_TIME() ;
 
 // Controls with magnetometer
 int rotate_right_mag(int power, int time, float heading);
