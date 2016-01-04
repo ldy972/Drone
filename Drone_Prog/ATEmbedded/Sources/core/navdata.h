@@ -63,7 +63,30 @@ float32_t get_roll();
  */
 float32_t get_yaw();
 
+/**
+ * get_vx : Returns the current estimated linear velocity on axis x
+ * @arg : void
+ * @return : vx field of the current navdata
+ */
+float32_t get_vx() ;
+
+/**
+ * get_vy : Returns the current estimated linear velocity on axis y
+ * @arg : void
+ * @return : vy field of the current navdata
+ */
+float32_t get_vy() ;
+
+/**
+ * get_vz : Returns the current estimated linear velocity on axis z
+ * @arg : void
+ * @return : vz field of the current navdata
+ */
+float32_t get_vz() ;
+
 float get_heading();
+
+float get_magneto_radius();
 
 #endif //NAVDATA_H
 

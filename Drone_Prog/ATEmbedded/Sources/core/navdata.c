@@ -19,10 +19,12 @@ int init_navdata_reception()
 
     if ( result == 0) {
         result = initialize_navdata_socket();
+        //printf("[NAV] Navdata socket ok\n");
     }
 
     if ( result == 0) {
         send_navdata("\x01\x00");
+        //printf("[NAV] Navdata flag sent\n");
     }
 
     while (!ok) {
@@ -31,6 +33,7 @@ int init_navdata_reception()
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_NAVDATA_BOOTSTRAP) {
                 ok = 1;
+                //printf("[NAV] Bootstrap\n");
             }
         }
     }
@@ -44,6 +47,7 @@ int init_navdata_reception()
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
                 ok = 1;
+                //printf("[NAV] Conf OK\n");
             }
         }
     }
@@ -57,6 +61,7 @@ int init_navdata_reception()
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
                 ok = 1;
+                //printf("[NAV] Ack\n");
             }
         }
     }
@@ -149,6 +154,39 @@ float32_t get_yaw()
     return yaw;
 }
 
+float get_vx()
+{
+    float vx;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    vx = navdata_struct->navdata_option.vx;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return vx;
+}
+
+float get_vy()
+{
+    float vy;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    vy = navdata_struct->navdata_option.vy;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return vy;
+}
+
+float get_vz()
+{
+    float vz;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    vz = navdata_struct->navdata_option.vx;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return vz;
+}
+
 float get_heading()
 {
     float heading;
@@ -159,3 +197,15 @@ float get_heading()
 
     return heading;
 }
+
+float get_magneto_radius()
+{
+    float radius;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    radius = navdata_struct->navdata_magneto.magneto_radius;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return heading;
+}
+

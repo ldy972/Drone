@@ -1,4 +1,5 @@
-#include "com_AT.h"
+get_magneto_radius()#include "com_AT.h"
+#include "navdata.h"
 
 //#define DEBUG
 
@@ -142,7 +143,7 @@ power_percentage get_power(int power)
 /**
  * @overview : constructeur de commandes AT*REF : decollage, aterrissage, arret d'urgence, anti-urgence
  * @arg : la commande AT_REF utilisée
- * @return : 
+ * @return :
  * **/
 char * build_AT_REF (AT_REF_cmd cmd)
 {
@@ -172,7 +173,7 @@ char * build_AT_REF (AT_REF_cmd cmd)
 /**
  * @overview : constructeur de commandes AT*PCMD : déplacements du drone
  * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
- * @return : 
+ * @return :
  * **/
 char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw)
 {
@@ -187,22 +188,22 @@ char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, po
 /**
  * @overview : constructeur de commandes AT*PCMD : déplacements du drone
  * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
- * @return : 
+ * @return :
  * **/
 char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy)
 {
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_angle_to_power(heading), convert_power(heading_accuracy));
+    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_power(heading), convert_power(heading_accuracy));
     return returned_cmd;
 }
 
 
 /**
  * @overview : constructeur de commandes AT*FTRIM : calibrage du drone
- * @arg : 
- * @return : 
+ * @arg :
+ * @return :
  * **/
 char * build_AT_FTRIM()
 {
@@ -216,8 +217,8 @@ char * build_AT_FTRIM()
 
 /**
  * @overview : constructeur de commandes AT*COMWDG : reload du watchdog
- * @arg : 
- * @return : 
+ * @arg :
+ * @return :
  * **/
 char * build_AT_COMWDG(void)
 {
@@ -232,7 +233,7 @@ char * build_AT_COMWDG(void)
 /**
  * @overview : constructeur de commandes AT*CONFIG : configuration du drone. 
  * @arg : Pas d'options pour le moment, une seule config.
- * @return : 
+ * @return :
  * **/
 char* build_AT_CONFIG(char * parameter, char * value)
 {
@@ -241,7 +242,8 @@ char* build_AT_CONFIG(char * parameter, char * value)
     inc_num_sequence();
     sprintf(returned_cmd, "AT*CONFIG=%i,\"%s\",\"%s\"\r", numSeq, parameter, value);
     return returned_cmd;
-} 
+}
+
 
 /**
  * @overview : constructeur de commandes AT*CTRL : envoi d'un ack 
@@ -306,6 +308,7 @@ int send_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, po
     int result;
     char * command = build_AT_PCMD_MAG(flag, roll, pitch, gaz, yaw, heading, heading_accuracy);
 
+    printf("Sending %s\n", command);
     result = send_message(command);
     free(command);
     return result;
@@ -329,7 +332,7 @@ int configure_navdata(char * parameter, char * value)
  * Functions declarations                                                     *
  *****************************************************************************/
 
-// Intermediary functions
+// Intermediary functions for classic movement
 
 // pitch
 int move_forward(power_percentage power){
@@ -366,6 +369,35 @@ int move_up_down(power_percentage power){
 
     return result;
 }
+
+// Intermediary functions for movement with the magnetometer
+
+// Pitch
+int move_forward_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+    return result;
+}
+
+// Roll
+int move_translate_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, power, 0, 0, 0, heading, 0.02);
+
+    return result;
+}
+
+// Yaw
+int move_rotate_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, 0, 0, 0, power, heading, 0.02);
+
+    return result;
+}
+
 
 // Taking off, landing and emregency mode
 
@@ -441,135 +473,199 @@ int reload_watchdog(void){
 /**
  *rotate_right : rotate the drone to the right
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of rotation
+ *@arg : float aimed_angle : angle aimed to rotate
  *@return : status = 0 : OK 
  **/
-int rotate_right(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(power);
 
-    while (i>=0){
-        move_rotate(pow);	
-        i--;
+int rotate_right(int power, float aimed_angle)
+{
+    int yaw = (int)get_yaw() ;
+    power_percentage pow = get_power(power) ;
+
+    if(aimed_angle > 0)
+    { //antitrigo
+	while(yaw<aimed_angle)
+        {
+            move_rotate(pow) ;
+            yaw = (int)get_yaw() ;
+        }
     }
-    return 0;
+    else
+    {
+        while(yaw>aimed_angle)
+        {
+            move_rotate(pow) ;
+            yaw = (int)get_yaw() ;
+        }
+    }
+    return 0 ;
 }
 
 /**
  *rotate_left : rotate the drone to the left
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of rotation
- *@return : status = 0 : OK 
+ *@arg : float aimed_angle : angle aimed to rotate
+ *@return : status = 0 : OK
  **/
-int rotate_left(int power, int time){
-    int i = time;
+
+int rotate_left(int power, float aimed_angle)
+{
+    float yaw = get_yaw() ;
     power_percentage pow = get_power(-power);
 
-    while (i>=0){
-        move_rotate(pow);       
-        i--;
+    if(aimed_angle < 0)
+    { //trigo
+	while(yaw>aimed_angle)
+        {
+            move_rotate(pow) ;
+            yaw = get_yaw() ;
+        }
     }
-    return 0;
+    else
+    {
+        while(yaw<aimed_angle)
+        {
+            move_rotate(pow) ;
+            yaw = get_yaw() ;
+	}
+    }
+    return 0 ;
 }
 
 
 /**
  *translate_right : translate the drone to the right
- *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of translation
- *@return : status = 0 : OK 
+ *@arg : int power : power of the command (0,5,10,20,25,50,75,100)
+ *@arg : float aimed_distance : distance wanted to translate
+ *@return : status = 0 : OK
  **/
-int translate_right(int power, int time){
-    int i = time;
+
+
+int translate_right(int power, float aimed_distance)
+{
+    float passed_distance = 0.0 ;
+    float t0 = 0.0, t1 = 0.0 ;
     power_percentage pow = get_power(power);
 
-    while (i>=0){
-        move_translate(pow);       
-        i--;
+    while (passed_distance < aimed_distance)
+    {
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ; 
+        move_translate(pow) ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
+        passed_distance = passed_distance + get_vx()*(t1-t0) ;
     }
-    return 0;
+    return 0 ;
 }
 
 /**
  *translate_left : translate the drone to the left
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
- *@arg : int time : number of translation
+ *@arg : float aimed_distance : distance wanted to translate
  *@return : status = 0 : OK 
  **/
-int translate_left(int power, int time){
-    int i = time;
+
+int translate_left(int power, float aimed_distance)
+{
+    float passed_distance = 0.0 ;
+    float t0 = 0.0, t1 = 0.0 ;
     power_percentage pow = get_power(-power);
 
-    while (i>=0){
-        move_translate(pow);       
-        i--;
+    while (passed_distance > aimed_distance)
+    {
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ; 
+        move_translate(pow) ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
+        passed_distance = passed_distance + get_vx()*(t1-t0) ;
     }
-    return 0;
+    
+    return 0 ;
 }
+
 
 /**
  *forward : move forward
- *@arg : int power, int time : power of the command, number of command to send
+ *@arg : int power : power of the command
+ *@arg : float aimed_distance : distance wanted to go forward
  *@return : status = 0 : OK
  **/
-int forward(int power, int time){
-    int i = time;
-    power_percentage pow = get_power(-power);
-
-    while (i>=0){
-        move_forward(pow);       
-        i--;
-    }
-    return 0;
-}
-
-/**
- *backward : move backwards
- *@arg : int power, int time : power of the command, number of command to send
- *@return : status = 0 : OK
- **/
-int backward(int power, int time){
-    int i = time;
+int forward(int power, float aimed_distance)
+{
+    float passed_distance = 0.0, t0 = 0.0, t1 = 0.0 ;
     power_percentage pow = get_power(power);
 
-    while (i>=0){
-        move_forward(pow);       
-        i--;
+    while (passed_distance < aimed_distance)
+    {
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ;
+        move_forward(pow) ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
+        passed_distance = passed_distance + (t1-t0)*get_vy() ;
     }
-    return 0;
+   
+    return 0 ;
+}
+/**
+ *backward : move backwards
+ *@arg : int power : power of the command
+ *@arg : float aimed_distance : distance wanted to go backward
+ *@return : status = 0 : OK
+ **/
+int backward(int power, float aimed_distance)
+{
+
+    float passed_distance = 0.0 ;
+    float t0 = 0.0, t1 = 0.0 ;
+    power_percentage pow = get_power(-power);
+
+    while (passed_distance > aimed_distance){
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ;
+        move_translate(pow) ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
+        passed_distance = passed_distance + get_vy()*(t1-t0) ;
+    }
+    
+    return 0 ;
+
 }
 
 /**
  *up : move up
- *@arg : int power, int time : power of the command, number of command to send
+ *@arg : int power : power of the command
+ *@arg : float aimed_height : height wanted to go up
  *@return : status = 0 : OK
  **/
-int up(int power, int time){
-    int i = time;
+int up(int power, float aimed_height)
+{
+    float altitude = get_altitude() ;
     power_percentage pow = get_power(power);
-
-    while (i>=0){
-        move_up_down(pow);       
-        i--;
+    while (altitude<=aimed_height)
+    {
+        move_up_down(pow);  
+	altitude = get_altitude() ;     
     }
+
     return 0;
 }
+
 
 /**
  *down : move down
- *@arg : int power, int time : power of the command, number of command to send
+ *@arg : int power : power of the command
+ *@arg : float aimed_height : height wanted to go up
  *@return : status = 0 : OK
  **/
-int down(int power, int time){
-    int i = time;
+int down(int power, float aimed_height)
+{
+    float altitude = get_altitude() ;
     power_percentage pow = get_power(-power);
-
-    while (i>=0){
-        move_up_down(pow);       
-        i--;
+    while (altitude>=aimed_height)
+    {
+       move_up_down(pow); 
+       altitude = get_altitude() ;      
     }
+
     return 0;
 }
+
 
 // Controls with magnetometer
 
@@ -585,7 +681,7 @@ int rotate_right_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, 0, 0, pow, heading, 0.2);
+        move_rotate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -603,7 +699,7 @@ int rotate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, 0, 0, pow, heading, 0.2);
+        move_rotate(pow, heading);
         i--;
     }
     return 0;
@@ -622,7 +718,7 @@ int translate_right_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, pow, 0, 0, 0, heading, 0.2);
+        move_translate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -640,7 +736,7 @@ int translate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, pow, 0, 0, 0, heading, 0.2);
+        move_translate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -657,7 +753,7 @@ int forward_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, pow, 0, 0, heading, 0.2);
+        move_forward_mag(pow, heading);
         i--;
     }
     return 0;
@@ -674,7 +770,7 @@ int backward_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(3, 0, pow, 0, 0, heading, 0.2);
+        move_forward_mag(pow, heading);
         i--;
     }
     return 0;
