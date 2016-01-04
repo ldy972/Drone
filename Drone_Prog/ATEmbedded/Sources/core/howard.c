@@ -83,7 +83,7 @@ int main()
         //}
     //}
 
-    cap = get_heading();
+    /*cap = get_heading();
     printf("\nCAP A ATTEINDRE SA MERE : %f\n", cap);
     sleep(2);
    
@@ -105,6 +105,7 @@ int main()
     }
 
     printf("\nCAP ATTEINT SA MERE : %f\n", get_heading());
+    */
 
     // Test for full rotation
     // BE CAREFUL : the drone derives quite easily
@@ -126,7 +127,7 @@ int main()
         //}
     //}
 
-   /* printf("Test Heading\n");
+    printf("Test Heading\n");
 
     float heading = get_heading() - 0.5;
 
@@ -136,8 +137,9 @@ int main()
     // Tests for heading : make the drone move relatively to a given heading
     for (i = 0; i < 10; i++) {
         printf("Heading : %f\n", heading);
+        printf("Magneto rad : %f\n", get_magneto_radius());
         translate_right_mag(50, 1, heading);
-    }*/
+    }
 
     land();
 
