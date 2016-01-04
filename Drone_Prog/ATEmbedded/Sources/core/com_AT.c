@@ -332,7 +332,7 @@ int configure_navdata(char * parameter, char * value)
  * Functions declarations                                                     *
  *****************************************************************************/
 
-// Intermediary functions
+// Intermediary functions for classic movement
 
 // pitch
 int move_forward(power_percentage power){
@@ -369,6 +369,35 @@ int move_up_down(power_percentage power){
 
     return result;
 }
+
+// Intermediary functions for movement with the magnetometer
+
+// Pitch
+int move_forward_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+    return result;
+}
+
+// Roll
+int move_translate_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, power, 0, 0, 0, heading, 0.02);
+
+    return result;
+}
+
+// Yaw
+int move_rotate_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, 0, 0, 0, power, heading, 0.02);
+
+    return result;
+}
+
 
 // Taking off, landing and emregency mode
 
@@ -540,6 +569,7 @@ int translate_left(int power, float aimed_distance)
  *@arg : float aimed_distance : distance wanted to go forward
  *@return : status = 0 : OK
  **/
+
 int forward(int power, float aimed_distance)
 {
     float passed_distance = 0.0, t0 = 0.0, t1 = 0.0 ;
@@ -547,6 +577,7 @@ int forward(int power, float aimed_distance)
 
     while (passed_distance < aimed_distance)
     {
+
         t0 = (float)(clock()/CLOCKS_PER_SEC) ;
         move_forward(pow) ;
         t1 = (float)(clock()/CLOCKS_PER_SEC) ;
@@ -628,10 +659,15 @@ int down(int power, float aimed_height)
  *@arg : float heading : the heading the drone must follow
  *@return : status = 0 : OK 
  **/
-int rotate_right_mag(int power, float aimed_heading)
-{
-   ;
-    
+int rotate_right_mag(int power, int time, float heading){
+    int i = time;
+    power_percentage pow = get_power(power);
+
+    while (i>=0){
+        move_rotate_mag(pow, heading);
+        i--;
+    }
+    return 0;
 }
 
 /**
@@ -646,7 +682,7 @@ int rotate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, 0, 0, 0, pow, heading, 0.02);
+        move_rotate(pow, heading);
         i--;
     }
     return 0;
@@ -665,7 +701,7 @@ int translate_right_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, pow, 0, 0, 0, heading, 0.02);
+        move_translate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -683,7 +719,7 @@ int translate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, pow, 0, 0, 0, heading, 0.02);
+        move_translate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -700,7 +736,7 @@ int forward_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+        move_forward_mag(pow, heading);
         i--;
     }
     return 0;
@@ -717,7 +753,7 @@ int backward_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+        move_forward_mag(pow, heading);
         i--;
     }
     return 0;

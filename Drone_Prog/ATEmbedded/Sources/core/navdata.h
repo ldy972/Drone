@@ -86,6 +86,8 @@ float32_t get_vz() ;
 
 float get_heading();
 
+float get_magneto_radius();
+
 #endif //NAVDATA_H
 
 #ifdef __cplusplus

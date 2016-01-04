@@ -33,6 +33,10 @@ int trajectory(){
 			move_forward(75, trajectory_measure.cap); // TODO
 			if (get_signal_power>=POWER_MAX) exit(0); // On est assez proche
 		}
+
+
+		//Algo en escargot
+
 	}
 }
 
