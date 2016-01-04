@@ -6,7 +6,7 @@
 #include "navdata.h"
 #include "com_AT.h"
 
-int navdata_thread()
+void * navdata_thread()
 {
     int result = 1;
     printf("[NAV] Init\n");
@@ -22,23 +22,25 @@ int navdata_thread()
     }
     printf("F*ck this, I'm outta here\n");
 
-    return 0;
+    return NULL;
 }
 
 
-int watchdog_thread()
+void * watchdog_thread()
 {
     while (1) {
         reload_watchdog();
         usleep(1500000);
     }
-    return 0;
+
+    return NULL;
 }
 
 
 int main()
 {
-    int result = 1;
+    //int result = 1;
+    int i;
     pthread_t th_navdata;
     pthread_t th_watchdog;
 
@@ -71,16 +73,15 @@ int main()
     sleep(5);
 
     // Test for heading : turns a bit once a second for 5 seconds
-    int i;
-    for (i = 0; i < 50; i++) {
-        printf("Altitude : %d\n", (int) get_altitude());
-        printf("Cap : %f\n", get_heading());
-        usleep(100000);
+    //for (i = 0; i < 50; i++) {
+        //printf("Altitude : %d\n", (int) get_altitude());
+        //printf("Cap : %f\n", get_heading());
+        //usleep(100000);
 
-        if (i % 10 == 0) {
-            rotate_right(50, 1);
-        }
-    }
+        //if (i % 10 == 0) {
+            //rotate_right(50, 1);
+        //}
+    //}
 
     cap = get_heading();
     printf("\nCAP A ATTEINDRE SA MERE : %f\n", cap);
@@ -112,6 +113,31 @@ int main()
     //while (abs((float) base_yaw - (float) get_yaw()) > 1.0) {
         //rotate_right(75,1);
     //}
+
+
+    // Test for altitude : goes up once every second for 5 seconds
+    //for (i = 0; i < 50; i++) {
+        //printf("Altitude : %d\n", (int) get_altitude());
+        //printf("Cap : %f\n", get_heading());
+        //usleep(100000);
+
+        //if (i % 10 == 0) {
+            //up(50, 1);
+        //}
+    //}
+
+   /* printf("Test Heading\n");
+
+    float heading = get_heading() - 0.5;
+
+    if (heading < -1.0)
+        heading += 2.0;
+
+    // Tests for heading : make the drone move relatively to a given heading
+    for (i = 0; i < 10; i++) {
+        printf("Heading : %f\n", heading);
+        translate_right_mag(50, 1, heading);
+    }*/
 
     land();
 
