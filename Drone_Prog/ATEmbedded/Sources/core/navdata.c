@@ -19,10 +19,12 @@ int init_navdata_reception()
 
     if ( result == 0) {
         result = initialize_navdata_socket();
+        //printf("[NAV] Navdata socket ok\n");
     }
 
     if ( result == 0) {
         send_navdata("\x01\x00");
+        //printf("[NAV] Navdata flag sent\n");
     }
 
     while (!ok) {
@@ -31,6 +33,7 @@ int init_navdata_reception()
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_NAVDATA_BOOTSTRAP) {
                 ok = 1;
+                //printf("[NAV] Bootstrap\n");
             }
         }
     }
@@ -44,6 +47,7 @@ int init_navdata_reception()
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
                 ok = 1;
+                //printf("[NAV] Conf OK\n");
             }
         }
     }
@@ -57,6 +61,7 @@ int init_navdata_reception()
         if (result != 0) {
             if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
                 ok = 1;
+                //printf("[NAV] Ack\n");
             }
         }
     }
