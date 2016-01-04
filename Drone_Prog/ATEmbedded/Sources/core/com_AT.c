@@ -143,7 +143,7 @@ power_percentage get_power(int power)
 /**
  * @overview : constructeur de commandes AT*REF : decollage, aterrissage, arret d'urgence, anti-urgence
  * @arg : la commande AT_REF utilisée
- * @return : 
+ * @return :
  * **/
 char * build_AT_REF (AT_REF_cmd cmd)
 {
@@ -173,7 +173,7 @@ char * build_AT_REF (AT_REF_cmd cmd)
 /**
  * @overview : constructeur de commandes AT*PCMD : déplacements du drone
  * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
- * @return : 
+ * @return :
  * **/
 char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw)
 {
@@ -188,7 +188,7 @@ char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, po
 /**
  * @overview : constructeur de commandes AT*PCMD : déplacements du drone
  * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
- * @return : 
+ * @return :
  * **/
 char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy)
 {
@@ -202,8 +202,8 @@ char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch
 
 /**
  * @overview : constructeur de commandes AT*FTRIM : calibrage du drone
- * @arg : 
- * @return : 
+ * @arg :
+ * @return :
  * **/
 char * build_AT_FTRIM()
 {
@@ -217,8 +217,8 @@ char * build_AT_FTRIM()
 
 /**
  * @overview : constructeur de commandes AT*COMWDG : reload du watchdog
- * @arg : 
- * @return : 
+ * @arg :
+ * @return :
  * **/
 char * build_AT_COMWDG(void)
 {
@@ -233,7 +233,7 @@ char * build_AT_COMWDG(void)
 /**
  * @overview : constructeur de commandes AT*CONFIG : configuration du drone. 
  * @arg : Pas d'options pour le moment, une seule config.
- * @return : 
+ * @return :
  * **/
 char* build_AT_CONFIG(char * parameter, char * value)
 {
@@ -242,7 +242,8 @@ char* build_AT_CONFIG(char * parameter, char * value)
     inc_num_sequence();
     sprintf(returned_cmd, "AT*CONFIG=%i,\"%s\",\"%s\"\r", numSeq, parameter, value);
     return returned_cmd;
-} 
+}
+
 
 /**
  * @overview : constructeur de commandes AT*CTRL : envoi d'un ack 
@@ -486,17 +487,17 @@ int rotate_right(int power, float aimed_angle)
 	while(yaw<aimed_angle)
         {
             move_rotate(pow) ;
-            yaw = (int)get_yaw() ;		
+            yaw = (int)get_yaw() ;
         }
-    }	
-    else 
-    {	    
+    }
+    else
+    {
         while(yaw>aimed_angle)
         {
             move_rotate(pow) ;
             yaw = (int)get_yaw() ;
-        }		
-    }	
+        }
+    }
     return 0 ;
 }
 
@@ -504,7 +505,7 @@ int rotate_right(int power, float aimed_angle)
  *rotate_left : rotate the drone to the left
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
  *@arg : float aimed_angle : angle aimed to rotate
- *@return : status = 0 : OK 
+ *@return : status = 0 : OK
  **/
 
 int rotate_left(int power, float aimed_angle)
@@ -517,17 +518,17 @@ int rotate_left(int power, float aimed_angle)
 	while(yaw>aimed_angle)
         {
             move_rotate(pow) ;
-            yaw = get_yaw() ;	 	
-        }	
-    } 
-    else 
+            yaw = get_yaw() ;
+        }
+    }
+    else
     {
         while(yaw<aimed_angle)
         {
             move_rotate(pow) ;
             yaw = get_yaw() ;
-	}		
-    }	
+	}
+    }
     return 0 ;
 }
 
@@ -536,30 +537,23 @@ int rotate_left(int power, float aimed_angle)
  *translate_right : translate the drone to the right
  *@arg : int power : power of the command (0,5,10,20,25,50,75,100)
  *@arg : float aimed_distance : distance wanted to translate
- *@return : status = 0 : OK 
+ *@return : status = 0 : OK
  **/
 
-float GET_CURRENT_TIME() //Simulate the system time
-{
-   return 0.0 ;
-}
-
-//TODO : récupérer un delta t en fonction de l'heure système.
 
 int translate_right(int power, float aimed_distance)
 {
     float passed_distance = 0.0 ;
     float t0 = 0.0, t1 = 0.0 ;
     power_percentage pow = get_power(power);
-    
+
     while (passed_distance < aimed_distance)
     {
-        t0 = GET_CURRENT_TIME() ;
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ; 
         move_translate(pow) ;
-        t1 = GET_CURRENT_TIME() ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
         passed_distance = passed_distance + get_vx()*(t1-t0) ;
     }
-    
     return 0 ;
 }
 
@@ -574,14 +568,13 @@ int translate_left(int power, float aimed_distance)
 {
     float passed_distance = 0.0 ;
     float t0 = 0.0, t1 = 0.0 ;
-
     power_percentage pow = get_power(-power);
 
     while (passed_distance > aimed_distance)
     {
-        t0 = GET_CURRENT_TIME() ;
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ; 
         move_translate(pow) ;
-        t1 = GET_CURRENT_TIME() ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
         passed_distance = passed_distance + get_vx()*(t1-t0) ;
     }
     
@@ -602,9 +595,9 @@ int forward(int power, float aimed_distance)
 
     while (passed_distance < aimed_distance)
     {
-        t0 = GET_CURRENT_TIME() ;
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ;
         move_forward(pow) ;
-        t1 = GET_CURRENT_TIME() ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
         passed_distance = passed_distance + (t1-t0)*get_vy() ;
     }
    
@@ -624,9 +617,9 @@ int backward(int power, float aimed_distance)
     power_percentage pow = get_power(-power);
 
     while (passed_distance > aimed_distance){
-        t0 = GET_CURRENT_TIME() ;
+        t0 = (float)(clock()/CLOCKS_PER_SEC) ;
         move_translate(pow) ;
-        t1 = GET_CURRENT_TIME() ;
+        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
         passed_distance = passed_distance + get_vy()*(t1-t0) ;
     }
     
