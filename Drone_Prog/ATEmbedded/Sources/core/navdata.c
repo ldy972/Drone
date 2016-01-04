@@ -154,17 +154,6 @@ float32_t get_yaw()
     return yaw;
 }
 
-float get_heading()
-{
-    float heading;
-
-    pthread_mutex_lock(&mutex_navdata_struct);
-    heading = navdata_struct->navdata_magneto.heading_fusion_unwrapped;
-    pthread_mutex_unlock(&mutex_navdata_struct);
-
-    return heading;
-}
-
 float get_vx()
 {
     float vx;
@@ -196,5 +185,27 @@ float get_vz()
     pthread_mutex_unlock(&mutex_navdata_struct);
 
     return vz;
+}
+
+float get_heading()
+{
+    float heading;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    heading = navdata_struct->navdata_magneto.heading_fusion_unwrapped;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return heading;
+}
+
+float get_magneto_radius()
+{
+    float radius;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    radius = navdata_struct->navdata_magneto.magneto_radius;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return heading;
 }
 

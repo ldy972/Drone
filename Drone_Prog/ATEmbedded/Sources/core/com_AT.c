@@ -1,4 +1,4 @@
-#include "com_AT.h"
+get_magneto_radius()#include "com_AT.h"
 #include "navdata.h"
 
 //#define DEBUG
@@ -331,7 +331,7 @@ int configure_navdata(char * parameter, char * value)
  * Functions declarations                                                     *
  *****************************************************************************/
 
-// Intermediary functions
+// Intermediary functions for classic movement
 
 // pitch
 int move_forward(power_percentage power){
@@ -368,6 +368,35 @@ int move_up_down(power_percentage power){
 
     return result;
 }
+
+// Intermediary functions for movement with the magnetometer
+
+// Pitch
+int move_forward_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+    return result;
+}
+
+// Roll
+int move_translate_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, power, 0, 0, 0, heading, 0.02);
+
+    return result;
+}
+
+// Yaw
+int move_rotate_mag(power_percentage power, float heading){
+    int result;
+
+    result = send_AT_PCMD_MAG(5, 0, 0, 0, power, heading, 0.02);
+
+    return result;
+}
+
 
 // Taking off, landing and emregency mode
 
@@ -659,7 +688,7 @@ int rotate_right_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, 0, 0, 0, pow, heading, 0.02);
+        move_rotate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -677,7 +706,7 @@ int rotate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, 0, 0, 0, pow, heading, 0.02);
+        move_rotate(pow, heading);
         i--;
     }
     return 0;
@@ -696,7 +725,7 @@ int translate_right_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, pow, 0, 0, 0, heading, 0.02);
+        move_translate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -714,7 +743,7 @@ int translate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, pow, 0, 0, 0, heading, 0.02);
+        move_translate_mag(pow, heading);
         i--;
     }
     return 0;
@@ -731,7 +760,7 @@ int forward_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+        move_forward_mag(pow, heading);
         i--;
     }
     return 0;
@@ -748,7 +777,7 @@ int backward_mag(int power, int time, float heading){
     power_percentage pow = get_power(power);
 
     while (i>=0){
-        send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+        move_forward_mag(pow, heading);
         i--;
     }
     return 0;
