@@ -566,6 +566,7 @@ int translate_left(int power, float aimed_distance)
  *@arg : float aimed_distance : distance wanted to go forward
  *@return : status = 0 : OK
  **/
+
 int forward(int power, float aimed_distance)
 {
     float passed_distance = 0.0, t0 = 0.0, t1 = 0.0 ;
@@ -574,7 +575,7 @@ int forward(int power, float aimed_distance)
     while (passed_distance < aimed_distance)
     {
         t0 = GET_CURRENT_TIME() ;
-        move_forward(pow) ;
+        move_forward_(pow) ;
         t1 = GET_CURRENT_TIME() ;
         passed_distance = passed_distance + (t1-t0)*get_vy() ;
     }
