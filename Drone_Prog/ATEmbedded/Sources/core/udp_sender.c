@@ -59,7 +59,7 @@ int initialize_socket_source(int * sock_id, struct sockaddr_in * addr_src, int p
     bzero(addr_src, sizeof(struct sockaddr_in));
     addr_src->sin_family = AF_INET;
     addr_src->sin_addr.s_addr = htonl(INADDR_ANY);
-    addr_src->sin_port = htons(UDP_NAVDATA_DEST);
+    addr_src->sin_port = htons(port);
 
     if (bind(*sock_id, (struct sockaddr *) addr_src, sizeof(* addr_src)) != 0)
     {
