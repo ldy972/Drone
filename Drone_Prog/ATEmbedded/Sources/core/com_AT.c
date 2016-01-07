@@ -557,7 +557,7 @@ int rotate_left(int power, float angle_disp) //aimed_angle = angle absolu que je
         }
     }
 
-        move_rotate(pow);
+        move_rotate(-10);
     
     return 0 ;
 }
