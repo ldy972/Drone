@@ -113,8 +113,8 @@ int move_translate(power_percentage power);
 int move_up_down(power_percentage power);
 
 // Classic controls
-int rotate_right(int power, float aimed_angle) ;
-int rotate_left(int power, float aimed_angle) ;
+int rotate_right(int power, float angle_disp) ;
+int rotate_left(int power, float angle_disp) ;
 int translate_right(int power, float aimed_distance) ;
 int translate_left(int power, float aimed_distance) ;
 int forward(int power, float aimed_distance) ;

@@ -477,12 +477,24 @@ int reload_watchdog(void){
  *@return : status = 0 : OK 
  **/
 
-int rotate_right(int power, float aimed_angle) //aimed_angle = angle absolu que je veux atteindre 
+//TODO : cope with the 0-360 passage 
+int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que je veux atteindre 
 {
+    int i = 0 ;
     float current_angle = get_yaw() ;
-    power_percentage pow = get_power(-power);
-
-    if(abs(aimed_angle) == 180.0)
+    power_percentage pow = get_power(power);
+    float aimed_angle = (current_angle + angle_disp) ;
+    if(aimed_angle>360.0)
+        aimed_angle = aimed_angle-360.0 ; 
+     
+    else
+    {
+         if(aimed_angle < 0.0)
+           aimed_angle = 360.0-aimed_angle ;
+    } 
+           
+    printf("aimed_angle = %f",aimed_angle);
+    /*if(abs(aimed_angle) == 180.0)
     {
         while(abs(abs(current_angle) - 180.0) >= 2.0)
 	{
@@ -491,13 +503,15 @@ int rotate_right(int power, float aimed_angle) //aimed_angle = angle absolu que 
         }
     }
     else 
-    {
+    {*/
         while(abs(aimed_angle-current_angle) >= 2.0)
-        {
+        {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
-    }
+	for(i=0;i<=2;i++)
+        move_rotate(-pow);
+    //}
 
     return 0 ;
 }
@@ -509,10 +523,52 @@ int rotate_right(int power, float aimed_angle) //aimed_angle = angle absolu que 
  *@return : status = 0 : OK
  **/
 
-int rotate_left(int power, float aimed_angle)
+//TODO : cope with the 0-360 passage
+int rotate_left(int power, float angle_disp) //aimed_angle = angle absolu que je veux atteindre 
+{
+    int i = 0 ;
+    float current_angle = get_yaw() ;
+    power_percentage pow = get_power(-power);
+    float aimed_angle = (current_angle + angle_disp) ;
+    if(aimed_angle>360.0)
+        aimed_angle = aimed_angle-360.0 ; 
+     
+    else
+    {
+         if(aimed_angle < 0.0)
+           aimed_angle = 360.0-aimed_angle ;
+    } 
+           
+    printf("aimed_angle = %f",aimed_angle);
+    /*if(abs(aimed_angle) == 180.0)
+    {
+        while(abs(abs(current_angle) - 180.0) >= 2.0)
+	{
+            move_rotate(pow) ;
+            current_angle = get_yaw() ;
+        }
+    }
+    else 
+    {*/
+        while(abs(aimed_angle-current_angle) >= 2.0)
+        {   
+            move_rotate(pow) ;
+            current_angle = get_yaw() ;
+        }
+	for(i=0;i<=2;i++)
+        move_rotate(pow);
+    //}
+
+    return 0 ;
+}
+
+//without positive angles
+
+/*int rotate_left(int power, float angle_disp)
 {
     float current_angle = get_yaw() ;
     power_percentage pow = get_power(-power);
+    float aimed_angle = current_angle + angle_disp ;
 
     if(abs(aimed_angle) == 180.0)
     {
@@ -529,10 +585,11 @@ int rotate_left(int power, float aimed_angle)
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
+        move_rotate(pow);
     }
 
     return 0 ;
-}
+}*/
 
 
 /**
@@ -688,7 +745,7 @@ int rotate_right_mag(int power, float aimed_heading)
 
     if(abs(aimed_heading == 1.0))
     {
-        while(abs(aimed_heading) - 1.0 >= 0.1)
+        while(abs(aimed_heading) - 1.0 >= 0.01)
         {
 	    move_rotate_mag(pow, aimed_heading) ;
             current_heading = get_heading() ;
@@ -696,7 +753,7 @@ int rotate_right_mag(int power, float aimed_heading)
     }   
     else
     {
-        while (abs(aimed_heading - current_heading) >= 0.1)
+        while (abs(aimed_heading - current_heading) >= 0.01)
         {
             move_rotate_mag(pow, aimed_heading) ;
             current_heading = get_heading() ;
