@@ -509,8 +509,6 @@ int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que j
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
-	for(i=0;i<=2;i++)
-        move_rotate(-pow);
     //}
 
     return 0 ;
