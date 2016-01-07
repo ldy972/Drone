@@ -511,9 +511,7 @@ int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que j
             current_angle = get_yaw() ;
         }
     }
-
-    for(i=0;i<=2;i++)
-        move_rotate(-pow);
+        move_rotate(-10);
     
     return 0 ;
 }
@@ -559,7 +557,6 @@ int rotate_left(int power, float angle_disp) //aimed_angle = angle absolu que je
         }
     }
 
-    for(i=0;i<=2;i++)
         move_rotate(pow);
     
     return 0 ;
