@@ -494,25 +494,27 @@ int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que j
     } 
            
     printf("aimed_angle = %f",aimed_angle);
-    /*if(abs(aimed_angle) == 180.0)
+
+    if(aimed_angle == 360.0 || aimed_angle == 0.0)
     {
-        while(abs(abs(current_angle) - 180.0) >= 2.0)
+        while(current_angle > 5.0 && current_angle < 355.0 )
 	{
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
     }
     else 
-    {*/
+    {
         while(abs(aimed_angle-current_angle) >= 2.0)
         {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
-	for(i=0;i<=2;i++)
-        move_rotate(-pow);
-    //}
+    }
 
+    for(i=0;i<=2;i++)
+        move_rotate(-pow);
+    
     return 0 ;
 }
 
@@ -523,7 +525,6 @@ int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que j
  *@return : status = 0 : OK
  **/
 
-//TODO : cope with the 0-360 passage
 int rotate_left(int power, float angle_disp) //aimed_angle = angle absolu que je veux atteindre 
 {
     int i = 0 ;
@@ -540,27 +541,30 @@ int rotate_left(int power, float angle_disp) //aimed_angle = angle absolu que je
     } 
            
     printf("aimed_angle = %f",aimed_angle);
-    /*if(abs(aimed_angle) == 180.0)
+
+    if(aimed_angle == 360.0 || aimed_angle == 0.0)
     {
-        while(abs(abs(current_angle) - 180.0) >= 2.0)
+        while(current_angle > 5.0 && current_angle < 355.0 )
 	{
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
     }
     else 
-    {*/
+    {
         while(abs(aimed_angle-current_angle) >= 2.0)
         {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
-	for(i=0;i<=2;i++)
-        move_rotate(pow);
-    //}
+    }
 
+    for(i=0;i<=2;i++)
+        move_rotate(pow);
+    
     return 0 ;
 }
+
 
 //without positive angles
 
