@@ -477,10 +477,8 @@ int reload_watchdog(void){
  *@return : status = 0 : OK 
  **/
 
-//TODO : cope with the 0-360 passage 
-int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que je veux atteindre 
+/*int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
 {
-    int i = 0 ;
     float current_angle = get_yaw() ;
     power_percentage pow = get_power(power);
     float aimed_angle = (current_angle + angle_disp) ;
@@ -490,13 +488,14 @@ int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que j
     else
     {
          if(aimed_angle < 0.0)
-           aimed_angle = 360.0-aimed_angle ;
+           aimed_angle = 360.0+aimed_angle ;
     } 
            
-    printf("aimed_angle = %f",aimed_angle);
+    printf("aimed_angle = %f\n",aimed_angle);
 
     if(aimed_angle == 360.0 || aimed_angle == 0.0)
-    {
+    {   
+        
         while(current_angle > 5.0 && current_angle < 355.0 )
 	{
             move_rotate(pow) ;
@@ -505,16 +504,61 @@ int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que j
     }
     else 
     {
+        while(abs(aimed_angle-current_angle) >= 5.0)
+        {   
+            move_rotate(pow) ;
+            current_angle = get_yaw() ;
+        }
+    }
+	printf("Stop\n");
+        move_rotate(get_power(-10));
+	printf("Stopped\n");
+    
+    return 0 ;
+}*/
+
+int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
+{
+    float current_angle = get_yaw() ;
+    power_percentage pow = get_power(power);
+    float aimed_angle = (current_angle + angle_disp) ; 
+
+    
+    if(aimed_angle>=360.0)
+        aimed_angle = aimed_angle-360.0 ; 
+     
+    else if(aimed_angle < 0.0)
+           aimed_angle = aimed_angle+360.0 ;
+           
+    printf("aimed_angle = %f\n",aimed_angle);
+
+    if(angle_disp == 360.0)
+    {
+       move_rotate(pow) ; 
+       current_angle = get_yaw() ;   
+    }
+
+    if(aimed_angle == 360.0 || aimed_angle == 0.0)
+    {    
+        while(current_angle < 359.0 && current_angle > 1.0)
+	{
+            move_rotate(pow) ;
+            current_angle = get_yaw() ;
+        }
+   }
+    else 
+    {
         while(abs(aimed_angle-current_angle) >= 2.0)
         {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
     }
-        move_rotate(-10);
+        move_rotate(get_power(-10));
     
     return 0 ;
 }
+
 
 /**
  *rotate_left : rotate the drone to the left
@@ -523,31 +567,35 @@ int rotate_right(int power, float angle_disp) //aimed_angle = angle absolu que j
  *@return : status = 0 : OK
  **/
 
-int rotate_left(int power, float angle_disp) //aimed_angle = angle absolu que je veux atteindre 
+int rotate_left(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
 {
-    int i = 0 ;
     float current_angle = get_yaw() ;
     power_percentage pow = get_power(-power);
-    float aimed_angle = (current_angle + angle_disp) ;
-    if(aimed_angle>360.0)
+    float aimed_angle = (current_angle + angle_disp) ; 
+
+    
+    if(aimed_angle>=360.0)
         aimed_angle = aimed_angle-360.0 ; 
      
-    else
-    {
-         if(aimed_angle < 0.0)
-           aimed_angle = 360.0-aimed_angle ;
-    } 
+    else if(aimed_angle < 0.0)
+           aimed_angle = aimed_angle+360.0 ;
            
-    printf("aimed_angle = %f",aimed_angle);
+    printf("aimed_angle = %f\n",aimed_angle);
+
+    if(angle_disp == 360.0)
+    {
+       move_rotate(pow) ; 
+       current_angle = get_yaw() ;   
+    }
 
     if(aimed_angle == 360.0 || aimed_angle == 0.0)
-    {
-        while(current_angle > 5.0 && current_angle < 355.0 )
+    {    
+        while(current_angle < 359.0 && current_angle > 1.0)
 	{
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
-    }
+   }
     else 
     {
         while(abs(aimed_angle-current_angle) >= 2.0)
@@ -556,11 +604,12 @@ int rotate_left(int power, float angle_disp) //aimed_angle = angle absolu que je
             current_angle = get_yaw() ;
         }
     }
-
-        move_rotate(-10);
+        move_rotate(get_power(10));
     
     return 0 ;
 }
+
+
 
 
 //without positive angles
