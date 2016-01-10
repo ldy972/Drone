@@ -95,8 +95,23 @@ void sim_rssi(float target){
 	
 }
 
+int sim_get_target_pos (void){
+	int i, target_pos = 0;
+	int size_rssi_array =(sizeof(sim_rssi_array)/sizeof(int));
+	
+		
+	for(i=0; i<size_rssi_array; i++)
+		{
+			if (sim_rssi_array[i] == 100)
+				{target_pos =i;}
+		}
+	return target_pos;
+}
 
 // GLOBAL
+
+
+	
 void init_simu(float target){
 	sim_cap();
 	sim_rssi(target);
@@ -112,6 +127,18 @@ float sim_get_heading(void){
 int sim_get_power(void){
 	
 	return sim_rssi_array[sim_get_heading_pos()];
+}
+
+void sim_get_power_move(void){
+	float delta = sim_get_heading()-sim_cap_array[sim_get_target_pos()];
+	if (delta < 0)
+		{delta =-delta;}
+
+	if (delta <0.01)
+		{sim_rssi_array[sim_get_heading_pos()] +=2;}
+
+	else
+		{sim_rssi_array[sim_get_heading_pos()] -=2;}
 }
 
 void close_simu(void){

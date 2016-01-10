@@ -13,6 +13,7 @@ extern "C" {
 #include "udp_sender.h"
 #include "navdata.h"
 #include "time.h"
+#include "navdata.h"
 
  /***********************************************************************
  * global defines and macro
@@ -113,21 +114,20 @@ int move_translate(power_percentage power);
 int move_up_down(power_percentage power);
 
 // Classic controls
-int rotate_right(int power, float aimed_angle) ;
-int rotate_left(int power, float aimed_angle) ;
+int rotate_right(int power, float angle_disp) ;
+int rotate_left(int power, float angle_disp) ;
 int translate_right(int power, float aimed_distance) ;
 int translate_left(int power, float aimed_distance) ;
 int forward(int power, float aimed_distance) ;
 int backward(int power, float aimed_distance) ;
 int up(int power, float aimed_height) ;
 int down(int power, float aimed_height) ;
-float GET_CURRENT_TIME() ;
 
 // Controls with magnetometer
-int rotate_right_mag(int power, int time, float heading);
-int rotate_left_mag(int power, int time, float heading);
+int rotate_right_mag(int power, float aimed_heading);
+int rotate_left_mag(int power, float aimed_heading);
 int translate_right_mag(int power, int time, float heading);
-int translate_left_mag(int power, int time, float heading); 
+int translate_left_mag(int power, int time, float heading);
 int forward_mag(int power, int time, float heading);
 int backward_mag(int power, int time, float heading);
 
