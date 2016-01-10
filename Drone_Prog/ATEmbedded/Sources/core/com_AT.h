@@ -11,6 +11,7 @@ extern "C" {
 #include <string.h>
 #include "shared.h"
 #include "udp_sender.h"
+#include "navdata.h"
 #include "time.h"
 
  /***********************************************************************
@@ -33,7 +34,7 @@ int16_t connectionOpen;
  * *********************************************************************/
 #define NAVDATA_DEMO_PARAM "general:navdata_demo"
 #define NAVDATA_DEMO_VALUE "TRUE"
-#define NAVDATA_MAGNETO_PARAM "general:navdata_option"
+#define NAVDATA_MAGNETO_PARAM "general:navdata_options"
 
 /***********************************************************************
  * HEADER AT defines

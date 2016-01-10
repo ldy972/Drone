@@ -23,7 +23,6 @@ int send_to_socket(char * message, int * sock_id, struct sockaddr_in * addr_dest
 int close_socket(int * sock_id);
 
 
-
 /******************************************************************************
  * UDP Sender functions declaration
  *****************************************************************************/
@@ -156,19 +155,18 @@ int send_navdata(char* message)
 
 
 // Retrieve navdata
-int recieve_navdata(int * navdata)
+int recieve_navdata(unsigned char* navdata)
 {
     socklen_t navdata_size = sizeof(addr_dest_navdata);
     int result = 0;
 
-    result = recvfrom(socket_id_navdata, navdata, 1024 * sizeof(int), 0, (struct sockaddr *) &addr_dest_navdata, &navdata_size);
+    result = recvfrom(socket_id_navdata, navdata, 1024 * sizeof(uint8_t), 0, (struct sockaddr *) &addr_dest_navdata, &navdata_size);
     if (result == 0) {
         fprintf(stderr, "Erreur de réception");
     }
 
     return result;
 }
-
 
 
 // Close the specified socket

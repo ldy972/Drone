@@ -1,5 +1,4 @@
 #include "com_AT.h"
-#include "navdata.h"
 
 //#define DEBUG
 
@@ -308,7 +307,6 @@ int send_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, po
     int result;
     char * command = build_AT_PCMD_MAG(flag, roll, pitch, gaz, yaw, heading, heading_accuracy);
 
-    printf("Sending %s\n", command);
     result = send_message(command);
     free(command);
     return result;
@@ -376,7 +374,7 @@ int move_up_down(power_percentage power){
 int move_forward_mag(power_percentage power, float heading){
     int result;
 
-    result = send_AT_PCMD_MAG(5, 0, pow, 0, 0, heading, 0.02);
+    result = send_AT_PCMD_MAG(5, 0, power, 0, 0, heading, 0.02);
     return result;
 }
 
@@ -412,11 +410,9 @@ int take_off(void){
 
     while (!took_off) {
         result = send_AT_REF(REF_TAKE_OFF);
-        pthread_mutex_lock(&mutex_navdata_struct);
-        if (navdata_struct->navdata_option.altitude != 0) {
+        if (get_altitude() != 0) {
             took_off = 1;
         }
-        pthread_mutex_unlock(&mutex_navdata_struct);
     }
 
     return result;
@@ -433,11 +429,9 @@ int land(void){
 
     while (!landed) {
         result = send_AT_REF(REF_LAND);
-        pthread_mutex_lock(&mutex_navdata_struct);
-        if (navdata_struct->navdata_option.altitude == 0) {
+        if (get_altitude() == 0) {
             landed = 1;
         }
-        pthread_mutex_unlock(&mutex_navdata_struct);
     }
 
     return result;
@@ -701,7 +695,7 @@ int rotate_left_mag(int power, int time, float heading){
     power_percentage pow = get_power(-power);
 
     while (i>=0){
-        move_rotate(pow, heading);
+        move_rotate_mag(pow, heading);
         i--;
     }
     return 0;

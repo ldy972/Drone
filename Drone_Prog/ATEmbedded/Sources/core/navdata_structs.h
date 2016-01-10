@@ -131,7 +131,7 @@ enum option_tag {
 
 typedef float   float32_t;
 
-// navdata header
+// Navdata header
 typedef struct _navdata_header_t {
     uint32_t    header;                     // header:55667788 
     uint32_t    state;                      // the state of the drone 
@@ -139,10 +139,15 @@ typedef struct _navdata_header_t {
     uint32_t    vision;                     // vision flag 
 } navdata_header_t;
 
-// navdata option, demo mode
+// Option header : the first two fields of every option
+typedef struct _navdata_option_header_t {
+    uint16_t    tag;                        // Option identifier
+    uint16_t    size;                       // Option size
+} navdata_option_header_t;
+
+// Navdata option, demo mode
 typedef struct _navdata_demo_t {
-    uint16_t    id;                         // Navdata block ('option') identifier 
-    uint16_t    size;                       // set this to the size of this structure 
+    navdata_option_header_t header;
 
     uint32_t    ctrl_state;                 // Flying state (landed, flying, hovering, etc.) defined in CTRL_STATES enum. 
     uint32_t    vbat_flying_percentage;     // battery voltage filtered (mV) 
@@ -176,8 +181,7 @@ typedef struct _vector31_t {
 /* @brief The magneto structure
  */
 typedef struct _navdata_magneto_t {
-    uint16_t      tag;
-    uint16_t      size;
+    navdata_option_header_t header;
 
     int16_t       mx;
     int16_t       my;
@@ -201,7 +205,7 @@ typedef struct _navdata_magneto_t {
 // navdata structure
 typedef struct _navdata_t {
     navdata_header_t    navdata_header;     // navdata header 
-    navdata_demo_t      navdata_option;     // navdata demo : basic information
+    navdata_demo_t      navdata_demo;     // navdata demo : basic information
     navdata_magneto_t   navdata_magneto;    // navdata magneto : magnetomer information
 } navdata_t;
 
