@@ -7,9 +7,7 @@
 #include "shared.h"
 #include "navdata.h"
 #include "com_AT.h"
-<<<<<<< HEAD
 #include "controller.h"
-=======
 #include "sim_data.h"
 
 void Emergency_exit (int signum)
@@ -33,7 +31,6 @@ void * simu_thread ()
 	}
 	return NULL;
 }
->>>>>>> 3b94b1c9d5f5f7ffabdf6b63a8b44e3eb4a0f1d5
 
 void * navdata_thread()
 {

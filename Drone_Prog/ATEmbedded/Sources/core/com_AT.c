@@ -469,6 +469,16 @@ int reload_watchdog(void){
 
 // Classic controls
 
+int hover()
+{
+    int result;
+
+    result = send_AT_PCMD(1, 0, 0, 0, 0);
+
+    return result;
+    
+}
+
 /**
  *rotate_right : rotate the drone to the right
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
@@ -954,31 +964,7 @@ int calibrate_magnetometer()
     float heading_origin, current_heading;
     power_percentage pow = get_power(100);
 
-    printf("Go Calib\n");
     result = send_AT_CALIB();
-/*    sleep(5);
-
-    heading_origin = get_heading();
-    min_heading = heading_origin;
-    max_heading = heading_origin;
-    printf("Heading range : [%f; %f]\n", min_heading, max_heading);
-
-    flag_set_heading_range = 1;
-
-    for (i = 0; i < 5; i ++) {
-        printf("Tourne part1 : from %f\n", heading_origin);
-        move_rotate(pow);
-    }
-    current_heading = get_heading();
-    while (abs(current_heading - (heading_origin + 5.0)) > 5.0) {
-        printf("Tourne part2 : from to %f to %f\n", current_heading, heading_origin);
-        move_rotate(pow);
-        current_heading = get_heading() - 360.0;
-    }
-
-    flag_set_heading_range = 0;
-
-    printf("Heading range : [%f; %f]\n", min_heading, max_heading);*/
 
     return result;
 }
