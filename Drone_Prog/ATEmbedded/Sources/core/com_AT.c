@@ -601,13 +601,13 @@ int rotate_left(int power, float angle_disp) //angle_disp = angle_displacement =
    }
     else 
     {
-        while(abs(aimed_angle-current_angle) >= 2.0)
+        while(abs(aimed_angle-current_angle) >= 4.0)
         {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
     }
-        move_rotate(get_power(10));
+        //move_rotate(get_power(10));
     
     return 0 ;
 }
@@ -764,11 +764,11 @@ int rotate_right_mag(int power, float heading_disp)
         {
             move_rotate_mag(pow, current_heading) ;
             current_heading = get_heading() ;
-            printf("heading : %f\n", current_heading);
+          //  printf("heading : %f\n", current_heading);
         }
          
 
-        move_rotate_mag(-pow, current_heading);
+       // move_rotate_mag(-pow, current_heading);
     
 
     return 0;

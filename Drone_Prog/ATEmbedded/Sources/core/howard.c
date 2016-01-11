@@ -102,7 +102,8 @@ int main()
     //sleep(2);
 
     calibrate_magnetometer();
-    sleep(5);
+
+    sleep(7);
 
     // Test for heading : turns a bit once a second for 5 seconds
     //for (i = 0; i < 50; i++) {
