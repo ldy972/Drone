@@ -9,14 +9,13 @@
 ********************** GLOBAL VARIABLES **************************************
 *******************************************************************************/
 
-struct measure{
-	int power;
-	int cap;
-};
-
-struct measure trajectory_measure ;
 
 #define POWER_MAX 120; //A calculer
+
+typedef struct _trajectory_measure_t{
+	int power;
+	int cap;
+} trajectory_measure_t;
 
 
 /**
