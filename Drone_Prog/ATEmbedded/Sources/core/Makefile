@@ -8,7 +8,7 @@ BUILDDIR = ../../Build
 OBJDIR = $(BUILDDIR)/core
 EXECDIR =  $(BUILDDIR)
 EXEC = $(EXECDIR)/howard
-SRC = $(filter-out controller.c,$(wildcard *.c))
+SRC = $(filter-out ,$(wildcard *.c))
 OBJS = $(patsubst %.c,$(OBJDIR)/%.o,$(SRC))
 
 ifdef DEBUG

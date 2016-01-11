@@ -1,6 +1,5 @@
 #include "com_AT.h"
 
-
 //#define DEBUG
 
 /******************************************************************************
@@ -12,6 +11,10 @@ int16_t connectionOpen=0; // flag de connection au drone
 int numSeq=0;		  // numéro de séquence à fournir à chaque envoi de commande AT
 pthread_mutex_t mutex_AT_commands = PTHREAD_MUTEX_INITIALIZER;
 
+// Min and max values for drone heading, used to rectify the value
+int flag_set_heading_range = 0;
+float min_heading;
+float max_heading;
 
 /******************************************************************************
  * Local functions prototypes                                                 *
@@ -77,7 +80,8 @@ int convert_power(float power)
 // Converts an angle in range [-180°;180°] to the corresponding value for AT commands
 int convert_angle_to_power(float angle)
 {
-    return convert_power(angle / 180.0);
+    int turns = (int) (angle / 360.0);
+    return convert_power(angle - (float) (turns * 360.0));
 }
 
 // Converts a power value between -100 and 100 t the corresponding power percentage
@@ -308,7 +312,6 @@ int send_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, po
     int result;
     char * command = build_AT_PCMD_MAG(flag, roll, pitch, gaz, yaw, heading, heading_accuracy);
 
-    printf("Sending %s\n", command);
     result = send_message(command);
     free(command);
     return result;
@@ -412,11 +415,9 @@ int take_off(void){
 
     while (!took_off) {
         result = send_AT_REF(REF_TAKE_OFF);
-        pthread_mutex_lock(&mutex_navdata_struct);
-        if (navdata_struct->navdata_option.altitude != 0) {
+        if (get_altitude() != 0) {
             took_off = 1;
         }
-        pthread_mutex_unlock(&mutex_navdata_struct);
     }
 
     return result;
@@ -433,11 +434,9 @@ int land(void){
 
     while (!landed) {
         result = send_AT_REF(REF_LAND);
-        pthread_mutex_lock(&mutex_navdata_struct);
-        if (navdata_struct->navdata_option.altitude == 0) {
+        if (get_altitude() == 0) {
             landed = 1;
         }
-        pthread_mutex_unlock(&mutex_navdata_struct);
     }
 
     return result;
@@ -794,9 +793,9 @@ int rotate_left_mag(int power, float aimed_heading)
     {
         while((abs(aimed_heading) - 1.0) >= 0.1)
         {
-	    move_rotate_mag(pow, aimed_heading) ;
+	        move_rotate_mag(pow, aimed_heading) ;
             current_heading = get_heading() ;
-	}
+	    }
     }   
     else
     {
@@ -941,13 +940,50 @@ int trim_sensors()
     return result;
 }
 
-int calibrate_magnetometer()
+int send_AT_CALIB()
 {
     int result;
     char * command = build_AT_CALIB(0);
 
     result = send_message(command);
     free(command);
+    return result;
+}
+
+
+int calibrate_magnetometer()
+{
+    int result;
+    int i;
+    float heading_origin, current_heading;
+    power_percentage pow = get_power(100);
+
+    printf("Go Calib\n");
+    result = send_AT_CALIB();
+/*    sleep(5);
+
+    heading_origin = get_heading();
+    min_heading = heading_origin;
+    max_heading = heading_origin;
+    printf("Heading range : [%f; %f]\n", min_heading, max_heading);
+
+    flag_set_heading_range = 1;
+
+    for (i = 0; i < 5; i ++) {
+        printf("Tourne part1 : from %f\n", heading_origin);
+        move_rotate(pow);
+    }
+    current_heading = get_heading();
+    while (abs(current_heading - (heading_origin + 5.0)) > 5.0) {
+        printf("Tourne part2 : from to %f to %f\n", current_heading, heading_origin);
+        move_rotate(pow);
+        current_heading = get_heading() - 360.0;
+    }
+
+    flag_set_heading_range = 0;
+
+    printf("Heading range : [%f; %f]\n", min_heading, max_heading);*/
+
     return result;
 }
 

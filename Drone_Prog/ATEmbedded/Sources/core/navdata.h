@@ -88,6 +88,10 @@ float get_heading();
 
 float get_magneto_radius();
 
+float get_heading_unwrapped();
+
+void print_navdata_magneto();
+
 #endif //NAVDATA_H
 
 #ifdef __cplusplus
