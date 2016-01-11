@@ -70,8 +70,8 @@ int main()
     printf("First Altitude : %d\n", (int) get_altitude());
     sleep(2);
 
-    calibrate_magnetometer();
-    sleep(5);
+    //calibrate_magnetometer();
+    //sleep(5);
 
     // Test for heading : turns a bit once a second for 5 seconds
     //for (i = 0; i < 50; i++) {
@@ -128,7 +128,8 @@ int main()
         //}
     //}
 
-    printf("Test Heading\n");
+    printf("Test Rotation\n");
+
 
     /*float heading = get_heading() - 0.5;
 
@@ -144,6 +145,14 @@ int main()
 */
 	trajectory();
     land();
+
+    // Tests for rotation 
+/*        printf("first height : %f\n", get_altitude());
+        up(100.0,280.0);
+        sleep(2) ;
+        printf("height en l'air : %f\n", get_altitude());    
+        land();
+*/
 
     close_commands_socket();
     return 0;
