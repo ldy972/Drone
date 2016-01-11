@@ -245,7 +245,7 @@ float32_t get_yaw()
     yaw = navdata_struct->navdata_demo.psi / 1000.0;
     pthread_mutex_unlock(&mutex_navdata_struct);
     
-    if(yaw < 0)
+    if(yaw < 0.0)
     {
        return yaw + 360.0 ;
     } 
