@@ -164,14 +164,19 @@ int main()
     //if (heading < -1.0)
       //  heading += 2.0;
 
+    rotate_right_mag(100, 90.0);
+    sleep(1);
+
+    heading = get_heading();
     // Tests for heading : make the drone move relatively to a given heading
-    for (i = 0; i < 25; i++) {
+    for (i = 0; i < 10; i++) {
         printf("Heading : %f\n", heading);
         translate_right_mag(10, 1, heading);
-        heading -= 2.0;
-        usleep(50000);
+        hover();
+        heading -= 5.0;
     }
 
+    rotate_left_mag(100, 5.0);
 
     sleep(1);
 

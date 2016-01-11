@@ -773,16 +773,18 @@ int rotate_right_mag(int power, float heading_disp)
     float aimed_heading = current_heading + heading_disp ;
 
    
-        while (aimed_heading > current_heading)
-        {
-            move_rotate_mag(pow, current_heading) ;
-            current_heading = get_heading() ;
-            //printf("heading : %f\n", current_heading);
-        }
-         
+    while (aimed_heading > current_heading)
+    {
+        move_rotate_mag(pow, current_heading) ;
+        current_heading = get_heading() ;
+        //printf("heading : %f\n", current_heading);
+    }
 
-        move_rotate_mag(-pow, current_heading);
-    
+
+    while (aimed_heading < current_heading)
+    {
+        move_rotate_mag(get_power(-5), current_heading);
+    }
 
     return 0;
 }
