@@ -1,11 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <signal.h>
+#include <unistd.h>
 
 #include "shared.h"
 #include "navdata.h"
 #include "com_AT.h"
 #include "controller.h"
+#include "sim_data.h"
+
+void Emergency_exit (int signum)
+{
+	emergency_stop();
+	exit(signum);
+}
+
+/*void * simu_thread ()
+{ 
+	float target = 0.0;
+	printf("Simulation data initializing");
+	init_simu(target);
+	while (1)
+	{
+		sim_update();
+		printf("heading : %f\n pow : %d\n target : %f", sim_get_heading(), sim_get_power(), target);
+		usleep(1000000);
+	}
+	return NULL;
+}
+*/
 
 void * navdata_thread()
 {
@@ -40,10 +64,12 @@ void * watchdog_thread()
 
 int main()
 {
+    signal(SIGINT, Emergency_exit);
     //int result = 1;
     int i;
     pthread_t th_navdata;
     pthread_t th_watchdog;
+    pthread_t th_simu;
 
     initialize_connection_with_drone();
 
@@ -54,6 +80,7 @@ int main()
     pthread_mutex_unlock(&mutex_navdata_cond);
 
     pthread_create(&th_watchdog, NULL, watchdog_thread, NULL);
+    pthread_create(&th_simu, NULL,simu_thread, NULL);
 
     printf("It's on\n");
     sleep(2);
@@ -66,9 +93,9 @@ int main()
 		sleep(1);
 	}*/
     float cap;
-    take_off();
-    printf("First Altitude : %d\n", (int) get_altitude());
-    sleep(2);
+    //take_off();
+    //printf("First Altitude : %d\n", (int) get_altitude());
+    //sleep(2);
 
     //calibrate_magnetometer();
     //sleep(5);
@@ -128,7 +155,24 @@ int main()
         //}
     //}
 
-    printf("Test Rotation\n");
+
+    //printf("Test Heading\n");
+
+    //float heading = get_heading() - 0.5;
+
+    //if (heading < -1.0)
+      //  heading += 2.0;
+
+    // Tests for heading : make the drone move relatively to a given heading
+    //for (i = 0; i < 10; i++) {
+      //  printf("Heading : %f\n", heading);
+        //printf("Magneto rad : %f\n", get_magneto_radius());
+        //translate_right_mag(50, 1, heading);
+    //}
+
+    //land();
+
+    //printf("Test Rotation\n");
 
 
     /*float heading = get_heading() - 0.5;
