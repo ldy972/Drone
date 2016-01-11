@@ -172,7 +172,7 @@ int main()
 
     // Tests for rotation 
         printf("first heading : %f\n", get_heading());
-        rotate_right_mag(100.0,360.0);
+        rotate_left_mag(100.0,20.0);
         printf("final heading : %f\n", get_heading());    
         sleep(1);
         land();
