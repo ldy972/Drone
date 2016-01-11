@@ -5,6 +5,7 @@
 #include "shared.h"
 #include "navdata.h"
 #include "com_AT.h"
+#include "controller.h"
 
 void * navdata_thread()
 {
@@ -129,7 +130,7 @@ int main()
 
     printf("Test Heading\n");
 
-    float heading = get_heading() - 0.5;
+    /*float heading = get_heading() - 0.5;
 
     if (heading < -1.0)
         heading += 2.0;
@@ -140,7 +141,8 @@ int main()
         printf("Magneto rad : %f\n", get_magneto_radius());
         translate_right_mag(50, 1, heading);
     }
-
+*/
+	trajectory();
     land();
 
     close_commands_socket();
