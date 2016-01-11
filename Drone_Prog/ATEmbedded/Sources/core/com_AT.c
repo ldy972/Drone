@@ -199,7 +199,7 @@ char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_power(heading), convert_power(heading_accuracy));
+    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_angle_to_power(heading), convert_power(heading_accuracy));
     return returned_cmd;
 }
 
