@@ -147,8 +147,3 @@ void close_simu(void){
 	free (sim_rssi_array);
 	sim_rssi_array = NULL;
 }
-	
-int main (void)
-{
-return 1;
-}
