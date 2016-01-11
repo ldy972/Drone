@@ -1,0 +1,53 @@
+
+CROSS_COMPILE = arm-linux-gnueabi-gcc
+CFLAGS = -W -Wall 
+ARCH = arm
+LIB = `pkg-config --libs --cflags libusb-1.0`
+
+all : init rtl_test.elf
+
+init :
+	$(wildcard export ARCH=$(ARCH))
+	$(wildcard export CROSS_COMPILE=$(CROSS_COMPILE))
+	
+librtlsdr : librtlsdr.o tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o
+	$(CROSS_COMPILE) -o librtlsdr.o tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o
+
+librtlsdr.o : librtlsdr.c rtl-sdr.h tuner_e4k.h tuner_fc0012.h tuner_fc0013.h tuner_fc2580.h tuner_r82xx.h rtlsdr_i2c.h
+	$(CROSS_COMPILE) -o librtlsdr.o -c librtlsdr.c $(LIB)
+	
+tuner_e4k.o : tuner_e4k.c tuner_e4k.h reg_field.h rtlsdr_i2c.h
+	$(CROSS_COMPILE) -o tuner_e4k.o -c tuner_e4k.c $(CFLAGS)
+	
+tuner_fc0012.o : tuner_fc0012.c tuner_fc0012.h rtlsdr_i2c.h
+	$(CROSS_COMPILE) -o tuner_fc0012.o -c tuner_fc0012.c $(CFLAGS)
+	
+tuner_fc0013.o : tuner_fc0013.c tuner_fc0013.h rtlsdr_i2c.h
+	$(CROSS_COMPILE) -o tuner_fc0013.o -c tuner_fc0013.c $(CFLAGS)
+	
+tuner_fc2580.o : tuner_fc2580.c tuner_fc2580.h rtlsdr_i2c.h
+	$(CROSS_COMPILE) -o tuner_fc2580.o -c tuner_fc2580.c $(CFLAGS)
+	
+tuner_r82xx.o : tuner_r82xx.c tuner_r82xx.h rtlsdr_i2c.h
+	$(CROSS_COMPILE) -o tuner_r82xx.o -c tuner_r82xx.c $(CFLAGS)
+
+
+
+rtl_test.elf : rtl_test.o rtl_sdr.o convenience.o librtlsdr.o
+	$(CROSS_COMPILE) -o rtl_test.elf rtl_test.o rtl_sdr.o convenience.o librtlsdr.o
+
+rtl_test.o : rtl_test.c rtl-sdr.h convenience.h rtl-sdr_export.h
+	$(CROSS_COMPILE) -o rtl_test.o -c rtl_test.c $(CFLAGS)
+
+rtl_sdr.o : rtl_sdr.c rtl-sdr.h convenience.h rtl-sdr_export.h
+	$(CROSS_COMPILE) -o rtl_sdr.o -c rtl_sdr.c $(CFLAGS)
+
+convenience.o : convenience.c convenience.h rtl-sdr.h rtl-sdr_export.h
+	$(CROSS_COMPILE) -o convenience.o -c convenience.c $(CFLAGS)
+
+clean :
+	rm -rf ./*.o
+	
+mrproper : clean
+	rm -rf ./*.o
+	rm -rf ./*.elf
