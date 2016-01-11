@@ -6,7 +6,6 @@
  *****************************************************************************/
 
 trajectory_measure_t trajectory_measure;
-int power_max = 0;
 
 int trajectory(){
 	int end = 0;//On a atteint la cible 
@@ -15,6 +14,7 @@ int trajectory(){
 	//Full rotation 
 	//Every 10 degrees : calculate the signal power and the cap
 	int i;
+
 	//while (1) {
 		trajectory_measure.power = sim_get_power();
 		trajectory_measure.cap = sim_get_heading();
@@ -26,7 +26,7 @@ int trajectory(){
 				trajectory_measure.cap = sim_get_heading();
 			}
 			rotate_right(75,10.0);
-            usleep(500000);
+	                usleep(500000);
 		} //end for
 
 		//On a le cap : aller vers ce cap tout en vérifiant que la puissance reçue augmente bien
@@ -47,7 +47,7 @@ int trajectory(){
 */
 		close_simu();
 
-		//Algo en escargot
+	return 0;		//Algo en escargot
 	//}
 }
 

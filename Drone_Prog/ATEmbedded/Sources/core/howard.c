@@ -10,15 +10,16 @@
 #include "controller.h"
 #include "sim_data.h"
 
-void Emergency_exit (int signum)
+/*void Emergency_exit (int signum)
 {
 
 	land();
 	close_commands_socket();
 	exit(signum);
 }
+*/
 
-void * simu_thread ()
+/*void * simu_thread ()
 { 
 	float target = 0.0;
 	printf("Simulation data initializing");
@@ -31,6 +32,8 @@ void * simu_thread ()
 	}
 	return NULL;
 }
+*/
+
 
 void * navdata_thread()
 {
@@ -65,12 +68,12 @@ void * watchdog_thread()
 
 int main()
 {
-    signal(SIGINT, Emergency_exit);
+   // signal(SIGINT, Emergency_exit);
     //int result = 1;
     int i;
     pthread_t th_navdata;
     pthread_t th_watchdog;
-    pthread_t th_simu;
+//    pthread_t th_simu;
 
     initialize_connection_with_drone();
 
@@ -81,18 +84,21 @@ int main()
     pthread_mutex_unlock(&mutex_navdata_cond);
 
     pthread_create(&th_watchdog, NULL, watchdog_thread, NULL);
-    //pthread_create(&th_simu, NULL,simu_thread, NULL);
+
+   // pthread_create(&th_simu, NULL,simu_thread, NULL);
 
     printf("It's on\n");
     sleep(2);
 
     take_off();
-    printf("First Altitude : %d\n", (int) get_altitude());
-    sleep(2);
+
+    //printf("First Altitude : %d\n", (int) get_altitude());
+    //sleep(2);
 
 
     calibrate_magnetometer();
-    sleep(5);
+
+    sleep(7);
 
     // Indefinitely print magneto
     /*while (1) {
@@ -157,9 +163,10 @@ int main()
         //}
     //}
 
+
     //printf("Test Heading\n");
 
-    float heading = get_heading();
+//    float heading = get_heading();
 
     //if (heading < -1.0)
       //  heading += 2.0;
@@ -169,18 +176,54 @@ int main()
 
     heading = get_heading();
     // Tests for heading : make the drone move relatively to a given heading
-    for (i = 0; i < 10; i++) {
+  /*  for (i = 0; i < 25; i++) {
         printf("Heading : %f\n", heading);
         translate_right_mag(10, 1, heading);
         hover();
         heading -= 5.0;
     }
+*/
+
+    //land();
 
     rotate_left_mag(100, 5.0);
 
-    sleep(1);
+    //printf("Test Rotation\n");
 
-    land();
+
+    /*float heading = get_heading() - 0.5;
+
+    if (heading < -1.0)
+        heading += 2.0;
+
+    // Tests for heading : make the drone move relatively to a given heading
+    for (i = 0; i < 10; i++) {
+        printf("Heading : %f\n", heading);
+        printf("Magneto rad : %f\n", get_magneto_radius());
+        translate_right_mag(50, 1, heading);
+    }
+*/
+ 	trajectory();
+   	land();
+
+    // Tests for rotation 
+/*        printf("first height : %f\n", get_altitude());
+        up(100.0,280.0);
+        sleep(2) ;
+        printf("height en l'air : %f\n", get_altitude());    
+        land();
+*/
+
+/*    printf("Test Rotation\n");
+
+    // Tests for rotation 
+        printf("first heading : %f\n", get_heading());
+        rotate_right_mag(100.0,360.0);
+        printf("final heading : %f\n", get_heading());    
+        sleep(1);
+        land();
+*/
+
 
     close_commands_socket();
     return 0;
