@@ -14,6 +14,7 @@ navdata_t * navdata_struct = NULL;
  * ****************************************************************************/
 
 void decode_navdata(unsigned char * data, int size);
+void set_heading_range();
 
 
 /*******************************************************************************
@@ -111,6 +112,10 @@ int update_navdata()
 
     decode_navdata(tab_navdata, result);
 
+    if (flag_set_heading_range) {
+        set_heading_range();
+    }
+
     // If everything went fine, navdata is OK
 
     return result;
@@ -176,6 +181,17 @@ void decode_navdata(unsigned char * data, int size)
     }
 
     pthread_mutex_unlock(&mutex_navdata_struct);
+}
+
+
+void set_heading_range()
+{
+    float heading = get_heading();
+    if(heading < min_heading) {
+        min_heading = heading;
+    } else if (heading > max_heading) {
+        max_heading = heading;
+    }
 }
 
 

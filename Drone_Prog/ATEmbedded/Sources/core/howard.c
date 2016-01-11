@@ -12,7 +12,9 @@
 
 /*void Emergency_exit (int signum)
 {
-	emergency_stop();
+
+	land();
+	close_commands_socket();
 	exit(signum);
 }
 */
@@ -88,22 +90,23 @@ int main()
     printf("It's on\n");
     sleep(2);
 
- 
-	/*int i;
-	for (i=0; i<100; i++){
-		printf("Yaw : %d\n", (int)get_yaw());
-		printf("Cap : %d\n", (int)get_heading());
-		sleep(1);
-	}*/
-    float cap;
     take_off();
 
     //printf("First Altitude : %d\n", (int) get_altitude());
     //sleep(2);
 
+
     calibrate_magnetometer();
 
     sleep(7);
+
+    // Indefinitely print magneto
+    /*while (1) {
+        print_navdata_magneto();
+        usleep(500000);
+    }*/
+
+    //trajectory();
 
     // Test for heading : turns a bit once a second for 5 seconds
     //for (i = 0; i < 50; i++) {
@@ -163,17 +166,19 @@ int main()
 
     //printf("Test Heading\n");
 
-    //float heading = get_heading() - 0.5;
+//    float heading = get_heading();
 
     //if (heading < -1.0)
       //  heading += 2.0;
 
     // Tests for heading : make the drone move relatively to a given heading
-    //for (i = 0; i < 10; i++) {
-      //  printf("Heading : %f\n", heading);
-        //printf("Magneto rad : %f\n", get_magneto_radius());
-        //translate_right_mag(50, 1, heading);
-    //}
+  /*  for (i = 0; i < 25; i++) {
+        printf("Heading : %f\n", heading);
+        translate_right_mag(10, 1, heading);
+        heading -= 2.0;
+        usleep(50000);
+    }
+*/
 
     //land();
 
@@ -213,6 +218,7 @@ int main()
         sleep(1);
         land();
 */
+
 
     close_commands_socket();
     return 0;

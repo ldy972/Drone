@@ -15,7 +15,7 @@ static int* sim_rssi_array=NULL;
  * */
 void sim_cap(void){
 	int i =0;
-	int data_range = 360/step;
+	//int data_range = 360/step;
 	sim_cap_array=(float *) malloc(data_range * sizeof(float));
 	sim_rssi_array=(int *) malloc(data_range * sizeof(int));
 	
