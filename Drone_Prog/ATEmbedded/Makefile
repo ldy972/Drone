@@ -33,7 +33,6 @@ all : $(EXEC)
 	
 $(EXEC): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
-
 $(inc):
 	@(cd $(SRCS_DIR) && $(MAKE))
 	@(cd $(LIB_DIR) && $(MAKE))
