@@ -753,27 +753,23 @@ int down(int power, float aimed_height)
  *@return : status = 0 : OK 
  **/
 
-int rotate_right_mag(int power, float aimed_heading)
+int rotate_right_mag(int power, float heading_disp)
 {
     power_percentage pow = get_power(power);
     float current_heading = get_heading() ;
+    float aimed_heading = current_heading + heading_disp ;
 
-    if(abs(aimed_heading == 1.0))
-    {
-        while(abs(aimed_heading) - 1.0 >= 0.01)
+   
+        while (aimed_heading > current_heading)
         {
-	    move_rotate_mag(pow, aimed_heading) ;
+            move_rotate_mag(pow, current_heading) ;
             current_heading = get_heading() ;
-	}
-    }   
-    else
-    {
-        while (abs(aimed_heading - current_heading) >= 0.01)
-        {
-            move_rotate_mag(pow, aimed_heading) ;
-            current_heading = get_heading() ;
+            printf("heading : %f\n", current_heading);
         }
-    }
+         
+
+        move_rotate_mag(-pow, current_heading);
+    
 
     return 0;
 }
