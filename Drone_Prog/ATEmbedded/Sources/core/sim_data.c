@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "sim_data.h"
+#include "navdata.h"
 
 static float* sim_cap_array=NULL;
 static int* sim_rssi_array=NULL;
@@ -129,16 +130,19 @@ int sim_get_power(void){
 	return sim_rssi_array[sim_get_heading_pos()];
 }
 
-void sim_get_power_move(void){
+void sim_update(void){
 	float delta = sim_get_heading()-sim_cap_array[sim_get_target_pos()];
 	if (delta < 0)
 		{delta =-delta;}
 
-	if (delta <0.01)
+	if (delta <0.05)
 		{sim_rssi_array[sim_get_heading_pos()] +=2;}
 
 	else
 		{sim_rssi_array[sim_get_heading_pos()] -=2;}
+
+	sim_get_heading();
+	sim_get_power();
 }
 
 void close_simu(void){

@@ -5,6 +5,21 @@
 #include "shared.h"
 #include "navdata.h"
 #include "com_AT.h"
+#include "sim_data.h"
+
+void * simu_thread ()
+{ 
+	float target = 0.0;
+	printf("Simulation data initializing");
+	init_simu(target);
+	while (1)
+	{
+		sim_update();
+		printf("heading : %f\n pow : %d\n target : %f", sim_get_heading(), sim_get_power(), target);
+		usleep(1000000);
+	}
+	return NULL;
+}
 
 void * navdata_thread()
 {
