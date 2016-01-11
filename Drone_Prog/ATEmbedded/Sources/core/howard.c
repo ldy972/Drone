@@ -78,7 +78,7 @@ int main()
     pthread_mutex_unlock(&mutex_navdata_cond);
 
     pthread_create(&th_watchdog, NULL, watchdog_thread, NULL);
-    pthread_create(&th_simu, NULL,simu_thread, NULL);
+    //pthread_create(&th_simu, NULL,simu_thread, NULL);
 
     printf("It's on\n");
     sleep(2);
@@ -91,12 +91,12 @@ int main()
 		sleep(1);
 	}*/
     float cap;
-    //take_off();
-    //printf("First Altitude : %d\n", (int) get_altitude());
-    //sleep(2);
+    take_off();
+    printf("First Altitude : %d\n", (int) get_altitude());
+    sleep(2);
 
-    //calibrate_magnetometer();
-    //sleep(5);
+    calibrate_magnetometer();
+    sleep(5);
 
     // Test for heading : turns a bit once a second for 5 seconds
     //for (i = 0; i < 50; i++) {
@@ -171,9 +171,10 @@ int main()
     printf("Test Rotation\n");
 
     // Tests for rotation 
-        printf("first height : %f\n", get_altitude());
-        sleep(10) ;
-        printf("height en l'air : %f\n", get_altitude());    
+        printf("first heading : %f\n", get_heading());
+        rotate_right_mag(100.0,360.0);
+        printf("final heading : %f\n", get_heading());    
+        sleep(1);
         land();
 
     close_commands_socket();
