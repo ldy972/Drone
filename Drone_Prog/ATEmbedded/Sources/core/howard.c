@@ -10,11 +10,12 @@
 #include "controller.h"
 #include "sim_data.h"
 
-void Emergency_exit (int signum)
+/*void Emergency_exit (int signum)
 {
 	emergency_stop();
 	exit(signum);
 }
+*/
 
 /*void * simu_thread ()
 { 
@@ -30,6 +31,7 @@ void Emergency_exit (int signum)
 	return NULL;
 }
 */
+
 
 void * navdata_thread()
 {
@@ -64,12 +66,12 @@ void * watchdog_thread()
 
 int main()
 {
-    signal(SIGINT, Emergency_exit);
+   // signal(SIGINT, Emergency_exit);
     //int result = 1;
     int i;
     pthread_t th_navdata;
     pthread_t th_watchdog;
-    pthread_t th_simu;
+//    pthread_t th_simu;
 
     initialize_connection_with_drone();
 
@@ -80,7 +82,7 @@ int main()
     pthread_mutex_unlock(&mutex_navdata_cond);
 
     pthread_create(&th_watchdog, NULL, watchdog_thread, NULL);
-    pthread_create(&th_simu, NULL,simu_thread, NULL);
+   // pthread_create(&th_simu, NULL,simu_thread, NULL);
 
     printf("It's on\n");
     sleep(2);
@@ -93,12 +95,12 @@ int main()
 		sleep(1);
 	}*/
     float cap;
-    //take_off();
+    take_off();
     //printf("First Altitude : %d\n", (int) get_altitude());
     //sleep(2);
 
-    //calibrate_magnetometer();
-    //sleep(5);
+    calibrate_magnetometer();
+    sleep(5);
 
     // Test for heading : turns a bit once a second for 5 seconds
     //for (i = 0; i < 50; i++) {
@@ -187,8 +189,8 @@ int main()
         translate_right_mag(50, 1, heading);
     }
 */
-	trajectory();
-    land();
+ 	trajectory();
+   	land();
 
     // Tests for rotation 
 /*        printf("first height : %f\n", get_altitude());

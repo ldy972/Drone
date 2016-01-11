@@ -519,6 +519,7 @@ int reload_watchdog(void){
 int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
 {
     float current_angle = get_yaw() ;
+    
     power_percentage pow = get_power(power);
     float aimed_angle = (current_angle + angle_disp) ; 
     int i = 0 ;
@@ -550,7 +551,7 @@ int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement 
    }
     else 
     {
-        while(abs(aimed_angle-current_angle) >= 2.0)
+        while(abs(aimed_angle-current_angle) >= 4.0)
         {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
