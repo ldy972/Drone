@@ -3,18 +3,20 @@
 
 #include "com_AT.h"
 #include "navdata.h"
-
+#include "sim_data.h"
 
 /******************************************************************************
 ********************** GLOBAL VARIABLES **************************************
 *******************************************************************************/
 
-struct trajectory_measure{
+struct measure{
 	int power;
 	int cap;
 };
 
-int POWER_MAX 0; //A calculer
+struct measure trajectory_measure ;
+
+#define POWER_MAX 120; //A calculer
 
 
 /**
