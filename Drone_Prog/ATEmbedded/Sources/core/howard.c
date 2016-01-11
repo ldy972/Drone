@@ -69,8 +69,8 @@ int main()
     printf("First Altitude : %d\n", (int) get_altitude());
     sleep(2);
 
-    calibrate_magnetometer();
-    sleep(5);
+    //calibrate_magnetometer();
+    //sleep(5);
 
     // Test for heading : turns a bit once a second for 5 seconds
     //for (i = 0; i < 50; i++) {
@@ -127,21 +127,14 @@ int main()
         //}
     //}
 
-    printf("Test Heading\n");
+    printf("Test Rotation\n");
 
-    float heading = get_heading() - 0.5;
-
-    if (heading < -1.0)
-        heading += 2.0;
-
-    // Tests for heading : make the drone move relatively to a given heading
-    for (i = 0; i < 10; i++) {
-        printf("Heading : %f\n", heading);
-        printf("Magneto rad : %f\n", get_magneto_radius());
-        translate_right_mag(50, 1, heading);
-    }
-
-    land();
+    // Tests for rotation 
+        printf("first height : %f\n", get_altitude());
+        up(100.0,280.0);
+        sleep(2) ;
+        printf("height en l'air : %f\n", get_altitude());    
+        land();
 
     close_commands_socket();
     return 0;
