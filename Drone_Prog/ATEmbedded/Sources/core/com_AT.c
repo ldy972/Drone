@@ -81,7 +81,7 @@ int convert_power(float power)
 int convert_angle_to_power(float angle)
 {
     int turns = (int) (angle / 360.0);
-    return convert_power(angle - (float) (turns * 360.0));
+    return convert_power((angle - (float) (turns * 360)) / 180.0);
 }
 
 // Converts a power value between -100 and 100 t the corresponding power percentage
