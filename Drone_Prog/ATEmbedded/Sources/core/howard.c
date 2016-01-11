@@ -175,7 +175,6 @@ int main()
         usleep(50000);
     }
 
-    sleep(1);
 
     sleep(1);
 
