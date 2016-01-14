@@ -41,7 +41,7 @@ int init_navdata_reception()
 
     if (result == 0) {
         //printf("[NAV] Navdata flag sent\n");
-        while (!ok) {
+        //while (!ok) {
             result = update_navdata();
 
             if (result != 0) {
@@ -52,7 +52,7 @@ int init_navdata_reception()
                     navdata_configured = 1;
                 }
             }
-        }
+        //}
     }
 
     if (!navdata_configured) {
