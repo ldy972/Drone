@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "sim_data.h"
@@ -151,4 +150,5 @@ void close_simu(void){
 	free (sim_rssi_array);
 	sim_rssi_array = NULL;
 }
-	
+
+

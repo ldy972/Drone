@@ -114,6 +114,7 @@ int move_translate(power_percentage power);
 int move_up_down(power_percentage power);
 
 // Classic controls
+int hover();
 int rotate_right(int power, float angle_disp) ;
 int rotate_left(int power, float angle_disp) ;
 int translate_right(int power, float aimed_distance) ;

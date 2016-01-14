@@ -81,7 +81,7 @@ int convert_power(float power)
 int convert_angle_to_power(float angle)
 {
     int turns = (int) (angle / 360.0);
-    return convert_power(angle - (float) (turns * 360.0));
+    return convert_power((angle - (float) (turns * 360)) / 180.0);
 }
 
 // Converts a power value between -100 and 100 t the corresponding power percentage
@@ -199,7 +199,7 @@ char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_power(heading), convert_power(heading_accuracy));
+    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_angle_to_power(heading), convert_power(heading_accuracy));
     return returned_cmd;
 }
 
@@ -469,6 +469,16 @@ int reload_watchdog(void){
 
 // Classic controls
 
+int hover()
+{
+    int result;
+
+    result = send_AT_PCMD(1, 0, 0, 0, 0);
+
+    return result;
+    
+}
+
 /**
  *rotate_right : rotate the drone to the right
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
@@ -480,6 +490,7 @@ int reload_watchdog(void){
 int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
 {
     float current_angle = get_yaw() ;
+    
     power_percentage pow = get_power(power);
     float aimed_angle = (current_angle + angle_disp) ; 
     int i = 0 ;
@@ -511,7 +522,7 @@ int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement 
    }
     else 
     {
-        while(abs(aimed_angle-current_angle) >= 2.0)
+        while(abs(aimed_angle-current_angle) >= 4.0)
         {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
@@ -564,13 +575,13 @@ int rotate_left(int power, float angle_disp) //angle_disp = angle_displacement =
    }
     else 
     {
-        while(abs(aimed_angle-current_angle) >= 2.0)
+        while(abs(aimed_angle-current_angle) >= 4.0)
         {   
             move_rotate(-pow) ;
             current_angle = get_yaw() ;
         }
     }
-        move_rotate(get_power(10));
+        //move_rotate(get_power(10));
     
     return 0 ;
 }
@@ -731,6 +742,7 @@ int rotate_right_mag(int power, float heading_disp)
     float aimed_heading = current_heading + heading_disp ;
 
    
+<<<<<<< HEAD
         while (current_heading<aimed_heading)
         {
             move_rotate_mag(pow, current_heading) ;
@@ -738,9 +750,20 @@ int rotate_right_mag(int power, float heading_disp)
            // printf("heading : %f\n", current_heading);
         }
          
+=======
+    while (aimed_heading > current_heading)
+    {
+        move_rotate_mag(pow, current_heading) ;
+        current_heading = get_heading() ;
+        //printf("heading : %f\n", current_heading);
+    }
+>>>>>>> 6540b9984ade1b6460c75adcbe4beffcdf21dac7
 
-        move_rotate_mag(-pow, current_heading);
-    
+
+    while (aimed_heading < current_heading)
+    {
+        move_rotate_mag(get_power(-5), current_heading);
+    }
 
     return 0;
 }
@@ -986,31 +1009,7 @@ int calibrate_magnetometer()
     //float heading_origin, current_heading;
     //power_percentage pow = get_power(100);
 
-    printf("Go Calib\n");
     result = send_AT_CALIB();
-/*    sleep(5);
-
-    heading_origin = get_heading();
-    min_heading = heading_origin;
-    max_heading = heading_origin;
-    printf("Heading range : [%f; %f]\n", min_heading, max_heading);
-
-    flag_set_heading_range = 1;
-
-    for (i = 0; i < 5; i ++) {
-        printf("Tourne part1 : from %f\n", heading_origin);
-        move_rotate(pow);
-    }
-    current_heading = get_heading();
-    while (abs(current_heading - (heading_origin + 5.0)) > 5.0) {
-        printf("Tourne part2 : from to %f to %f\n", current_heading, heading_origin);
-        move_rotate(pow);
-        current_heading = get_heading() - 360.0;
-    }
-
-    flag_set_heading_range = 0;
-
-    printf("Heading range : [%f; %f]\n", min_heading, max_heading);*/
 
     return result;
 }
