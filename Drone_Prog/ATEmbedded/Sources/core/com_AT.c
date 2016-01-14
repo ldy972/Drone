@@ -741,29 +741,16 @@ int rotate_right_mag(int power, float heading_disp)
     float current_heading = get_heading() ;
     float aimed_heading = current_heading + heading_disp ;
 
-   
-<<<<<<< HEAD
         while (current_heading<aimed_heading)
         {
             move_rotate_mag(pow, current_heading) ;
             current_heading = get_heading() ;
-           // printf("heading : %f\n", current_heading);
+            printf("heading : %f\n", current_heading);
         }
-         
-=======
-    while (aimed_heading > current_heading)
-    {
-        move_rotate_mag(pow, current_heading) ;
-        current_heading = get_heading() ;
-        //printf("heading : %f\n", current_heading);
-    }
->>>>>>> 6540b9984ade1b6460c75adcbe4beffcdf21dac7
-
-
-    while (aimed_heading < current_heading)
-    {
-        move_rotate_mag(get_power(-5), current_heading);
-    }
+      
+        
+        move_rotate_mag(pow, current_heading);
+     
 
     return 0;
 }
@@ -849,7 +836,7 @@ int orientate_mag(float motor_pow, float aimed_heading)
         }
         else 
         {
-            printf("différence à plus  de 180° : on part à droite\n");
+            printf("différence à plus  de 180° : on parcourt %d degrés sur la droite\n",(360-(current_heading - (int)aimed_heading)));
             rotate_right_mag(motor_pow, 360-(current_heading-(int)aimed_heading));
             current_heading = (int)(get_heading())%360 ;
             if(current_heading < 0)
@@ -917,6 +904,7 @@ int forward_mag(int power, int time, float heading)
         move_forward_mag(pow, heading);
         i--;
     }
+    move_forward_mag(-pow,heading);
     return 0;
 }
 
