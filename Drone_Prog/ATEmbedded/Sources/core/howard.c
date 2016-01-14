@@ -62,8 +62,12 @@ void * watchdog_thread()
 }
 
 
+
+
+
 int main()
-{
+{   
+    float heading = 0.0 ;
     signal(SIGINT, Emergency_exit);
     //int result = 1;
     int i;
@@ -92,13 +96,15 @@ int main()
 		printf("Cap : %d\n", (int)get_heading());
 		sleep(1);
 	}*/
-    float cap;
+    //float cap;
+
+
     take_off();
     printf("First Altitude : %d\n", (int) get_altitude());
     sleep(2);
 
 
-    calibrate_magnetometer();
+//    calibrate_magnetometer();
     sleep(5);
 
     // Test for heading : turns a bit once a second for 5 seconds
@@ -156,10 +162,6 @@ int main()
         //}
     //}
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 8ea145f38598ac62cf0c71f8f32218affd38063d
     //printf("Test Heading\n");
 
     //float heading = get_heading() - 0.5;
@@ -175,7 +177,6 @@ int main()
     //}
 
     //land();
-<<<<<<< HEAD
    // printf("Test Rotation\n");
 
     // Tests for rotation 
@@ -184,17 +185,32 @@ int main()
       //  sleep(2) ;
       //  printf("height en l'air : %f\n", get_altitude());    
       //  land();
-=======
-    printf("Test Rotation\n");
 
-    // Tests for rotation 
-        printf("first heading : %f\n", get_heading());
-        rotate_left_mag(100.0,20.0);
-        printf("final heading : %f\n", get_heading());    
-        sleep(1);
+   // printf("Test Rotation\n");
+
+    // Tests for Rotation 
+        
+ 
+
+       printf("orientation\n") ;
+       printf("first heading : %f\n", get_heading()) ;
+       forward(100,100.0);
+       sleep(2) ;
+       //heading = get_heading() ;
+       //forward_mag(10,100,heading) ;
+       //sleep(5);
+       /*while(1)
+       {  
+          heading += 10.0 ;
+          printf("heading : %f\n",heading);
+          forward_mag(10.0,20,heading) ; 
+          sleep(5) ;
+       }*/
+        
         land();
->>>>>>> 8ea145f38598ac62cf0c71f8f32218affd38063d
+
 
     close_commands_socket();
+     
     return 0;
 }
