@@ -93,6 +93,8 @@ int init_navdata_reception()
 
     trim_sensors();
 
+    printf("[NAV] Ready. Battery level : %d\n", get_battery_level());
+
     pthread_mutex_lock(&mutex_navdata_cond);
     pthread_cond_signal(&navdata_initialised);
     pthread_mutex_unlock(&mutex_navdata_cond);
@@ -203,6 +205,17 @@ int close_navdata_connection()
     return close_navdata_socket();
 }
 
+
+uint32_t get_battery_level()
+{
+    uint32_t battery_level;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    battery_level = navdata_struct->navdata_demo.vbat_flying_percentage;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return battery_level;
+}
 
 int32_t get_altitude()
 {
