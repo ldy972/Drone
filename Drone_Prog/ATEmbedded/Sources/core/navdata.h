@@ -36,6 +36,13 @@ int update_navdata();
 int close_navdata_connection();
 
 /**
+ * get_battery_level : Returns the current battery percentage of the drone
+ * @arg : void
+ * @return : battery percentage field of the current navdata
+ */
+uint32_t get_battery_level();
+
+/**
  * get_altitude : Returns the current alitude of the drone in centimeters
  * @arg : void
  * @return : altitude field of the current navdata

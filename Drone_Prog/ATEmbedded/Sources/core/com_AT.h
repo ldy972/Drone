@@ -114,6 +114,7 @@ int move_translate(power_percentage power);
 int move_up_down(power_percentage power);
 
 // Classic controls
+int hover();
 int rotate_right(int power, float angle_disp) ;
 int rotate_left(int power, float angle_disp) ;
 int translate_right(int power, float aimed_distance) ;
@@ -126,6 +127,7 @@ int down(int power, float aimed_height) ;
 // Controls with magnetometer
 int rotate_right_mag(int power, float aimed_heading);
 int rotate_left_mag(int power, float aimed_heading);
+int orientate_mag(float motor_pow, float aimed_heading);//orientate
 int translate_right_mag(int power, int time, float heading);
 int translate_left_mag(int power, int time, float heading);
 int forward_mag(int power, int time, float heading);

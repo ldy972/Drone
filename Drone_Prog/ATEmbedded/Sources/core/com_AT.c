@@ -81,7 +81,7 @@ int convert_power(float power)
 int convert_angle_to_power(float angle)
 {
     int turns = (int) (angle / 360.0);
-    return convert_power(angle - (float) (turns * 360.0));
+    return convert_power((angle - (float) (turns * 360)) / 180.0);
 }
 
 // Converts a power value between -100 and 100 t the corresponding power percentage
@@ -199,7 +199,7 @@ char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_power(heading), convert_power(heading_accuracy));
+    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_angle_to_power(heading), convert_power(heading_accuracy));
     return returned_cmd;
 }
 
@@ -469,6 +469,16 @@ int reload_watchdog(void){
 
 // Classic controls
 
+int hover()
+{
+    int result;
+
+    result = send_AT_PCMD(1, 0, 0, 0, 0);
+
+    return result;
+    
+}
+
 /**
  *rotate_right : rotate the drone to the right
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
@@ -476,49 +486,11 @@ int reload_watchdog(void){
  *@return : status = 0 : OK 
  **/
 
-/*int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
-{
-    float current_angle = get_yaw() ;
-    power_percentage pow = get_power(power);
-    float aimed_angle = (current_angle + angle_disp) ;
-    if(aimed_angle>360.0)
-        aimed_angle = aimed_angle-360.0 ; 
-     
-    else
-    {
-         if(aimed_angle < 0.0)
-           aimed_angle = 360.0+aimed_angle ;
-    } 
-           
-    printf("aimed_angle = %f\n",aimed_angle);
-
-    if(aimed_angle == 360.0 || aimed_angle == 0.0)
-    {   
-        
-        while(current_angle > 5.0 && current_angle < 355.0 )
-	{
-            move_rotate(pow) ;
-            current_angle = get_yaw() ;
-        }
-    }
-    else 
-    {
-        while(abs(aimed_angle-current_angle) >= 5.0)
-        {   
-            move_rotate(pow) ;
-            current_angle = get_yaw() ;
-        }
-    }
-	printf("Stop\n");
-        move_rotate(get_power(-10));
-	printf("Stopped\n");
-    
-    return 0 ;
-}*/
 
 int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
 {
     float current_angle = get_yaw() ;
+    
     power_percentage pow = get_power(power);
     float aimed_angle = (current_angle + angle_disp) ; 
     int i = 0 ;
@@ -550,7 +522,7 @@ int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement 
    }
     else 
     {
-        while(abs(aimed_angle-current_angle) >= 2.0)
+        while(abs(aimed_angle-current_angle) >= 4.0)
         {   
             move_rotate(pow) ;
             current_angle = get_yaw() ;
@@ -574,7 +546,7 @@ int rotate_left(int power, float angle_disp) //angle_disp = angle_displacement =
     float current_angle = get_yaw() ;
     power_percentage pow = get_power(-power);
     float aimed_angle = (current_angle + angle_disp) ; 
-
+    int i = 0 ;
     
     if(aimed_angle>=360.0)
         aimed_angle = aimed_angle-360.0 ; 
@@ -585,31 +557,35 @@ int rotate_left(int power, float angle_disp) //angle_disp = angle_displacement =
     printf("aimed_angle = %f\n",aimed_angle);
 
     if(angle_disp == 360.0)
-    {
-       move_rotate(pow) ; 
-       current_angle = get_yaw() ;   
+    { 
+       for(i=0;i<20;i++)
+       {
+           move_rotate(-pow) ;
+           current_angle = get_yaw() ;
+       }   
     }
 
     if(aimed_angle == 360.0 || aimed_angle == 0.0)
     {    
         while(current_angle < 359.0 && current_angle > 1.0)
 	{
-            move_rotate(pow) ;
+            move_rotate(-pow) ;
             current_angle = get_yaw() ;
         }
    }
     else 
     {
-        while(abs(aimed_angle-current_angle) >= 2.0)
+        while(abs(aimed_angle-current_angle) >= 4.0)
         {   
-            move_rotate(pow) ;
+            move_rotate(-pow) ;
             current_angle = get_yaw() ;
         }
     }
-        move_rotate(get_power(10));
+        //move_rotate(get_power(10));
     
     return 0 ;
 }
+
 
 
 int translate_right(int power, float aimed_distance)
@@ -661,17 +637,24 @@ int translate_left(int power, float aimed_distance)
  **/
 
 int forward(int power, float aimed_distance)
-{
-    float passed_distance = 0.0, t0 = 0.0, t1 = 0.0 ;
-    power_percentage pow = get_power(power);
+{  
+    struct timespec instant ;
+    struct timespec instant_next ;
+    float passed_distance = 0.0, t0 = 0.0, t1 = 0.0, vx = 0.0 ;
+    power_percentage pow = get_power(-power);
 
     while (passed_distance < aimed_distance)
     {
-
-        t0 = (float)(clock()/CLOCKS_PER_SEC) ;
+        printf("passed distance : %f\n", passed_distance) ;
+        clock_gettime(CLOCK_MONOTONIC, &instant) ;
+        
+        printf("t0 : %d\n", instant.tv_nsec) ;
         move_forward(pow) ;
-        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
-        passed_distance = passed_distance + (t1-t0)*get_vy() ;
+        vx = get_vx() ;
+        printf("speed : %f\n",vx);
+        clock_gettime(CLOCK_MONOTONIC, &instant_next);
+        printf("t1 : %d\n", instant_next.tv_nsec) ;
+        passed_distance = passed_distance + (float)((int)(instant_next.tv_nsec - instant.tv_nsec) / 1000000000) *vx ;
     }
    
     return 0 ;
@@ -687,7 +670,7 @@ int backward(int power, float aimed_distance)
 
     float passed_distance = 0.0 ;
     float t0 = 0.0, t1 = 0.0 ;
-    power_percentage pow = get_power(-power);
+    power_percentage pow = get_power(power);
 
     while (passed_distance > aimed_distance)
     {
@@ -758,8 +741,35 @@ int rotate_right_mag(int power, float heading_disp)
     float current_heading = get_heading() ;
     float aimed_heading = current_heading + heading_disp ;
 
+        while (current_heading<aimed_heading)
+        {
+            move_rotate_mag(pow, current_heading) ;
+            current_heading = get_heading() ;
+            printf("heading : %f\n", current_heading);
+        }
+        
+        move_rotate_mag(pow, current_heading);
+
+    return 0;
+}
+
+
+/**
+ *rotate_left_mag : rotate the drone to the left
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of rotation
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK 
+ **/
+
+int rotate_left_mag(int power, float heading_disp)
+{
+    power_percentage pow = get_power(-power);
+    float current_heading = get_heading() ;
+    float aimed_heading = current_heading - heading_disp ;
+
    
-        while (aimed_heading > current_heading)
+        while (current_heading>aimed_heading)
         {
             move_rotate_mag(pow, current_heading) ;
             current_heading = get_heading() ;
@@ -774,37 +784,67 @@ int rotate_right_mag(int power, float heading_disp)
 }
 
 /**
- *rotate_left_mag : rotate the drone to the left
+ *orientate_mag : orientate the drone to an absolute heading going right
  *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
  *@arg : int time : number of rotation
  *@arg : float heading : the heading the drone must follow
  *@return : status = 0 : OK 
  **/
-int rotate_left_mag(int power, float aimed_heading)
-{
-    power_percentage pow = get_power(-power);
-    float current_heading = get_heading() ;
 
-    if(abs(aimed_heading == 1.0))
-    {
-        while((abs(aimed_heading) - 1.0) >= 0.1)
-        {
-	        move_rotate_mag(pow, aimed_heading) ;
-            current_heading = get_heading() ;
-	    }
-    }   
-    else
-    {
-        while((abs(aimed_heading - current_heading)) >= 0.1)
-        {
-            move_rotate_mag(pow, aimed_heading) ;
-            current_heading = get_heading() ;
+int orientate_mag(float motor_pow, float aimed_heading)
+{
+    int current_heading = ((int)(get_heading()))%360 ; //Marche aussi pour un heading <0
+    if(current_heading < 0)
+        current_heading += 360 ;
+    //un cap int absolu ramené entre 0 et 360, ququelquesoit le cap de départ
+    printf("Cap ramené : %d\n",current_heading);  
+
+    if(current_heading<=(int)aimed_heading)
+    {  
+        printf("Cap courant <= au cap souhaité\n") ;
+         
+        if(((int)aimed_heading-current_heading) >= 180)
+        {     
+             printf("cap souhaité à plus de 180° du cap courant : on part à gauche \n"); 
+             rotate_left_mag(motor_pow,360-((int)aimed_heading-current_heading)) ;
+             current_heading = (int)(get_heading())%360 ;
+             if(current_heading < 0)
+                 current_heading += 360 ;  
+        }
+        else
+        {    
+             printf("cap souhaité à moins de 180° du cap courant : on part à droite \n");  
+             rotate_right_mag(motor_pow, (int)aimed_heading-current_heading);
+             current_heading = (int)(get_heading())%360 ;
+             if(current_heading < 0)
+                 current_heading += 360 ;
         }
     }
+    else 
+    { 
+          
+        printf("cap courant > cap souhaité\n");  
+        if((current_heading-(int)aimed_heading) <= 180)
+        { 
+            printf("différence à moins de 180° : on parcourt %d degrés sur la gauche\n",current_heading-(int)aimed_heading);
+            rotate_left_mag(motor_pow, (current_heading-(int)aimed_heading));
+            current_heading = (int)(get_heading())%360 ;
+            if(current_heading < 0)
+                current_heading += 360 ;
+        }
+        else 
+        {
+            printf("différence à plus  de 180° : on parcourt %d degrés sur la droite\n",(360-(current_heading - (int)aimed_heading)));
+            rotate_right_mag(motor_pow, 360-(current_heading-(int)aimed_heading));
+            current_heading = (int)(get_heading())%360 ;
+            if(current_heading < 0)
+                current_heading += 360 ; 
+        } 
+    }
 
-    return 0;
+    return 0 ;
+
 }
-
 
 /**
  *translate_right_mag : translate the drone to the right
@@ -862,6 +902,7 @@ int forward_mag(int power, int time, float heading)
         move_forward_mag(pow, heading);
         i--;
     }
+    move_forward_mag(-pow,heading);
     return 0;
 }
 
@@ -950,35 +991,11 @@ int send_AT_CALIB()
 int calibrate_magnetometer()
 {
     int result;
-    int i;
-    float heading_origin, current_heading;
-    power_percentage pow = get_power(100);
+    //int i;
+    //float heading_origin, current_heading;
+    //power_percentage pow = get_power(100);
 
-    printf("Go Calib\n");
     result = send_AT_CALIB();
-/*    sleep(5);
-
-    heading_origin = get_heading();
-    min_heading = heading_origin;
-    max_heading = heading_origin;
-    printf("Heading range : [%f; %f]\n", min_heading, max_heading);
-
-    flag_set_heading_range = 1;
-
-    for (i = 0; i < 5; i ++) {
-        printf("Tourne part1 : from %f\n", heading_origin);
-        move_rotate(pow);
-    }
-    current_heading = get_heading();
-    while (abs(current_heading - (heading_origin + 5.0)) > 5.0) {
-        printf("Tourne part2 : from to %f to %f\n", current_heading, heading_origin);
-        move_rotate(pow);
-        current_heading = get_heading() - 360.0;
-    }
-
-    flag_set_heading_range = 0;
-
-    printf("Heading range : [%f; %f]\n", min_heading, max_heading);*/
 
     return result;
 }

@@ -14,6 +14,7 @@ navdata_t * navdata_struct = NULL;
  * ****************************************************************************/
 
 void decode_navdata(unsigned char * data, int size);
+void set_heading_range();
 
 
 /*******************************************************************************
@@ -40,7 +41,7 @@ int init_navdata_reception()
 
     if (result == 0) {
         //printf("[NAV] Navdata flag sent\n");
-        while (!ok) {
+        //while (!ok) {
             result = update_navdata();
 
             if (result != 0) {
@@ -51,7 +52,7 @@ int init_navdata_reception()
                     navdata_configured = 1;
                 }
             }
-        }
+        //}
     }
 
     if (!navdata_configured) {
@@ -92,6 +93,8 @@ int init_navdata_reception()
 
     trim_sensors();
 
+    printf("[NAV] Ready. Battery level : %d\n", get_battery_level());
+
     pthread_mutex_lock(&mutex_navdata_cond);
     pthread_cond_signal(&navdata_initialised);
     pthread_mutex_unlock(&mutex_navdata_cond);
@@ -110,6 +113,10 @@ int update_navdata()
     result = recieve_navdata(tab_navdata);
 
     decode_navdata(tab_navdata, result);
+
+    if (flag_set_heading_range) {
+        set_heading_range();
+    }
 
     // If everything went fine, navdata is OK
 
@@ -179,6 +186,17 @@ void decode_navdata(unsigned char * data, int size)
 }
 
 
+void set_heading_range()
+{
+    float heading = get_heading();
+    if(heading < min_heading) {
+        min_heading = heading;
+    } else if (heading > max_heading) {
+        max_heading = heading;
+    }
+}
+
+
 int close_navdata_connection()
 {
     pthread_mutex_lock(&mutex_navdata_struct);
@@ -187,6 +205,17 @@ int close_navdata_connection()
     return close_navdata_socket();
 }
 
+
+uint32_t get_battery_level()
+{
+    uint32_t battery_level;
+
+    pthread_mutex_lock(&mutex_navdata_struct);
+    battery_level = navdata_struct->navdata_demo.vbat_flying_percentage;
+    pthread_mutex_unlock(&mutex_navdata_struct);
+
+    return battery_level;
+}
 
 int32_t get_altitude()
 {
