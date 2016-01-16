@@ -156,10 +156,7 @@ int main()
         //}
     //}
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 8ea145f38598ac62cf0c71f8f32218affd38063d
     //printf("Test Heading\n");
 
     //float heading = get_heading() - 0.5;
@@ -175,16 +172,7 @@ int main()
     //}
 
     //land();
-<<<<<<< HEAD
-   // printf("Test Rotation\n");
 
-    // Tests for rotation 
-      //  printf("first height : %f\n", get_altitude());
-      //  up(100.0,280.0);
-      //  sleep(2) ;
-      //  printf("height en l'air : %f\n", get_altitude());    
-      //  land();
-=======
     printf("Test Rotation\n");
 
     // Tests for rotation 
@@ -193,7 +181,7 @@ int main()
         printf("final heading : %f\n", get_heading());    
         sleep(1);
         land();
->>>>>>> 8ea145f38598ac62cf0c71f8f32218affd38063d
+
 
     close_commands_socket();
     return 0;
