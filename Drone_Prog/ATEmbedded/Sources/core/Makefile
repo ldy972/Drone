@@ -3,6 +3,7 @@
 # Builds ATEmbedded core .o files
 
 CFLAGS = -W -Wall -pthread -D_REENTRANT
+LIBS = -lm
 
 BUILDDIR = ../../Build
 OBJDIR = $(BUILDDIR)/core
@@ -38,7 +39,7 @@ ifeq ($(wildcard $(OBJDIR)),)
 endif
 
 $(EXECDIR)/% : $(OBJDIR)/%.o $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 # Create each .o if the corresponding .c or .h file has been edited
 $(OBJDIR)/%.o : %.c $(wildcard %.h) shared.h

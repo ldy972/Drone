@@ -1,16 +1,22 @@
-#ifndef DEF_SIM_REAL
-#define DEF_SIM_REAL
+#ifndef SIM_REAL_H
+#define SIM_REAL_H
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
 #include "navdata.h"
 
 
-#define step 10
-static int data_range = 360/step;
+#define D0 60.0
+#define STEP 1
 extern float* sim_rssi_array;
-	
-void sim_rssi(float target);
+
+
+// Fills the array of simulated RSSI with the given direction for the direction of the target
+void simulate_rssi(float target);
 void update_sim();
-float sim_get_pow(float teta);
+float sim_get_pow(float theta);
 
 
 
