@@ -174,6 +174,7 @@ int main()
             //up(50, 1);
         //}
     //}
+
     //printf("Test Heading\n");
 
 //    float heading = get_heading();
@@ -194,7 +195,6 @@ int main()
     }
 */
 
- 
     sleep(2) ;
 
     printf("orientation\n") ;
