@@ -106,10 +106,7 @@ int main()
     take_off();
 
     //printf("First Altitude : %d\n", (int) get_altitude());
-    //sleep(2);
-
-//    calibrate_magnetometer();
-    sleep(5);
+    sleep(2);
     calibrate_magnetometer();
 
     sleep(7);
@@ -198,16 +195,19 @@ int main()
 */
 
  
+    sleep(2) ;
 
-       printf("orientation\n") ;
-       printf("first heading : %f\n", get_heading()) ;
-       forward(100,100.0);
-       sleep(2) ;
+    printf("orientation\n") ;
+    printf("first heading : %f\n", get_heading()) ;
+    forward(10, 2.0);
+    //forward_mag(100, 150, get_heading());
+    sleep(2) ;
 
-    rotate_left_mag(100, 5.0);
- 
+    //orientate_mag(100, get_heading() + 10.0);
+
+    sleep(2) ;
     land();
     close_commands_socket();
-     
+
     return 0;
 }
