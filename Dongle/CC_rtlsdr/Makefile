@@ -1,17 +1,17 @@
 
 CROSS_COMPILE = arm-linux-gnueabi-gcc
-CFLAGS = -W -Wall 
+CFLAGS = -W -Wall -march=armv7-a -lrt
 ARCH = arm
-LIB = `pkg-config --libs --cflags libusb-1.0`
+LIB := $(shell PKG_CONFIG_PATH=../dronefs/lib/pkgconfig/ pkg-config --libs --cflags libusb-1.0)
 
-all : init rtl_test.elf
+all : init librtlsdr rtl_test.elf
 
 init :
 	$(wildcard export ARCH=$(ARCH))
 	$(wildcard export CROSS_COMPILE=$(CROSS_COMPILE))
 	
 librtlsdr : librtlsdr.o tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o
-	$(CROSS_COMPILE) -o librtlsdr.o tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o
+	#$(CROSS_COMPILE) -o librtlsdr.o tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o
 
 librtlsdr.o : librtlsdr.c rtl-sdr.h tuner_e4k.h tuner_fc0012.h tuner_fc0013.h tuner_fc2580.h tuner_r82xx.h rtlsdr_i2c.h
 	$(CROSS_COMPILE) -o librtlsdr.o -c librtlsdr.c $(LIB)
@@ -33,8 +33,8 @@ tuner_r82xx.o : tuner_r82xx.c tuner_r82xx.h rtlsdr_i2c.h
 
 
 
-rtl_test.elf : rtl_test.o rtl_sdr.o convenience.o librtlsdr.o
-	$(CROSS_COMPILE) -o rtl_test.elf rtl_test.o rtl_sdr.o convenience.o librtlsdr.o
+rtl_test.elf : rtl_test.o convenience.o librtlsdr.o tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o
+	$(CROSS_COMPILE) -o rtl_test.elf rtl_test.o convenience.o librtlsdr.o tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o $(CFLAGS) $(LIB)
 
 rtl_test.o : rtl_test.c rtl-sdr.h convenience.h rtl-sdr_export.h
 	$(CROSS_COMPILE) -o rtl_test.o -c rtl_test.c $(CFLAGS)
@@ -51,3 +51,4 @@ clean :
 mrproper : clean
 	rm -rf ./*.o
 	rm -rf ./*.elf
+
