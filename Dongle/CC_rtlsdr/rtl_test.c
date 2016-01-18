@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+
 #ifdef __APPLE__
 #include <sys/time.h>
 #else
@@ -150,13 +151,21 @@ static int ppm_gettime(struct timespec *ts)
 	return rv;
 }
 
+float round_p(float x){
+	int i_val = (int)x;
+	if((x-(float)i_val)<0.5)
+		return (float)i_val ;
+	else
+		return (float)i_val+1 ;
+}
+
 static int ppm_report(uint64_t nsamples, uint64_t interval)
 {
 	double real_rate, ppm;
 
 	real_rate = nsamples * 1e9 / interval;
 	ppm = 1e6 * (real_rate / (double)samp_rate - 1.);
-	return (int)round(ppm);
+	return (int)round_p(ppm);
 }
 
 static void ppm_test(uint32_t len)
