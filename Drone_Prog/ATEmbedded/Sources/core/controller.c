@@ -87,16 +87,16 @@ int trajectory(){
 		//Moving forward and checking the power is increasing
 		int i = time_command(distance_todo);
 		/*power = sim_get_power();
-		move_forward_mag(75,1,init_cap);
+		forward_mag(75,1,init_cap);
 		i--;
 
 		while ((sim_get_power_move()>=power) && (i>0)){
-			move_foward_mag(75, 1, init_cap);
+			foward_mag(75, 1, init_cap);
 			i--;
 			power = sim_get_power();
 		}
 		*/
-		move_forward_mag(75,i,init_cap);
+		forward_mag(75,i,init_cap);
 		ex_distance = distance_todo;
 	}
 
