@@ -1,5 +1,6 @@
 #include "sim_real.h"
 
+drone_state state_howard;
 
 int data_range = 360 / STEP;
 float* sim_rssi_array = NULL;
@@ -60,4 +61,30 @@ float sim_get_pow(float theta)
 {
 	int index = (adjust_angle_f(theta)) + 180;
 	return sim_rssi_array[index];
+}
+
+
+int rotate_right_simu(int power, float heading_disp)
+{
+    state_howard.heading += heading_disp;
+    return 0;
+}
+
+
+int forward_simu(int power, int times, float heading)
+{
+    // Write function linking nb commands to distance
+    return 0;
+}
+
+
+float get_simulated_heading()
+{
+    return state_howard.heading;
+}
+
+
+float get_simulated_power()
+{
+    return sim_rssi_array[adjust_angle_f(state_howard.heading)];
 }
