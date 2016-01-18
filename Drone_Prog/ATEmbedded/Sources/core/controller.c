@@ -5,23 +5,51 @@
  * Global Variables                                                           *
  *****************************************************************************/
 
+int time(float distance){
+	if (distance<=0.0) return 0;
+	else if (distance<=0.5) return 10;
+	else if (distance<=1.5) return 20;
+	else if (distance<=2.5) return 30;
+	else if (distance<=3.5) return 40;
+	else if (distance<=5.0) return 50;
+	else if (distance<=6.0) return 60;
+	else if (distance<=8.0) return 70;
+	else if (distance<=10.0) return 80;
+	else if (distance<=12.0) return 90;
+	else if (distance <= 14.0) return 100;
+	else if distance <= 16.0) return 110;
+	else return 120;
+}
+
+
+float distance_measure(float ex_a_parcourir){
+	return ex_a_parcourir;
+}
+
+
 trajectory_measure_t trajectory_measure;
 
 int trajectory(){
-	int end = 0;//On a atteint la cible 
+	int end = 0;//we reached the target 
+        int indice = 0;
 	int power; //power measure
-	init_simu(0); // Cap 0 
-	//Full rotation 
-	//Every 10 degrees : calculate the signal power and the cap
-	int i;
-	float init_cap;
+	float distance; //distance measure
+	float distance_todo=; //distance to cross
+	float ex_distance=20.0;
+	float init_cap; //initial heading
 
-	//while (1) {
+	while (indice<10) { 
+
+		indice ++;
+
+		//Full rotation
+		//Every 10 degrees: calculate the signal power and the cap
 		trajectory_measure.power = sim_get_power();
 		trajectory_measure.cap = sim_get_heading();
 		init_cap = get_heading();
 
 		rotate_right_mag(75,10.0);
+		printf("Rotation 360\n");
 		while(get_heading()<init_cap+360)
 		{
 			printf("Cap:%f\n", get_heading());
@@ -35,40 +63,45 @@ int trajectory(){
 			rotate_right_mag(75,10.0);
 	        } //end while
 		sleep(5);
-		init_cap = get_heading();
+		
+		//We have the right direction and the power related to it
+		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
 
-		rotate_left_mag(75,10.0);
+		//Rotation toward the right direction
+		while((get_heading()-trajectory_measure.cap)>5.0){
+			rotate_right_mag(75,5.0);
+		}
+
 		printf("\ncap:%f\n", get_heading());
+		init_cap = get_heading());
 
-		while(get_heading()>(init_cap-90)){
-			rotate_left_mag(75,10.0);
-			printf("\ncap:%f\n", get_heading());
+		sleep(1);
+
+		//Measurement of the distance from the phone and the distance to cross at 45° from the right head
+		distance = measure_distance(ex_distance);
+		distance_todo = distance * 0.71; //cosinus(45)
+
+		//Rotation of 45° from the cap
+		rotate_right(75,45.0);
+		sleep(3);
+
+		//Moving forward and checking the power is increasing
+		int i = time(distance_todo);
+		power = sim_get_power();
+		move_forward_mag(75,1,init_cap);
+		i--;
+
+		/*while ((sim_get_power_move()>=power) && (i>0)){
+			move_foward_mag(75, 1, init_cap);
+			i--;
+			power = sim_get_power();
 		}
-		sleep(5);
+		*/
+		move_forward_mag(75,i,init_cap);
+		ex_distance = distance_todo;
+	}
 
-		init_cap=get_heading();
-		forward_mag(75,10,init_cap);
-		sleep(5);				
-		//On a le cap : aller vers ce cap tout en vérifiant que la puissance reçue augmente bien
-	
-		/*while ((sim_get_heading()-trajectory_measure.cap)<0.01){
-			rotate_right(75,10.0);
-			printf("Cap:%f\n", get_heading());
-		}
-*/
-
-	/*	power = trajectory_measure.power;
-	
-		while ((sim_get_power_move()>=power) && (sim_get_power_move < POWER_MAX)){
-			power = sim_get_power_move();
-			move_forward(75, trajectory_measure.cap); // TODO
-			if (sim_get_power_move>=POWER_MAX) exit(0); // On est assez proche
-		}
-*/
-		close_simu();
-
-	return 0;		//Algo en escargot
-	//}
+	return 0;
 }
 
 
