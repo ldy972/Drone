@@ -43,8 +43,8 @@ void simulate_rssi(float target)
         theta = i - base_orientation - 180;
         adjust_angle_i(theta);
         // coeff d'atténuation de puissance en fonction de l'angle
-        attenuation = (float) (-3.0 * pow(10.0, -5.0) * pow((double)theta, 2.0) + 1.0);
-        sim_rssi_array[i] = power * attenuation;		
+        attenuation = (float) -(-3.0 * pow(10.0, -5.0) * pow((double)theta, 2.0) + 1.0);
+        sim_rssi_array[i] = power * (attenuation);		
     }
 }
 
