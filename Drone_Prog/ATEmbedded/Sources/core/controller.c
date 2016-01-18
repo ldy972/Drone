@@ -5,7 +5,7 @@
  * Global Variables                                                           *
  *****************************************************************************/
 
-int time(float distance){
+int time_command(float distance){
 	if (distance<=0.0) return 0;
 	else if (distance<=0.5) return 10;
 	else if (distance<=1.5) return 20;
@@ -17,7 +17,7 @@ int time(float distance){
 	else if (distance<=10.0) return 80;
 	else if (distance<=12.0) return 90;
 	else if (distance <= 14.0) return 100;
-	else if distance <= 16.0) return 110;
+	else if (distance <= 16.0) return 110;
 	else return 120;
 }
 
@@ -30,13 +30,12 @@ float distance_measure(float ex_a_parcourir){
 trajectory_measure_t trajectory_measure;
 
 int trajectory(){
-	int end = 0;//we reached the target 
-        int indice = 0;
-	int power; //power measure
+	int indice = 0;
 	float distance; //distance measure
-	float distance_todo=; //distance to cross
+	float distance_todo; //distance to cross
 	float ex_distance=20.0;
 	float init_cap; //initial heading
+	float power;
 
 	while (indice<10) { 
 
@@ -53,7 +52,7 @@ int trajectory(){
 		while(get_heading()<init_cap+360)
 		{
 			printf("Cap:%f\n", get_heading());
-			printf("Power:%d\n", trajectory_measure.power);
+			printf("Power:%f\n", trajectory_measure.power);
 			printf("Cap simu:%f\n", trajectory_measure.cap);
 
 			if (sim_get_power() >= trajectory_measure.power){
@@ -73,12 +72,12 @@ int trajectory(){
 		}
 
 		printf("\ncap:%f\n", get_heading());
-		init_cap = get_heading());
+		init_cap = get_heading();
 
 		sleep(1);
 
 		//Measurement of the distance from the phone and the distance to cross at 45° from the right head
-		distance = measure_distance(ex_distance);
+		distance = distance_measure(ex_distance);
 		distance_todo = distance * 0.71; //cosinus(45)
 
 		//Rotation of 45° from the cap
@@ -86,12 +85,12 @@ int trajectory(){
 		sleep(3);
 
 		//Moving forward and checking the power is increasing
-		int i = time(distance_todo);
-		power = sim_get_power();
+		int i = time_command(distance_todo);
+		/*power = sim_get_power();
 		move_forward_mag(75,1,init_cap);
 		i--;
 
-		/*while ((sim_get_power_move()>=power) && (i>0)){
+		while ((sim_get_power_move()>=power) && (i>0)){
 			move_foward_mag(75, 1, init_cap);
 			i--;
 			power = sim_get_power();
