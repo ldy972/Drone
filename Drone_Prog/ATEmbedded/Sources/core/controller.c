@@ -81,7 +81,7 @@ int trajectory(){
 		distance_todo = distance * 0.71; //cosinus(45)
 
 		//Rotation of 45° from the cap
-		rotate_right(75,45.0);
+		rotate_right_mag(75,45.0);
 		sleep(3);
 
 		//Moving forward and checking the power is increasing
