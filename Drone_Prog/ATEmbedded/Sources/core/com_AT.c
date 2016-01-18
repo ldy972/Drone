@@ -807,9 +807,9 @@ int orientate_mag(int motor_pow, float aimed_heading)
  *@arg : float heading : the heading the drone must follow
  *@return : status = 0 : OK 
  **/
-int translate_right_mag(int power, int time, float heading)
+int translate_right_mag(int power, int times, float heading)
 {
-    int i = time;
+    int i = times;
     float pow = get_power(power);
 
     while (i>=0)
@@ -827,9 +827,9 @@ int translate_right_mag(int power, int time, float heading)
  *@arg : float heading : the heading the drone must follow
  *@return : status = 0 : OK 
  **/
-int translate_left_mag(int power, int time, float heading)
+int translate_left_mag(int power, int times, float heading)
 {
-    int i = time;
+    int i = times;
     float pow = get_power(-power);
 
     while (i>=0)
@@ -846,9 +846,9 @@ int translate_left_mag(int power, int time, float heading)
  *@arg : float heading : the heading the drone must follow
  *@return : status = 0 : OK
  **/
-int forward_mag(int power, int time, float heading)
+int forward_mag(int power, int times, float heading)
 {
-    int i = time;
+    int i = times;
     float pow = get_power(-power);
 
     while (i>=0)
@@ -866,8 +866,8 @@ int forward_mag(int power, int time, float heading)
  *@arg : float heading : the heading the drone must follow
  *@return : status = 0 : OK
  **/
-int backward_mag(int power, int time, float heading){
-    int i = time;
+int backward_mag(int power, int times, float heading){
+    int i = times;
     float pow = get_power(power);
 
     while (i>=0){

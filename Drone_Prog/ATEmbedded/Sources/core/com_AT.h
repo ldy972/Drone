@@ -118,13 +118,13 @@ int up(int power, float aimed_height) ;
 int down(int power, float aimed_height) ;
 
 // Controls with magnetometer
-int rotate_right_mag(int power, float aimed_heading);
-int rotate_left_mag(int power, float aimed_heading);
+int rotate_right_mag(int power, float heading_disp);
+int rotate_left_mag(int power, float heading_disp);
 int orientate_mag(int motor_pow, float aimed_heading);//orientate
-int translate_right_mag(int power, int time, float heading);
-int translate_left_mag(int power, int time, float heading);
-int forward_mag(int power, int time, float heading);
-int backward_mag(int power, int time, float heading);
+int translate_right_mag(int power, int times, float heading);
+int translate_left_mag(int power, int times, float heading);
+int forward_mag(int power, int times, float heading);
+int backward_mag(int power, int times, float heading);
 
 // Messages used for initialization
 int configure_navdata_demo();
