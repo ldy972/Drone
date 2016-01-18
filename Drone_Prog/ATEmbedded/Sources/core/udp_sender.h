@@ -42,7 +42,7 @@ int send_message_no_delay(char* message);
 int send_navdata(char* message);
 
 // Retrieve navdata
-int recieve_navdata(int * navdata);
+int recieve_navdata(unsigned char * navdata);
 
 // Close the sockets
 int close_sockets();
