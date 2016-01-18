@@ -28,8 +28,8 @@ void simulate_rssi(float target)
 {
 	int i = 0;
 	int theta;
-    int base_orientation = adjust_angle_f(target);
-	float attenuation = 0.0;
+    	int base_orientation = adjust_angle_f(target);
+	
 	float power = 0;
 
     if (sim_rssi_array == NULL) {
@@ -37,14 +37,15 @@ void simulate_rssi(float target)
     	sim_rssi_array = malloc(sizeof(float) * data_range);
     }
     // puissance reçue en face de la cible en fonction de la distance
-	power = -0.2255 * distance -14.527;
+	
 	for (i = 0; i < data_range; i++)
     {
         theta = i - base_orientation - 180;
         adjust_angle_i(theta);
-        // coeff d'atténuation de puissance en fonction de l'angle
-        attenuation = (float) -(-3.0 * pow(10.0, -5.0) * pow((double)theta, 2.0) + 1.0);
-        sim_rssi_array[i] = power * (attenuation);		
+        // calcul puissance
+	power = -0.2255 * distance -14.527;
+        power = (float) (-0.00017 * pow((double)theta, 2.0)+power);
+        sim_rssi_array[i] = power;		
     }
 }
 
