@@ -1,4 +1,3 @@
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -107,12 +106,6 @@ int no_emergency_stop(void);
 // Watchdog
 int reload_watchdog(void);
 
-// Intermediary functions
-int move_forward(power_percentage power);
-int move_rotate(power_percentage power);
-int move_translate(power_percentage power);
-int move_up_down(power_percentage power);
-
 // Classic controls
 int hover();
 int rotate_right(int power, float angle_disp) ;
@@ -127,6 +120,7 @@ int down(int power, float aimed_height) ;
 // Controls with magnetometer
 int rotate_right_mag(int power, float aimed_heading);
 int rotate_left_mag(int power, float aimed_heading);
+int orientate_mag(int motor_pow, float aimed_heading);//orientate
 int translate_right_mag(int power, int time, float heading);
 int translate_left_mag(int power, int time, float heading);
 int forward_mag(int power, int time, float heading);

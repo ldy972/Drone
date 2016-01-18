@@ -24,12 +24,12 @@ float max_heading;
 void inc_num_sequence();
 int convert_power(float power);
 int convert_angle_to_power(float angle);
-power_percentage get_power(int power);
+float get_power(int power);
 
 // AT Commands builders
 char * build_AT_REF(AT_REF_cmd cmd);
-char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw);
-char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy);
+char * build_AT_PCMD(int flag, float roll, float pitch, float gaz, float yaw);
+char * build_AT_PCMD_MAG(int flag, float roll, float pitch, float gaz, float yaw, float heading, float heading_accuracy);
 char * build_AT_FTRIM();
 char * build_AT_COMWDG();
 char * build_AT_CONFIG();
@@ -38,8 +38,9 @@ char * build_AT_CALIB(int device_id);
 
 // AT Commands senders
 int send_AT_REF(AT_REF_cmd cmd);
-int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw);
-int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw);
+int send_AT_PCMD(int flag, float roll, float pitch, float gaz, float yaw);
+int send_AT_PCMD_MAG(int flag, float roll, float pitch, float gaz, float yaw, float heading, float heading_accuracy);
+int send_AT_CALIB(int device_id);
 int configure_navdata(char * parameter, char * value);
 
 
@@ -54,12 +55,12 @@ int configure_navdata(char * parameter, char * value);
  * */
 void inc_num_sequence(void){
     ENTER_FCT()
-    if (numSeq == 9999) {
-        maxSeqReached++ ;
-        numSeq=0 ;
-    } else {
-        numSeq++;
-    }
+        if (numSeq == 9999) {
+            maxSeqReached++ ;
+            numSeq=0 ;
+        } else {
+            numSeq++;
+        }
     EXIT_FCT()
 }
 
@@ -85,59 +86,9 @@ int convert_angle_to_power(float angle)
 }
 
 // Converts a power value between -100 and 100 t the corresponding power percentage
-power_percentage get_power(int power)
+float get_power(int power)
 {
-    power_percentage result;
-
-    switch (power) {
-    case -100:
-        result = NEG_POWER_100;
-        break;
-    case -75:
-        result = NEG_POWER_75;
-        break;
-    case -50:
-        result = NEG_POWER_50;
-        break;
-    case -25:
-        result = NEG_POWER_25;
-        break;
-    case -20:
-        result = NEG_POWER_20;
-        break;
-    case -10:
-        result = NEG_POWER_10;
-        break;
-    case -5:
-        result = NEG_POWER_5;
-        break;
-    case 5:
-        result = POS_POWER_5;
-        break;
-    case 10:
-        result = POS_POWER_10;
-        break;
-    case 20:
-        result = POS_POWER_20;
-        break;
-    case 25:
-        result = POS_POWER_25;
-        break;
-    case 50:
-        result = POS_POWER_50;
-        break;
-    case 75:
-        result = POS_POWER_75;
-        break;
-    case 100:
-        result = POS_POWER_100;
-        break;
-    default:
-        result = NULL_POWER_VALUE;
-        break;
-    }
-
-    return result;
+    return ((float) power) / 100.0;
 }
 
 /******************************************************************************
@@ -179,12 +130,12 @@ char * build_AT_REF (AT_REF_cmd cmd)
  * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
  * @return :
  * **/
-char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw)
+char * build_AT_PCMD(int flag, float roll, float pitch, float gaz, float yaw)
 {
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw);
+    sprintf(returned_cmd, "AT*PCMD=%i,%i,%i,%i,%i,%i\r", numSeq, flag, convert_power(roll), convert_power(pitch), convert_power(gaz), convert_power(yaw));
     return returned_cmd;
 }
 
@@ -194,12 +145,12 @@ char * build_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, po
  * @arg : le hovering flag et les valeurs en pourcentage puissance moteur des déplacement
  * @return :
  * **/
-char * build_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy)
+char * build_AT_PCMD_MAG(int flag, float roll, float pitch, float gaz, float yaw, float heading, float heading_accuracy)
 {
     char * returned_cmd = (char *) malloc(TAILLE_COMMANDE * sizeof(char));
 
     inc_num_sequence();
-    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, (int)roll, (int)pitch, (int)gaz, (int)yaw, convert_angle_to_power(heading), convert_power(heading_accuracy));
+    sprintf(returned_cmd, "AT*PCMD_MAG=%i,%i,%i,%i,%i,%i,%i,%i\r", numSeq, flag, convert_power(roll), convert_power(pitch), convert_power(gaz), convert_power(yaw), convert_angle_to_power(heading), convert_power(heading_accuracy));
     return returned_cmd;
 }
 
@@ -297,7 +248,7 @@ int send_AT_REF(AT_REF_cmd cmd){
 }
 
 
-int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw)
+int send_AT_PCMD(int flag, float roll, float pitch, float gaz, float yaw)
 {
     int result;
     char * command = build_AT_PCMD(flag, roll, pitch, gaz, yaw);
@@ -307,7 +258,7 @@ int send_AT_PCMD(int flag, power_percentage roll, power_percentage pitch, power_
     return result;
 }
 
-int send_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, power_percentage gaz, power_percentage yaw, float heading, float heading_accuracy)
+int send_AT_PCMD_MAG(int flag, float roll, float pitch, float gaz, float yaw, float heading, float heading_accuracy)
 {
     int result;
     char * command = build_AT_PCMD_MAG(flag, roll, pitch, gaz, yaw, heading, heading_accuracy);
@@ -317,6 +268,16 @@ int send_AT_PCMD_MAG(int flag, power_percentage roll, power_percentage pitch, po
     return result;
 }
 
+
+int send_AT_CALIB(int device_id)
+{
+    int result;
+    char * command = build_AT_CALIB(device_id);
+
+    result = send_message(command);
+    free(command);
+    return result;
+}
 
 int configure_navdata(char * parameter, char * value)
 {
@@ -338,7 +299,7 @@ int configure_navdata(char * parameter, char * value)
 // Intermediary functions for classic movement
 
 // pitch
-int move_forward(power_percentage power){
+int move_forward(float power){
     int result;
 
     result = send_AT_PCMD(1, 0, power, 0, 0);
@@ -347,7 +308,7 @@ int move_forward(power_percentage power){
 }
 
 // yaw
-int move_rotate(power_percentage power){
+int move_rotate(float power){
     int result;
 
     result = send_AT_PCMD(1, 0, 0, 0, power);
@@ -356,7 +317,7 @@ int move_rotate(power_percentage power){
 }
 
 // roll : negative to translate left, positive to translate right
-int move_translate(power_percentage power){
+int move_translate(float power){
     int result;
 
     result = send_AT_PCMD(1, power, 0, 0, 0);
@@ -365,7 +326,7 @@ int move_translate(power_percentage power){
 }
 
 // gaz : positive = up, negative = down
-int move_up_down(power_percentage power){
+int move_up_down(float power){
     int result;
 
     result = send_AT_PCMD(1, 0, 0, power, 0);
@@ -376,7 +337,7 @@ int move_up_down(power_percentage power){
 // Intermediary functions for movement with the magnetometer
 
 // Pitch
-int move_forward_mag(power_percentage power, float heading){
+int move_forward_mag(float power, float heading){
     int result;
 
     result = send_AT_PCMD_MAG(5, 0, power, 0, 0, heading, 0.02);
@@ -384,7 +345,7 @@ int move_forward_mag(power_percentage power, float heading){
 }
 
 // Roll
-int move_translate_mag(power_percentage power, float heading){
+int move_translate_mag(float power, float heading){
     int result;
 
     result = send_AT_PCMD_MAG(5, power, 0, 0, 0, heading, 0.02);
@@ -393,7 +354,7 @@ int move_translate_mag(power_percentage power, float heading){
 }
 
 // Yaw
-int move_rotate_mag(power_percentage power, float heading){
+int move_rotate_mag(float power, float heading){
     int result;
 
     result = send_AT_PCMD_MAG(5, 0, 0, 0, power, heading, 0.02);
@@ -409,7 +370,7 @@ int move_rotate_mag(power_percentage power, float heading){
  *@arg :
  *@return : status = 0 : OK
  **/
-int take_off(void){
+int take_off(void) {
     int result = 0;
     int took_off = 0;
 
@@ -473,10 +434,10 @@ int hover()
 {
     int result;
 
-    result = send_AT_PCMD(1, 0, 0, 0, 0);
+    result = send_AT_PCMD(1, 0.0, 0.0, 0.0, 0.0);
 
     return result;
-    
+
 }
 
 /**
@@ -486,79 +447,40 @@ int hover()
  *@return : status = 0 : OK 
  **/
 
-/*int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
-{
-    float current_angle = get_yaw() ;
-    power_percentage pow = get_power(power);
-    float aimed_angle = (current_angle + angle_disp) ;
-    if(aimed_angle>360.0)
-        aimed_angle = aimed_angle-360.0 ; 
-     
-    else
-    {
-         if(aimed_angle < 0.0)
-           aimed_angle = 360.0+aimed_angle ;
-    } 
-           
-    printf("aimed_angle = %f\n",aimed_angle);
-
-    if(aimed_angle == 360.0 || aimed_angle == 0.0)
-    {   
-        
-        while(current_angle > 5.0 && current_angle < 355.0 )
-	{
-            move_rotate(pow) ;
-            current_angle = get_yaw() ;
-        }
-    }
-    else 
-    {
-        while(abs(aimed_angle-current_angle) >= 5.0)
-        {   
-            move_rotate(pow) ;
-            current_angle = get_yaw() ;
-        }
-    }
-	printf("Stop\n");
-        move_rotate(get_power(-10));
-	printf("Stopped\n");
-    
-    return 0 ;
-}*/
 
 int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
 {
     float current_angle = get_yaw() ;
-    
-    power_percentage pow = get_power(power);
+
+    float pow = get_power(power);
     float aimed_angle = (current_angle + angle_disp) ; 
     int i = 0 ;
-    
+
     if(aimed_angle>=360.0)
         aimed_angle = aimed_angle-360.0 ; 
-     
+
     else if(aimed_angle < 0.0)
-           aimed_angle = aimed_angle+360.0 ;
-           
+        aimed_angle = aimed_angle+360.0 ;
+
     printf("aimed_angle = %f\n",aimed_angle);
 
     if(angle_disp == 360.0)
     { 
-       for(i=0;i<20;i++)
-       {
-           move_rotate(pow) ;
-           current_angle = get_yaw() ;
-       }   
+        for(i=0;i<20;i++)
+        {
+            move_rotate(pow) ;
+            current_angle = get_yaw() ;
+        }   
     }
 
     if(aimed_angle == 360.0 || aimed_angle == 0.0)
     {    
         while(current_angle < 359.0 && current_angle > 1.0)
-	{
+        {
             move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
-   }
+    }
     else 
     {
         while(abs(aimed_angle-current_angle) >= 4.0)
@@ -567,8 +489,8 @@ int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement 
             current_angle = get_yaw() ;
         }
     }
-        move_rotate(get_power(-10));
-    
+    move_rotate(0.1) ;
+
     return 0 ;
 }
 
@@ -583,45 +505,45 @@ int rotate_right(int power, float angle_disp) //angle_disp = angle_displacement 
 int rotate_left(int power, float angle_disp) //angle_disp = angle_displacement = relative displacement wished 
 {
     float current_angle = get_yaw() ;
-    power_percentage pow = get_power(-power);
+    float pow = get_power(-power);
     float aimed_angle = (current_angle + angle_disp) ; 
     int i = 0 ;
-    
+
     if(aimed_angle>=360.0)
         aimed_angle = aimed_angle-360.0 ; 
-     
+
     else if(aimed_angle < 0.0)
-           aimed_angle = aimed_angle+360.0 ;
-           
+        aimed_angle = aimed_angle+360.0 ;
+
     printf("aimed_angle = %f\n",aimed_angle);
 
     if(angle_disp == 360.0)
     { 
-       for(i=0;i<20;i++)
-       {
-           move_rotate(-pow) ;
-           current_angle = get_yaw() ;
-       }   
+        for(i=0;i<20;i++)
+        {
+            move_rotate(pow) ;
+            current_angle = get_yaw() ;
+        }   
     }
 
     if(aimed_angle == 360.0 || aimed_angle == 0.0)
     {    
         while(current_angle < 359.0 && current_angle > 1.0)
-	{
-            move_rotate(-pow) ;
+        {
+            move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
-   }
+    }
     else 
     {
         while(abs(aimed_angle-current_angle) >= 4.0)
         {   
-            move_rotate(-pow) ;
+            move_rotate(pow) ;
             current_angle = get_yaw() ;
         }
     }
-        //move_rotate(get_power(10));
-    
+    move_rotate(-0.1);
+
     return 0 ;
 }
 
@@ -631,7 +553,7 @@ int translate_right(int power, float aimed_distance)
 {
     float passed_distance = 0.0 ;
     float t0 = 0.0, t1 = 0.0 ;
-    power_percentage pow = get_power(power);
+    float pow = get_power(power);
 
     while (passed_distance < aimed_distance)
     {
@@ -654,7 +576,7 @@ int translate_left(int power, float aimed_distance)
 {
     float passed_distance = 0.0 ;
     float t0 = 0.0, t1 = 0.0 ;
-    power_percentage pow = get_power(-power);
+    float pow = get_power(-power);
 
     while (passed_distance > aimed_distance)
     {
@@ -663,7 +585,7 @@ int translate_left(int power, float aimed_distance)
         t1 = (float)(clock()/CLOCKS_PER_SEC) ;
         passed_distance = passed_distance + get_vx()*(t1-t0) ;
     }
-    
+
     return 0 ;
 }
 
@@ -676,19 +598,26 @@ int translate_left(int power, float aimed_distance)
  **/
 
 int forward(int power, float aimed_distance)
-{
-    float passed_distance = 0.0, t0 = 0.0, t1 = 0.0 ;
-    power_percentage pow = get_power(power);
+{  
+    struct timespec instant ;
+    struct timespec instant_next ;
+    float passed_distance = 0.0, vx = 0.0 ;
+    float pow = get_power(-power);
 
-    while (passed_distance < aimed_distance)
+    while (passed_distance < aimed_distance * 1000.0)
     {
+        printf("passed distance : %f\n", passed_distance) ;
+        clock_gettime(CLOCK_MONOTONIC, &instant) ;
 
-        t0 = (float)(clock()/CLOCKS_PER_SEC) ;
+        printf("t0 : %ld\n", instant.tv_nsec) ;
         move_forward(pow) ;
-        t1 = (float)(clock()/CLOCKS_PER_SEC) ;
-        passed_distance = passed_distance + (t1-t0)*get_vy() ;
+        vx = get_vx() ;
+        printf("speed : %f\n",vx);
+        clock_gettime(CLOCK_MONOTONIC, &instant_next);
+        printf("t1 : %ld\n", instant_next.tv_nsec) ;
+        passed_distance = passed_distance + vx * ((float)(instant_next.tv_nsec - instant.tv_nsec) / 1000000.0);
     }
-   
+
     return 0 ;
 }
 /**
@@ -702,7 +631,7 @@ int backward(int power, float aimed_distance)
 
     float passed_distance = 0.0 ;
     float t0 = 0.0, t1 = 0.0 ;
-    power_percentage pow = get_power(-power);
+    float pow = get_power(power);
 
     while (passed_distance > aimed_distance)
     {
@@ -711,7 +640,7 @@ int backward(int power, float aimed_distance)
         t1 = (float)(clock()/CLOCKS_PER_SEC) ;
         passed_distance = passed_distance + get_vy()*(t1-t0) ;
     }
-    
+
     return 0 ;
 
 }
@@ -725,11 +654,11 @@ int backward(int power, float aimed_distance)
 int up(int power, float aimed_height)
 {
     float altitude = get_altitude() ;
-    power_percentage pow = get_power(power);
+    float pow = get_power(power);
     while (altitude<=aimed_height)
     {
         move_up_down(pow);  
-	altitude = get_altitude() ;     
+        altitude = get_altitude() ;     
     }
 
     return 0;
@@ -746,11 +675,11 @@ int up(int power, float aimed_height)
 int down(int power, float aimed_height)
 {
     float altitude = get_altitude() ;
-    power_percentage pow = get_power(-power);
+    float pow = get_power(-power);
     while (altitude>=aimed_height)
     {
-       move_up_down(pow); 
-       altitude = get_altitude() ;      
+        move_up_down(pow); 
+        altitude = get_altitude() ;      
     }
 
     return 0;
@@ -769,26 +698,22 @@ int down(int power, float aimed_height)
 
 int rotate_right_mag(int power, float heading_disp)
 {
-    power_percentage pow = get_power(power);
+    float pow = get_power(power);
     float current_heading = get_heading() ;
     float aimed_heading = current_heading + heading_disp ;
 
-   
-    while (aimed_heading > current_heading)
+    while (current_heading<aimed_heading)
     {
         move_rotate_mag(pow, current_heading) ;
         current_heading = get_heading() ;
-        //printf("heading : %f\n", current_heading);
+        printf("heading : %f\n", current_heading);
     }
 
-
-    while (aimed_heading < current_heading)
-    {
-        move_rotate_mag(get_power(-5), current_heading);
-    }
+    move_rotate_mag(pow, current_heading);
 
     return 0;
 }
+
 
 /**
  *rotate_left_mag : rotate the drone to the left
@@ -800,23 +725,79 @@ int rotate_right_mag(int power, float heading_disp)
 
 int rotate_left_mag(int power, float heading_disp)
 {
-    power_percentage pow = get_power(-power);
+    float pow = get_power(-power);
     float current_heading = get_heading() ;
     float aimed_heading = current_heading - heading_disp ;
 
-   
-        while (aimed_heading < current_heading)
-        {
-            move_rotate_mag(pow, current_heading) ;
-            current_heading = get_heading() ;
-            //printf("heading : %f\n", current_heading);
-        }
-         
 
-        move_rotate_mag(pow, current_heading);
-    
+    while (current_heading>aimed_heading)
+    {
+        move_rotate_mag(pow, current_heading) ;
+        current_heading = get_heading() ;
+        printf("heading : %f\n", current_heading);
+    }
+
+
+    move_rotate_mag(pow, current_heading);
+
 
     return 0;
+}
+
+/**
+ *orientate_mag : orientate the drone to an absolute heading going right
+ *@arg : int power : power or the command (0,5,10,20,25,50,75,100)
+ *@arg : int time : number of rotation
+ *@arg : float heading : the heading the drone must follow
+ *@return : status = 0 : OK 
+ **/
+
+int orientate_mag(int motor_pow, float aimed_heading)
+{
+    int current_heading = ((int)(get_heading()))%360 ; //Marche aussi pour un heading <0
+    if(current_heading < 0) {
+        current_heading += 360;
+    }
+    //un cap int absolu ramené entre 0 et 360, ququelquesoit le cap de départ
+    printf("Cap ramené : %d\n",current_heading);  
+
+    if(current_heading<=(int)aimed_heading) {  
+        printf("Cap courant <= au cap souhaité\n") ;
+
+        if(((int)aimed_heading-current_heading) >= 180) {     
+            printf("cap souhaité à plus de 180° du cap courant : on part à gauche \n"); 
+            rotate_left_mag(motor_pow, 360-((int)aimed_heading-current_heading)) ;
+            current_heading = (int)(get_heading())%360 ;
+            if(current_heading < 0)
+                current_heading += 360 ;  
+        } else {    
+            printf("cap souhaité à moins de 180° du cap courant : on part à droite \n");  
+            rotate_right_mag(motor_pow, (int)aimed_heading-current_heading);
+            current_heading = (int)(get_heading())%360 ;
+            if(current_heading < 0)
+                current_heading += 360 ;
+        }
+    } else { 
+        printf("cap courant > cap souhaité\n");  
+        if ((current_heading - (int) aimed_heading) <= 180) { 
+            printf("différence à moins de 180° : on parcourt %d degrés sur la gauche\n",current_heading-(int)aimed_heading);
+            rotate_left_mag(motor_pow, (current_heading-(int)aimed_heading));
+            current_heading = (int)(get_heading())%360 ;
+            if(current_heading < 0) {
+                current_heading += 360 ;
+            }
+        } else {
+            printf("différence à plus  de 180° : on parcourt %d degrés sur la droite\n",(360-(current_heading - (int)aimed_heading)));
+            rotate_right_mag(motor_pow, 360-(current_heading-(int)aimed_heading));
+            current_heading = (int)(get_heading())%360 ;
+            if(current_heading < 0) {
+                current_heading += 360 ;
+            }
+        } 
+    }
+
+    return 0 ;
+
 }
 
 /**
@@ -829,11 +810,11 @@ int rotate_left_mag(int power, float heading_disp)
 int translate_right_mag(int power, int time, float heading)
 {
     int i = time;
-    power_percentage pow = get_power(power);
+    float pow = get_power(power);
 
     while (i>=0)
     {
-        move_translate_mag(pow, heading);
+        move_translate_mag(convert_power(pow), heading);
         i--;
     }
     return 0;
@@ -849,11 +830,11 @@ int translate_right_mag(int power, int time, float heading)
 int translate_left_mag(int power, int time, float heading)
 {
     int i = time;
-    power_percentage pow = get_power(-power);
+    float pow = get_power(-power);
 
     while (i>=0)
     {
-        move_translate_mag(pow, heading);
+        move_translate_mag(convert_power(pow), heading);
         i--;
     }
     return 0;
@@ -868,13 +849,14 @@ int translate_left_mag(int power, int time, float heading)
 int forward_mag(int power, int time, float heading)
 {
     int i = time;
-    power_percentage pow = get_power(-power);
+    float pow = get_power(-power);
 
     while (i>=0)
     {
-        move_forward_mag(pow, heading);
+        move_forward_mag(convert_power(pow), heading);
         i--;
     }
+    move_forward_mag(convert_power(-pow),heading);
     return 0;
 }
 
@@ -886,10 +868,10 @@ int forward_mag(int power, int time, float heading)
  **/
 int backward_mag(int power, int time, float heading){
     int i = time;
-    power_percentage pow = get_power(power);
+    float pow = get_power(power);
 
     while (i>=0){
-        move_forward_mag(pow, heading);
+        move_forward_mag(convert_power(pow), heading);
         i--;
     }
     return 0;
@@ -949,25 +931,12 @@ int trim_sensors()
     return result;
 }
 
-int send_AT_CALIB()
-{
-    int result;
-    char * command = build_AT_CALIB(0);
-
-    result = send_message(command);
-    free(command);
-    return result;
-}
-
 
 int calibrate_magnetometer()
 {
     int result;
-    int i;
-    float heading_origin, current_heading;
-    power_percentage pow = get_power(100);
 
-    result = send_AT_CALIB();
+    result = send_AT_CALIB(0);
 
     return result;
 }
@@ -981,7 +950,7 @@ int calibrate_magnetometer()
 int initialize_connection_with_drone(void)
 {
     ENTER_FCT()
-    int result;
+        int result;
 
     PRINT_LOG("Init");
     // Open AT_Commands and navdata socket
