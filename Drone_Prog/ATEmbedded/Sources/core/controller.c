@@ -1,5 +1,6 @@
 #include "controller.h"
 #include "math.h"
+#include "io_manager.h"
 
 /******************************************************************************
  * Global Variables                                                           *
@@ -43,36 +44,36 @@ int trajectory(){
 
 		//Full rotation
 		//Every 10 degrees: calculate the signal power and the cap
-		trajectory_measure.power = sim_get_power();
-		trajectory_measure.cap = sim_get_heading();
-		init_cap = get_heading();
+		trajectory_measure.power = retrieve_power();
+		trajectory_measure.cap = retrieve_heading();
+		init_cap = retrieve_heading();
 
-		rotate_right_mag(75,10.0);
+		turn_right(75,10.0);
 		printf("Rotation 360\n");
-		while(get_heading()<init_cap+360)
+		while(retrieve_heading()<init_cap+360)
 		{
-			printf("Cap:%f\n", get_heading());
+			printf("Cap:%f\n", retrieve_heading());
 			printf("Power:%f\n", trajectory_measure.power);
 			printf("Cap simu:%f\n", trajectory_measure.cap);
 
-			if (sim_get_power() >= trajectory_measure.power){
-				trajectory_measure.power = sim_get_power();
-				trajectory_measure.cap = sim_get_heading();
+			if (retrieve_power() >= trajectory_measure.power){
+				trajectory_measure.power = retrieve_power();
+				trajectory_measure.cap = retrieve_heading();
 			}
-			rotate_right_mag(75,10.0);
+			turn_right(75,10.0);
 	        } //end while
 		sleep(5);
-		
+
 		//We have the right direction and the power related to it
 		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
 
 		//Rotation toward the right direction
-		while((get_heading()-trajectory_measure.cap)>5.0){
-			rotate_right_mag(75,5.0);
+		while((retrieve_heading()-trajectory_measure.cap)>5.0){
+			turn_right(75,5.0);
 		}
 
-		printf("\ncap:%f\n", get_heading());
-		init_cap = get_heading();
+		printf("\ncap:%f\n", retrieve_heading());
+		init_cap = retrieve_heading();
 
 		sleep(1);
 
@@ -81,7 +82,7 @@ int trajectory(){
 		distance_todo = distance * 0.71; //cosinus(45)
 
 		//Rotation of 45° from the cap
-		rotate_right_mag(75,45.0);
+		turn_right(75,45.0);
 		sleep(3);
 
 		//Moving forward and checking the power is increasing
@@ -96,7 +97,7 @@ int trajectory(){
 			power = sim_get_power();
 		}
 		*/
-		forward_mag(75,i,init_cap);
+		go_forward(75,i,init_cap);
 		ex_distance = distance_todo;
 	}
 
