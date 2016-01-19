@@ -20,6 +20,14 @@ ifdef PRINT_DEBUG
     CFLAGS += -DDEBUG
 endif
 
+ifdef FULL_SIMU
+    CFLAGS += -DFULL_SIMU
+endif
+
+ifdef POWER_SIMU
+    CFLAGS += -DPOWER_SIMU
+endif
+
 ifdef EMBED
     CC = arm-linux-gnueabi-gcc
     CFLAGS += -DEMBED
