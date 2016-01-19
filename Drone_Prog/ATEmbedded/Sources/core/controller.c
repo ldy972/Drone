@@ -61,16 +61,15 @@ int trajectory(){
 				trajectory_measure.cap = retrieve_heading();
 			}
 			turn_right(75,10.0);
-	        } //end while
+	    } //end while
+		printf("Rotation OK\n");
 		sleep(5);
 
 		//We have the right direction and the power related to it
 		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
 
 		//Rotation toward the right direction
-		while((retrieve_heading()-trajectory_measure.cap)>5.0){
-			turn_right(75,5.0);
-		}
+        orientate_drone(100, trajectory_measure.cap);
 
 		printf("\ncap:%f\n", retrieve_heading());
 		init_cap = retrieve_heading();

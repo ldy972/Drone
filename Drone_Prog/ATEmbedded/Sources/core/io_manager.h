@@ -12,6 +12,7 @@
 
 int turn_right(int power, float heading_disp);
 int go_forward(int power, int times, float heading);
+int orientate_drone(int power, float target_heading);
 float retrieve_heading();
 float retrieve_power();
 

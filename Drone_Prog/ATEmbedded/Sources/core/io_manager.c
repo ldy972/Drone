@@ -19,6 +19,16 @@ int go_forward(int power, int times, float heading)
 #endif
 }
 
+int orientate_drone(int power, float target_heading)
+{
+#ifdef SIMU
+    return orientate_simu(power, target_heading);
+#else
+    return orientate_mag(power, target_heading);
+#endif
+
+}
+
 float retrieve_heading()
 {
 #ifdef SIMU
