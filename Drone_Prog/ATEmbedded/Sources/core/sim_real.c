@@ -52,8 +52,22 @@ void simulate_rssi(float target)
 
 void update_sim()
 {
-	x = 0.71 * distance;
-	distance = sqrt(pow(distance,2) + pow(x,2));
+	x = 0.71 * distance; // computed thanks to drone velocity
+	float heading = adjust_angle(state_howard.heading);
+	float beta = adjust_angle(heading - pi + theta);
+	
+// computing the new polar position of the drone
+	state_howard.rho = pow(state_howard.rho,2) + pow(x,2) +2*state_howard.rho*x*cos(beta);
+	float gamma = adjust_angle(asin( sin(beta)*x/state_howard.rho;
+	state_howard.theta = adjust_angle(adjust_angle(state_howard.theta) + gamma);
+
+// updating drone heading depending on the mode used
+	#ifndef FULL_SIMU
+	state_howard.heading = adjust_angle(get_heading());
+	#endif
+	
+	
+	
 }
 
 
