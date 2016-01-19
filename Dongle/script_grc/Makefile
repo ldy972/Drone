@@ -1,16 +1,15 @@
 
 CROSS_COMPILE = arm-linux-gnueabi-gcc
 ARCH = arm
-NEMBED =
 
-ifeq ($(NEMBED),)
+ifeq ($(EMBED),embed)
+    	CROSS_COMPILE = arm-linux-gnueabi-gcc
+	EXEC = transcriptIQ.elf
+	CFLAGS = -W -Wall -march=armv7-a -lm
+else 
 	CROSS_COMPILE = gcc
 	EXEC = transcriptIQ
 	CFLAGS = -W -Wall -lm
-else ifeq ($(NEMBED),"embed")
-    	CROSS_COMPILE = arm-linux-gnueabi-gcc
-	EXEC = transcriptIQ.elf
-    	CFLAGS = -W -Wall -march=armv7-a -lm
 endif
 
 all : $(EXEC)

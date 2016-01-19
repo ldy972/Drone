@@ -11,6 +11,7 @@ void closing_file(FILE *infile, FILE *outfile){
 	fclose(infile) ;
 	fclose(outfile) ;
 }
+
 void main(int argc, char *argv[])
 {
 	int byte1, byte2;  // int -- not unsigned char -- see fgetc man page
@@ -37,7 +38,7 @@ void main(int argc, char *argv[])
 	}else if (outfile==NULL){
 		fclose(infile) ;
 	  	printf("Error opening output file : %s\n",outfilename);
-		exit(-11);
+		exit(-12);
 	}
 	while ((byte1=fgetc(infile)) != EOF){
 		if ((byte2=fgetc(infile)) == EOF){
