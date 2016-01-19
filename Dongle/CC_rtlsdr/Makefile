@@ -2,9 +2,10 @@
 CROSS_COMPILE = arm-linux-gnueabi-gcc
 CFLAGS = -W -Wall -march=armv7-a -lrt -lpthread -lm
 ARCH = arm
-PKG_CONFIG_PATH=/home/yann/projets/CC_rtl/drone/lib/pkgconfig/
+CURRENT_DIR =$(shell pwd)
+PKG_CONFIG_PATH=$(CURRENT_DIR)/usblib/lib/pkgconfig/
 
-LIB_USB:=$(shell PKG_CONFIG_PATH=/home/yann/projets/CC_rtl/drone/lib/pkgconfig/ pkg-config --libs --cflags libusb-1.0)
+LIB_USB:=$(shell PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) pkg-config --libs --cflags libusb-1.0)
 
 all : init build_lib rtl_test.elf rtl_sdr.elf rtl_eeprom.elf rtl_adsb.elf rtl_fm.elf rtl_power.elf rtl_tcp.elf
 
@@ -26,6 +27,7 @@ tcp : init build_lib rtl_tcp.elf
 init :
 	$(wildcard export ARCH=$(ARCH))
 	$(wildcard export CROSS_COMPILE=$(CROSS_COMPILE))
+	echo $(PKG_CONFIG_PATH)
 
 #building .o
 build_lib : tuner_e4k.o tuner_fc0012.o tuner_fc0013.o tuner_fc2580.o tuner_r82xx.o librtlsdr.o convenience.o 
