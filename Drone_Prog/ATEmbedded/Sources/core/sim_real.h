@@ -24,8 +24,8 @@ void simulate_rssi(float target);
 void update_sim();
 float sim_get_pow(float theta);
 
-int rotate_right_mag(int power, float heading_disp);
-int forward_mag(int power, int times, float heading_disp);
+int rotate_right_simu(int power, float heading_disp);
+int forward_simu(int power, int times, float heading);
 float get_simulated_heading();
 float get_simulated_power();
 

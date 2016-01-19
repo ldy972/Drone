@@ -6,8 +6,8 @@
 #include "sim_real.h"
 
 
-#ifdef FULL_SIMU
-#define POWER_SIMU
+#if defined FULL_SIMU || defined POWER_SIMU
+#define SIMU
 #endif
 
 int turn_right(int power, float heading_disp);

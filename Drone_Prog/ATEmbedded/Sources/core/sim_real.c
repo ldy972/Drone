@@ -73,14 +73,22 @@ int rotate_right_simu(int power, float heading_disp)
 
 int forward_simu(int power, int times, float heading)
 {
+#ifdef FULL_SIMU
     // Write function linking nb commands to distance
     return 0;
+#else
+    return forward_mag(power, times, heading);
+#endif
 }
 
 
 float get_simulated_heading()
 {
+#ifdef FULL_SIMU
     return state_howard.heading;
+#else
+    return get_heading();
+#endif
 }
 
 
