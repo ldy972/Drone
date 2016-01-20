@@ -119,11 +119,12 @@ void simulate_rssi(float target)
 
 void update_sim(float distance, float direction)
 {
+    printf("[SIM] Move %fm in direction %f", distance, direction);
 	float heading = (float) adjust_angle_f(state_howard.heading);
 	float beta = (float) adjust_angle_f(heading - 180.0 + state_howard.theta);
 	
 // computing the new polar position of the drone
-	state_howard.rho = pow(state_howard.rho,2) + pow(distance,2) +2*state_howard.rho*distance*cos(beta);
+	state_howard.rho = sqrt(pow(state_howard.rho,2) + pow(distance,2) +2*state_howard.rho*distance*cos(beta));
 	float gamma = (float) adjust_angle_f(asin(sin(beta) * distance / state_howard.rho));
 	state_howard.theta = (float) adjust_angle_f(state_howard.theta + gamma);
 

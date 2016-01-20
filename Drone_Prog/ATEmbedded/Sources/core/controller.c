@@ -69,7 +69,7 @@ int trajectory(){
 		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
 
 		//Rotation toward the right direction
-        orientate_drone(100, trajectory_measure.cap);
+        orientate_drone(100, trajectory_measure.cap + 45.0);
 
 		printf("\ncap:%f\n", retrieve_heading());
 		init_cap = retrieve_heading();
