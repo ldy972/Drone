@@ -3,7 +3,7 @@
 
 #include "com_AT.h"
 #include "navdata.h"
-#include "sim_data.h"
+#include "shared.h"
 
 /******************************************************************************
 ********************** GLOBAL VARIABLES **************************************
@@ -11,11 +11,6 @@
 
 
 #define POWER_MAX 120 //A calculer
-
-typedef struct _trajectory_measure_t{
-	float power;
-	float cap;
-} trajectory_measure_t;
 
 
 /**
