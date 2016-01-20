@@ -1,4 +1,4 @@
-prefix=/home/yann/projets/CC_rtl/drone
+prefix=./usblib
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
