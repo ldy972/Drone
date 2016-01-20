@@ -5,9 +5,9 @@
 
 le dossier CC_rtl contient l'ensemble des fonction c de la librairie rtl_sdr
 ainsi qu'un makefile qui permet de les cross compiler dans un format compatible avec l'AR Drone
-la commande rtl_sdr.elf : usage ./rtl_sdr 'fichier_de_sortie'.bin -s 'frequence d'échantillonage' -f 'frequence_porteuse'
+la commande rtl_sdr.elf : usage ./rtl_sdr 'fichier_de_sortie'.bin -s 'frequence_d_échantillonage' -f 'frequence_porteuse'
 
-le dossier script_grc contient un ensemble de fichier permettant d'exploiter les fichiers provenant d'enregistrement RF fait sur le drone (ou pas car le format ne change pas 'fichier'.bin) :
+le dossier script_grc contient un ensemble de fichier permettant d exploiter les fichiers provenant d enregistrement RF fait sur le drone (ou pas car le format ne change pas 'fichier'.bin) :
 	-un script compatible avec grc en python : "top_block.py"
 		ainsi que
 	-son fichier .grc : "script.grc" (a ouvrir avec gnu radio companion 3.6 "grc")
