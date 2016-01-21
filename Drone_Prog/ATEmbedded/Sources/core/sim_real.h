@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <float.h>
 
 #include "navdata.h"
 #include "shared.h"
+#include "filter.h"
 
 
 #define D0 30.0

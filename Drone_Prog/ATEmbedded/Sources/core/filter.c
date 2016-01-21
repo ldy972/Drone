@@ -54,9 +54,19 @@ void generate_acquisition_file(char * filename_csv)
 }
 
 //Returning the max power according to the correlation
-trajectory_measure_t get_max_measure(trajectory_measure_t *measure)
+trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
 {
-    return * measure ;
+    trajectory_measure_t max_measure;
+    max_measure.power = -FLT_MAX;
+
+    int i;
+    for (i = 0; i < size; i++){
+        if (max_measure.power < measure[i].power) {
+            max_measure = measure[i];
+        }
+    }
+
+    return max_measure;
 }
 
 

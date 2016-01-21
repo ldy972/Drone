@@ -116,7 +116,7 @@ void simulate_rssi(void)
         sim_rssi_array[i].power = power;	
     }
 
-    print_rssi_array(stdout);
+    //print_rssi_array(stdout);
 }
 
 void update_sim(float distance, float direction)
@@ -220,17 +220,7 @@ float get_simulated_power()
 
 trajectory_measure_t get_max_simulated_measure()
 {
-    trajectory_measure_t max_measure;
-    max_measure.power = -FLT_MAX;
-
-    int i;
-    for (i = 0; i < NB_MEASURES; i++){
-        if (max_measure.power < sim_rssi_array[i].power) {
-            max_measure = sim_rssi_array[i];
-        }
-    }
-
-    return max_measure;
+    return get_max_measure(sim_rssi_array, NB_MEASURES);
 }
 
 int finish_simulation()
