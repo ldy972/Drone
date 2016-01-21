@@ -34,6 +34,7 @@ int forward_simu(int power, int times, float heading);
 int orientate_simu(int power, float target_heading);
 float get_simulated_heading();
 float get_simulated_power();
+trajectory_measure_t get_max_simulated_measure();
 
 int finish_simulation();
 
