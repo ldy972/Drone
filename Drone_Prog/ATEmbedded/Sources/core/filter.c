@@ -56,10 +56,7 @@ void generate_acquisition_file(char * filename_csv)
 //Returning the max power according to the correlation
 trajectory_measure_t get_max_measure(trajectory_measure_t *measure)
 {
-    trajectory_measure_t measure ;
-    measure.cap = 0.0 ;
-    measure.power = 0.0 ;
-    return measure ;
+    return * measure ;
 }
 
 
@@ -86,7 +83,7 @@ trajectory_measure_t * get_measure(){
 	{
 	  
 		my_measure[i].cap = get_heading();
-		my_measure[i].power = get_power();		
+		my_measure[i].power = measure();		
 		printf("Cap : %f\n", my_measure[i].cap);
 		printf("Power : %f\n", my_measure[i].power);
 		
@@ -99,10 +96,10 @@ trajectory_measure_t * get_measure(){
 	return my_measure ; //get_max_measure(&my_measure);
 }
 
-float get_power()
+float measure()
 {  
     generate_acquisition_file("acquisition.csv") ;
-    return(get_power_from_file("acquisition.csv") ; 
+    return(get_power_from_file("acquisition.csv")) ; 
 }
 
 /*int main()
