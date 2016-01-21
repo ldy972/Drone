@@ -6,11 +6,11 @@
 #include <math.h>
 
 #include "navdata.h"
+#include "shared.h"
 
 
 #define D0 60.0
-#define STEP 1
-extern float* sim_rssi_array;
+#define NB_MEASURES 36 
 
 // Drone state inside the simulation : position in polar coordinates + heading
 typedef struct _drone_state {

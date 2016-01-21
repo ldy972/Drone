@@ -26,15 +26,15 @@ int main(void)
 		printf("Nav data received\n") ;
         // printf("decode navdata_struct %d bytes\n",sizeof(navdata_struct));
         printf("navdata_demo:\n");
-        printf("\t%13d:%s\n",   navdata_struct->navdata_option.ctrl_state,             "Control State");
-        printf("\t%13d:%s\n",   navdata_struct->navdata_option.vbat_flying_percentage, "battery");
-        printf("\t%13.3f:%s\n", navdata_struct->navdata_option.theta / 1000.0,                  "pitch angle");
-        printf("\t%13.3f:%s\n", navdata_struct->navdata_option.phi / 1000.0,                    "roll  angle");
-        printf("\t%13.3f:%s\n", navdata_struct->navdata_option.psi / 1000.0,                    "yaw   angle");
-        printf("\t%13d:%s\n",   navdata_struct->navdata_option.altitude,               "altitude");
-        printf("\t%13.3f:%s\n", navdata_struct->navdata_option.vx,                     "estimated vx");
-        printf("\t%13.3f:%s\n", navdata_struct->navdata_option.vy,                     "estimated vy");
-        printf("\t%13.3f:%s\n", navdata_struct->navdata_option.vz,                     "estimated vz");
+        printf("\t%13d:%s\n",   navdata_struct->navdata_demo.ctrl_state,             "Control State");
+        printf("\t%13d:%s\n",   navdata_struct->navdata_demo.vbat_flying_percentage, "battery");
+        printf("\t%13.3f:%s\n", navdata_struct->navdata_demo.theta / 1000.0,                  "pitch angle");
+        printf("\t%13.3f:%s\n", navdata_struct->navdata_demo.phi / 1000.0,                    "roll  angle");
+        printf("\t%13.3f:%s\n", navdata_struct->navdata_demo.psi / 1000.0,                    "yaw   angle");
+        printf("\t%13d:%s\n",   navdata_struct->navdata_demo.altitude,               "altitude");
+        printf("\t%13.3f:%s\n", navdata_struct->navdata_demo.vx,                     "estimated vx");
+        printf("\t%13.3f:%s\n", navdata_struct->navdata_demo.vy,                     "estimated vy");
+        printf("\t%13.3f:%s\n", navdata_struct->navdata_demo.vz,                     "estimated vz");
         printf("\n\n");
         go_on ++;
     }
