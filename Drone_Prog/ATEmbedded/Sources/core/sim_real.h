@@ -25,7 +25,7 @@ int initialize_simulation();
 void print_drone_state(FILE * out_file);
 
 // Fills the array of simulated RSSI with the given direction for the direction of the target
-void simulate_rssi(float target);
+void simulate_rssi(void);
 void update_sim(float distance, float direction);
 float sim_get_pow(float theta);
 
