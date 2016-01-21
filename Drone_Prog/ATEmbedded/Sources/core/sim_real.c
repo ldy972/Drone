@@ -214,6 +214,22 @@ float get_simulated_power()
     return sim_rssi_array[adjust_angle_f(state_howard.heading)].power;
 }
 
+
+trajectory_measure_t get_max_simulated_measure()
+{
+    trajectory_measure_t max_measure;
+    max_measure.power = FLT_MIN;
+
+    int i;
+    for (i = 0; i < NB_MEASURES; i++){
+        if (max_measure.power < sim_rssi_array[i].power) {
+            max_measure = sim_rssi_array[i];
+        }
+    }
+
+    return max_measure;
+}
+
 int finish_simulation()
 {
     free(sim_rssi_array);
