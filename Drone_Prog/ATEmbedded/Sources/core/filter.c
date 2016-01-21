@@ -21,41 +21,24 @@ static void suppress_return(FILE *f, char* chain)
     }    
 }
 
-//Takes a file containing float at each line
-float get_mean_from_file(const char* filename)
+float get_power_from_file(const char* filename)
 {
-    float sum = 0.0 ;
-    int values_count = 1 ;
-    
-    char** endptr=NULL ;
+    float power1=0.0, power2=0.0,power_target=-9999;
     FILE *file;
     file = fopen(filename, "r");
-    
+    int i = 0 ;
     if(file!=NULL)
     {    
-         char line[20] ;
-
-         while(fgets(line,sizeof(line),file))
-         {  
-            suppress_return(file,line);
-            //printf("string number %d : %s\n", values_count,line);
-            sum += strtod(line,endptr);
-            values_count++ ;
-         }
-        
-         fclose(file); 
-    }
-    values_count-- ;
-    
-    printf("Nb of values to average : %d\n",values_count);
-
-    if(values_count > 0)
-    {
-        return (sum/values_count) ; 
-    }
-    else
-    }
-    
+	while(fscanf(file,"%*d-%*d-%*d, %*d:%*d:%*d, %*d, %*d, %*f, %*d, %f, %f",&power1,&power2)>0 && ++i<12){
+			if(power1>power_target)
+				power_target = power1 ;
+			if(power2>power_target)
+				power_target = power2 ;
+		}
+		fclose(file); 
+    } else 
+		printf("error openning file\n") ;
+    return power_target ;
 }
 
 //Write <filename>.csv --> don't forget the .csv, no protections inside ! ;)
