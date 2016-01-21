@@ -41,34 +41,22 @@ float get_power_from_file(const char* filename)
     return power_target ;
 }
 
-void generate_acquisition_file(char * filename_bin, char * filename_txt, char * frequency, char * sampling)
+//Write <filename>.csv --> don't forget the .csv, no protections inside ! ;)
+void generate_acquisition_file(char * filename_csv)
 {
-    char command_transcript[70]="" ;
-    char command_rtl[70]="" ; 
-
-    strcat(command_rtl,"./rtl_sdr ") ;
-    strcat(command_rtl,filename_bin);
-    strcat(command_rtl," -s ") ;
-    strcat(command_rtl,sampling) ;
-    strcat(command_rtl," -f ") ;
-    strcat(command_rtl,frequency) ;
- 
-    strcat(command_transcript,"./transcriptIQ.elf ");
-    strcat(command_transcript, filename_bin) ;
-    strcat(command_transcript, " ");
-    strcat(command_transcript, filename_txt);
-
-    printf("command_transcript : %s\n",command_transcript);
-    printf("command_rtl : %s\n",command_rtl);
+    char command_acq[70]="" ; 
     
-    system (command_rtl) ; 
-    system ("^C") ;   
-    system (command_transcript) ;
+    strcat(command_acq,"./rtl_power.elf -f 1.235G:1.245G:1M -g 50 -i 1 -1 ") ;
+    strcat(command_acq,filename_csv) ;
+    
+   // printf("%s", command_acq) ;
+    system (command_acq) ; 
 }
 
 //Returning the max power according to the correlation
-trajectory_measure_t get_max_measure(trajectory_measure_t *measure){
-
+trajectory_measure_t get_max_measure(trajectory_measure_t *measure)
+{
+    //WRITE CORRELATION CODE
 }
 
 
@@ -87,7 +75,7 @@ trajectory_measure_t get_measure(){
 	init_cap = get_power();
 	
 	turn_right(75,10.0);
-	while(retrieve_heading<init_cap+360){
+	while(retrieve_heading()<init_cap+360){
 		
 		printf("Cap:%f\n", my_measure[i].cap);
 		printf("Power:%f\n", my_measure[i].power);
@@ -100,7 +88,8 @@ trajectory_measure_t get_measure(){
 	}
 
 	//Correlation
-	return get_max_measure(&my_measure);
+        // /!\
+	return my_measure[1]; //get_max_measure(&my_measure);
 }
 
 /*int main()
