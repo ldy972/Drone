@@ -54,8 +54,6 @@ float get_mean_from_file(const char* filename)
         return (sum/values_count) ; 
     }
     else
-    { 
-        return 0.0 ;
     }
     
 }
@@ -75,40 +73,53 @@ void generate_acquisition_file(char * filename_csv)
 //Returning the max power according to the correlation
 trajectory_measure_t get_max_measure(trajectory_measure_t *measure)
 {
-    //WRITE CORRELATION CODE
+    trajectory_measure_t measure ;
+    measure.cap = 0.0 ;
+    measure.power = 0.0 ;
+    return measure ;
 }
-
 
 
 //Returning the heading and power according to the max power
 //Full rotation retrieving the power each 10 degrees
 //Correlation
-trajectory_measure_t get_measure(){
-	trajectory_measure_t my_measure[36];
-	float init_cap;
-	int i=0;
+trajectory_measure_t * get_measure(){
+	trajectory_measure_t my_measure[50];
+        int i = 0, j = 0 ;
+	float init_cap; 
+	for(j=0;j<50;j++)
+	{
+		my_measure[i].cap = 0.0 ;
+		my_measure[i].power = 0.0 ;
+	}
 
-	//Every 10 degrees: calculate the signal power and the cap
-	my_measure[i].cap = retrieve_heading();
-	my_measure[i].power = get_power();
-	init_cap = get_power();
-	
-	turn_right(75,10.0);
-	while(retrieve_heading()<init_cap+360){
-		
-		printf("Cap:%f\n", my_measure[i].cap);
-		printf("Power:%f\n", my_measure[i].power);
+	//Every 10 degrees: calculate the signal power and the heading
+//	my_measure[i].cap = get_heading();
+//	my_measure[i].power = get_power(); //Recuperer la puissance 
+	init_cap = get_heading();
+       	
+	rotate_right_mag(75,10.0);
+	while(get_heading()<init_cap+360.0)
+	{
+	  
+		my_measure[i].cap = get_heading();
+		my_measure[i].power = get_power();		
+		printf("Cap : %f\n", my_measure[i].cap);
+		printf("Power : %f\n", my_measure[i].power);
 		
 		i++;
-		my_measure[i].cap = retrieve_heading();
-		my_measure[i].power = get_power();
 	
-		turn_right(75,10.0);
+		rotate_right_mag(75,10.0);
 	}
 
 	//Correlation
-        // /!\
-	return my_measure[1]; //get_max_measure(&my_measure);
+	return my_measure ; //get_max_measure(&my_measure);
+}
+
+float get_power()
+{  
+    generate_acquisition_file("acquisition.csv") ;
+    return(get_power_from_file("acquisition.csv") ; 
 }
 
 /*int main()
