@@ -42,34 +42,18 @@ int trajectory(){
 
 		indice ++;
 
-		//Full rotation
-		//Every 10 degrees: calculate the signal power and the cap
-		trajectory_measure.power = retrieve_power();
-		trajectory_measure.cap = retrieve_heading();
-		init_cap = retrieve_heading();
+		//Get the head and power according to the max power
+		trajectory_measure = get_max_power_measure();
 
-		turn_right(75,10.0);
-		printf("Rotation 360\n");
-		while(retrieve_heading()<init_cap+360)
-		{
-			printf("Cap:%f\n", retrieve_heading());
-			printf("Power:%f\n", trajectory_measure.power);
-			printf("Cap simu:%f\n", trajectory_measure.cap);
-
-			if (retrieve_power() >= trajectory_measure.power){
-				trajectory_measure.power = retrieve_power();
-				trajectory_measure.cap = retrieve_heading();
-			}
-			turn_right(75,10.0);
-	    } //end while
-		printf("Rotation OK\n");
+ 		printf("Rotation OK\n");
 		sleep(5);
 
 		//We have the right direction and the power related to it
 		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
 
 		//Rotation toward the right direction
-        orientate_drone(100, trajectory_measure.cap);
+
+	        orientate_drone(100, trajectory_measure.cap);
 
 		printf("\ncap:%f\n", retrieve_heading());
 		init_cap = retrieve_heading();
@@ -86,16 +70,6 @@ int trajectory(){
 
 		//Moving forward and checking the power is increasing
 		int i = time_command(distance_todo);
-		/*power = sim_get_power();
-		forward_mag(75,1,init_cap);
-		i--;
-
-		while ((sim_get_power_move()>=power) && (i>0)){
-			foward_mag(75, 1, init_cap);
-			i--;
-			power = sim_get_power();
-		}
-		*/
 		go_forward(75,i,init_cap);
 		ex_distance = distance_todo;
 	}

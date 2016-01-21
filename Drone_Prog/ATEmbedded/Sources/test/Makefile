@@ -49,5 +49,6 @@ clean :
 
 mrproper : clean
 	rm -rf $(EXECDIR)
+	rm -rf $(COREDIR)
 
 print-%  : ; @echo $* = $($*)

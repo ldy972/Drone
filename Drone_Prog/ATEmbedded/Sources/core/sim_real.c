@@ -58,11 +58,13 @@ int initialize_simulation()
         return 1;
     }
 
+    fprintf(simulation_output, "rho, theta, heading\n");
+
     state_howard.rho = D0;
     state_howard.theta = 0.0;
     state_howard.heading = 180.0;
 
-    simulate_rssi(state_howard.heading);
+    simulate_rssi();
 
     print_drone_state(stdout);
 
@@ -79,13 +81,13 @@ void print_drone_state(FILE * out_file)
 void print_rssi_array(FILE * out_file)
 {
     int i;
-    for (i = 0; i < data_step; i++) {
+    for (i = 0; i < NB_MEASURES; i++) {
         fprintf(out_file, "%f,%f;", sim_rssi_array[i].cap, sim_rssi_array[i].power);
     }
     fprintf(out_file, "\n");
 }
 
-void simulate_rssi(float target)
+void simulate_rssi(void)
 {
 	int i = 0;
     int base_orientation = adjust_angle_f(state_howard.theta - 180.0);
@@ -93,24 +95,25 @@ void simulate_rssi(float target)
 	float power = 0;
 
     if (sim_rssi_array == NULL) {
-        // Crée un tableau de 360 floats 
+        // Crée un tableau de 360 mesures 
     	sim_rssi_array = malloc(sizeof(trajectory_measure_t) * NB_MEASURES);
     }
     // puissance reçue en face de la cible en fonction de la distance
 	
 	for (i = 0; i < NB_MEASURES; i ++)
     {
-	    int current_simulated_signal;
-        current_simulated_signal = (i * data_step - base_orientation) % 360;
-        if (current_simulated_signal < -180) {
-            current_simulated_signal += 360; 
-        } else if (current_simulated_signal > 180) {
-            current_simulated_signal -= 360; 
+	int current_simulated_angle;
+        current_simulated_angle = (i * data_step - base_orientation) % 360;
+        if (current_simulated_angle < -180) {
+            current_simulated_angle += 360; 
+        } else if (current_simulated_angle > 180) {
+            current_simulated_angle -= 360; 
         }
         // calcul puissance
     	power = -0.2255 * state_howard.rho - 14.527;
-        power = (float) (-0.00017 * pow((double)current_simulated_signal, 2.0)+power);
-        sim_rssi_array[i].power = power;		
+        power = (float) (-0.00017 * pow((double)current_simulated_angle, 2.0)+power);
+        sim_rssi_array[i].cap = (float) i * data_step;
+        sim_rssi_array[i].power = power;	
     }
 
     print_rssi_array(stdout);
@@ -125,7 +128,7 @@ void update_sim(float distance, float direction)
     // computing the new polar position of the drone
 	state_howard.rho = sqrt(pow(state_howard.rho,2) + pow(distance,2) - 2*state_howard.rho*distance*cos(beta * to_rad));
 	float gamma = (float) adjust_angle_f(asin(sin(beta * to_rad) * distance / state_howard.rho) / to_rad);
-	state_howard.theta = (float) adjust_angle_f(state_howard.theta + gamma);
+	state_howard.theta = state_howard.theta - (float) adjust_angle_f( gamma);
 
     print_drone_state(stdout);
 
@@ -164,7 +167,7 @@ int forward_simu(int power, int times, float heading)
     printf("[SIM] Forward\n");
     // When the drone is simulated, calculate its position and update state
     update_sim(compute_travelled_distance(times), heading);
-    simulate_rssi((float) adjust_angle_f(state_howard.theta - 180.0));
+    simulate_rssi();
 #else
     // When the drone is not simulated, make it move and get its heading
     result = forward_mag(power, times, heading);
@@ -212,6 +215,22 @@ float get_simulated_power()
 {
     //printf("[SIM] Get power\n");
     return sim_rssi_array[adjust_angle_f(state_howard.heading)].power;
+}
+
+
+trajectory_measure_t get_max_simulated_measure()
+{
+    trajectory_measure_t max_measure;
+    max_measure.power = -FLT_MAX;
+
+    int i;
+    for (i = 0; i < NB_MEASURES; i++){
+        if (max_measure.power < sim_rssi_array[i].power) {
+            max_measure = sim_rssi_array[i];
+        }
+    }
+
+    return max_measure;
 }
 
 int finish_simulation()
