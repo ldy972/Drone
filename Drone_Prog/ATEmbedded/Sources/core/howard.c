@@ -8,7 +8,7 @@
 #include "navdata.h"
 #include "com_AT.h"
 #include "controller.h"
-#include "sim_data.h"
+#include "sim_real.h"
 
 void Emergency_exit (int signum)
 {
