@@ -23,8 +23,16 @@ extern pthread_mutex_t mutex_navdata_cond;
 // Storage for navdata
 extern pthread_mutex_t mutex_navdata_struct;
 extern navdata_t * navdata_struct;
-extern int flag_set_heading_range;
-extern float min_heading;
-extern float max_heading;
+
+/******************************************************************************
+ * Signal related
+ *****************************************************************************/
+
+// Structure for storing power measurements and the related heading
+typedef struct _trajectory_measure_t{
+	float power;
+	float cap;
+} trajectory_measure_t;
+
 
 #endif

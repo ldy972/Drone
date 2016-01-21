@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -W -Wall
-EXEC = test_udp test_AT_commands2 test_navdata
+LIBS = -lm
+EXEC = test_udp test_AT_commands2 test_navdata test_simu
 
 SRCDIR = ../core
 BUILDDIR = ../../Build
@@ -36,10 +37,10 @@ endif
 	$(MAKE) -C $(SRCDIR)
 
 $(TEST_EXEC) : $(EXECDIR)/% : $(OBJDIR)/%.o $(CORE)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
 $(OBJDIR)/%.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 .PHONY: mrproper	
 
