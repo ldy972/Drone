@@ -357,7 +357,7 @@ int move_translate_mag(float power, float heading){
 int move_rotate_mag(float power, float heading){
     int result;
 
-    result = send_AT_PCMD_MAG(5, 0, 0, 0, power, heading, 0.02);
+    result = send_AT_PCMD_MAG(0, 0, 0, 0, power, heading, 0.02);
 
     return result;
 }
