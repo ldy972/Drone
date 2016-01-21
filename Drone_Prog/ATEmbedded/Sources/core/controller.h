@@ -4,6 +4,7 @@
 #include "com_AT.h"
 #include "navdata.h"
 #include "shared.h"
+#include "io_manager.h"
 
 /******************************************************************************
 ********************** GLOBAL VARIABLES **************************************

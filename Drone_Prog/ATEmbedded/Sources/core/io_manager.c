@@ -1,6 +1,5 @@
 #include "io_manager.h"
 
-
 int turn_right(int power, float heading_disp)
 {
 #ifdef SIMU
@@ -47,3 +46,11 @@ float retrieve_power()
 #endif
 }
 
+trajectory_measure_t get_max_power_measure()
+{
+#ifdef SIMU
+	return get_simulated_measure();
+#else
+	return get_measure();
+#endif
+}

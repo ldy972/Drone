@@ -60,10 +60,39 @@ float get_max_from_file(const char* filename)
 }
 
 
-/*int main()
-{
-  return 0 ; 
-} */  
+//Returning the max power according to the correlation
+trajectory_measure_t get_max_measure(trajectory_measure_t *measure){
+
+}
 
 
 
+//Returning the heading and power according to the max power
+//Full rotation retrieving the power each 10 degrees
+//Correlation
+trajectory_measure_t get_measure(){
+	trajectory_measure_t my_measure[36];
+	float init_cap;
+	int i=0;
+
+	//Every 10 degrees: calculate the signal power and the cap
+	my_measure[i].cap = retrieve_heading();
+	my_measure[i].power = get_power();
+	init_cap = get_power();
+	
+	turn_right(75,10.0);
+	while(retrieve_heading<init_cap+360){
+		
+		printf("Cap:%f\n", my_measure[i].cap);
+		printf("Power:%f\n", my_measure[i].power);
+		
+		i++;
+		my_measure[i].cap = retrieve_heading();
+		my_measure[i].power = get_power();
+	
+		turn_right(75,10.0);
+	}
+
+	//Correlation
+	return get_max_measure(&my_measure);
+}
