@@ -43,12 +43,13 @@ int trajectory(){
 		indice ++;
 
 		//Full rotation
+		/*
 		//Every 10 degrees: calculate the signal power and the cap
 		trajectory_measure.power = retrieve_power();
 		trajectory_measure.cap = retrieve_heading();
 		init_cap = retrieve_heading();
 
-		turn_right(75,10.0);
+				turn_right(75,10.0);
 		printf("Rotation 360\n");
 		while(retrieve_heading()<init_cap+360)
 		{
@@ -61,15 +62,22 @@ int trajectory(){
 				trajectory_measure.cap = retrieve_heading();
 			}
 			turn_right(75,10.0);
-	    } //end while
-		printf("Rotation OK\n");
+	    	} //end while
+		*/
+
+
+		//Get the head according to the max power
+
+		init_cap = get_max_power_cap(); // FONCTION A ECRIRE
+
+ 		printf("Rotation OK\n");
 		sleep(5);
 
 		//We have the right direction and the power related to it
 		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
 
 		//Rotation toward the right direction
-        orientate_drone(100, trajectory_measure.cap + 45.0);
+	        orientate_drone(100, trajectory_measure.cap);
 
 		printf("\ncap:%f\n", retrieve_heading());
 		init_cap = retrieve_heading();
