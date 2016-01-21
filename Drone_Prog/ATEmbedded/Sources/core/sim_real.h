@@ -4,13 +4,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
 
 #include "navdata.h"
 #include "shared.h"
 
 
-#define D0 60.0
-#define NB_MEASURES 36 
+#define D0 30.0
+#define NB_MEASURES 360 
 
 // Drone state inside the simulation : position in polar coordinates + heading
 typedef struct _drone_state {

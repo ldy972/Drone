@@ -81,7 +81,7 @@ trajectory_measure_t get_measure(){
 	init_cap = get_power();
 	
 	turn_right(75,10.0);
-	while(retrieve_heading<init_cap+360){
+	while(get_heading() < init_cap+360){
 		
 		printf("Cap:%f\n", my_measure[i].cap);
 		printf("Power:%f\n", my_measure[i].power);

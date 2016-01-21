@@ -100,17 +100,18 @@ void simulate_rssi(void)
 	
 	for (i = 0; i < NB_MEASURES; i ++)
     {
-	int current_simulated_signal;
-        current_simulated_signal = (i * data_step - base_orientation) % 360;
-        if (current_simulated_signal < -180) {
-            current_simulated_signal += 360; 
-        } else if (current_simulated_signal > 180) {
-            current_simulated_signal -= 360; 
+	int current_simulated_angle;
+        current_simulated_angle = (i * data_step - base_orientation) % 360;
+        if (current_simulated_angle < -180) {
+            current_simulated_angle += 360; 
+        } else if (current_simulated_angle > 180) {
+            current_simulated_angle -= 360; 
         }
         // calcul puissance
     	power = -0.2255 * state_howard.rho - 14.527;
-        power = (float) (-0.00017 * pow((double)current_simulated_signal, 2.0)+power);
-        sim_rssi_array[i].power = power;		
+        power = (float) (-0.00017 * pow((double)current_simulated_angle, 2.0)+power);
+        sim_rssi_array[i].cap = (float) i * data_step;
+        sim_rssi_array[i].power = power;	
     }
 
     print_rssi_array(stdout);
@@ -218,7 +219,7 @@ float get_simulated_power()
 trajectory_measure_t get_max_simulated_measure()
 {
     trajectory_measure_t max_measure;
-    max_measure.power = FLT_MIN;
+    max_measure.power = -FLT_MAX;
 
     int i;
     for (i = 0; i < NB_MEASURES; i++){
