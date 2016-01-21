@@ -6,4 +6,5 @@
 float get_max_from_file(const char* filename);
 static void vider_buffer(FILE *f);
 static void suppress_return(FILE *f, char* chain);
+trajectory_measure_t get_max_measure(trajectory_measure_t *measure);
 trajectory_measure_t get_measure();
