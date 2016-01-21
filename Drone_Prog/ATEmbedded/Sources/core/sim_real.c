@@ -58,6 +58,8 @@ int initialize_simulation()
         return 1;
     }
 
+    fprintf(simulation_output, "rho, theta, heading\n");
+
     state_howard.rho = D0;
     state_howard.theta = 0.0;
     state_howard.heading = 180.0;
