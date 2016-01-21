@@ -15,7 +15,6 @@ int go_forward(int power, int times, float heading);
 int orientate_drone(int power, float target_heading);
 float retrieve_heading();
 float retrieve_power();
-trajectory_measure_t get_max_measure(trajectory_measure_t *measure);
 trajectory_measure_t get_max_power_measure();
 
 #endif
