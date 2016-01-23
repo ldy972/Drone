@@ -30,7 +30,7 @@ endif
 
 ifdef EMBED
     CC = arm-linux-gnueabi-gcc
-    CFLAGS += -DEMBED
+    CFLAGS += -march=armv7-a -DEMBED
     EXEC = $(EXECDIR)/howard.elf  
     OBJS = $(patsubst %.c,$(OBJDIR)/%.so,$(SRC))
 else
