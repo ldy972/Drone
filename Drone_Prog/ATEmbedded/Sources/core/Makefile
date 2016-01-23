@@ -31,8 +31,11 @@ endif
 ifdef EMBED
     CC = arm-linux-gnueabi-gcc
     CFLAGS += -DEMBED
+    EXEC = $(EXECDIR)/howard.elf  
+    OBJS = $(patsubst %.c,$(OBJDIR)/%.so,$(SRC))
 else
     CC = gcc
+    EXEC = $(EXECDIR)/howard
 endif
 
 all : init $(EXEC)
@@ -46,6 +49,7 @@ ifeq ($(wildcard $(OBJDIR)),)
 	@mkdir $(OBJDIR)
 endif
 
+## Rules for non embedded compilation
 $(EXECDIR)/% : $(OBJDIR)/%.o $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
 
@@ -53,7 +57,15 @@ $(EXECDIR)/% : $(OBJDIR)/%.o $(OBJS)
 $(OBJDIR)/%.o : %.c $(wildcard %.h) shared.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-.PRECIOUS : $(OBJDIR)/%.o
+## Rules for embedded compilation
+$(EXECDIR)/%.elf : $(OBJDIR)/%.so $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LIBS)
+
+# Create each .so if the corresponding .c or .h file has been edited
+$(OBJDIR)/%.so : %.c $(wildcard %.h) shared.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+.PRECIOUS : $(OBJDIR)/%.o $(OBJDIR)/%.so
 
 clean :
 	rm -rf $(OBJS)
