@@ -1,7 +1,7 @@
 COREDIR = core
 TESTDIR = test
 
-.PHONY = local embedded tests simu power-simu
+.PHONY = local embedded tests simu power-simu embedded-simu
 
 all : local embedded
 
@@ -16,6 +16,9 @@ simu :
 
 power-simu :
 	$(MAKE) -C $(COREDIR) POWER_SIMU=1
+
+embedded-simu :
+	$(MAKE) -C $(COREDIR) EMBED=1 POWER_SIMU=1
 
 tests :
 	$(MAKE) -C $(TESTDIR)
