@@ -45,15 +45,14 @@ int trajectory(){
 		//Get the head and power according to the max power
 		trajectory_measure = get_max_power_measure();
 
- 		printf("Rotation OK\n");
+ 		printf("Measure OK\n");
 		sleep(5);
 
 		//We have the right direction and the power related to it
 		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
 
 		//Rotation toward the right direction
-
-	        orientate_drone(100, trajectory_measure.cap);
+        orientate_drone(100, trajectory_measure.cap);
 
 		printf("\ncap:%f\n", retrieve_heading());
 		init_cap = retrieve_heading();
@@ -70,7 +69,7 @@ int trajectory(){
 
 		//Moving forward and checking the power is increasing
 		int i = time_command(distance_todo);
-		go_forward(75,i,init_cap);
+		go_forward(75,i,retrieve_heading());
 		ex_distance = distance_todo;
 	}
 
