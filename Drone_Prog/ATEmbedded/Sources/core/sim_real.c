@@ -135,7 +135,7 @@ void update_sim(float distance, float direction)
 
     // updating drone heading depending on the mode used
 	#ifndef FULL_SIMU
-	state_howard.heading = (float) adjust_angle_f(get_heading());
+	state_howard.heading = get_heading();
 	#endif
 }
 
@@ -172,6 +172,8 @@ int forward_simu(int power, int times, float heading)
 #else
     // When the drone is not simulated, make it move and get its heading
     result = forward_mag(power, times, heading);
+    update_sim(compute_travelled_distance(times), heading);
+    simulate_rssi();
     state_howard.heading = get_heading();
 #endif
     print_drone_state(simulation_output);

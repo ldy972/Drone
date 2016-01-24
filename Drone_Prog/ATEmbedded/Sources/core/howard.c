@@ -71,7 +71,12 @@ void * watchdog_thread()
 
 int main()
 {
-#ifndef FULL_SIMU
+#ifdef FULL_SIMU
+    initialize_simulation();
+    trajectory();
+    finish_simulation();
+
+#else
     signal(SIGINT, Emergency_exit);
 
     pthread_t th_navdata;
@@ -129,10 +134,6 @@ int main()
     land();
     close_commands_socket();
 
-#else
-    initialize_simulation();
-    trajectory();
-    finish_simulation();
 #endif
 
     return 0;
