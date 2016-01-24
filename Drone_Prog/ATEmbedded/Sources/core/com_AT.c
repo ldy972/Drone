@@ -706,7 +706,7 @@ int rotate_right_mag(int power, float heading_disp)
     {
         move_rotate_mag(pow, current_heading) ;
         current_heading = get_heading() ;
-        printf("heading : %f\n", current_heading);
+        //printf("heading : %f\n", current_heading);
     }
 
     move_rotate_mag(pow, current_heading);
