@@ -38,7 +38,7 @@ int trajectory(){
 	float init_cap; //initial heading
 	float power;
 
-	while (indice<10) { 
+	//while (indice<10) { 
 
 		indice ++;
 
@@ -63,7 +63,7 @@ int trajectory(){
 		sleep(1);
 
 		//Measurement of the distance from the phone and the distance to cross at 45° from the right head
-		distance = distance_measure(ex_distance);
+		/*distance = distance_measure(ex_distance);
 		printf("\nDistance:%f\n", distance);
 		distance_todo = distance * 0.71; //cosinus(45)
 		printf("\nDistance_TODO:%f\n",distance_todo);
@@ -75,7 +75,8 @@ int trajectory(){
 		int i = time_command(distance_todo);
 		go_forward(75,i,init_cap);
 		ex_distance = distance_todo;
-	}
+	*/
+	//}
 
 	return 0;
 }
