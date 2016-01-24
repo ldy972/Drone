@@ -51,6 +51,6 @@ trajectory_measure_t get_max_power_measure()
 #ifdef SIMU
 	return get_max_simulated_measure();
 #else
-	return *get_measure();
+	return get_measure();
 #endif
 }

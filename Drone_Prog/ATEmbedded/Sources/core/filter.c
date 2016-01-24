@@ -65,19 +65,19 @@ trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
             max_measure = measure[i];
         }
     }
-
-    free(measure) ;	
+	
     return max_measure;
 }
 
 //Rotation 10° by 10°, construction of the (heading,power) array  
 //Correlation
-trajectory_measure_t * get_measure(){
+trajectory_measure_t get_measure(){
 	
 	int size = 50 ;
 	trajectory_measure_t * measure_array;
+	trajectory_measure_t result ;
 	measure_array = malloc(sizeof(trajectory_measure_t)*size) ;
-        int i = 0, j = 0 ;
+        int i = 0, j = 0, k = 0 ;
 	float init_cap = 0.0 ;
 
 	for(j=0;j<size;j++)
@@ -103,8 +103,14 @@ trajectory_measure_t * get_measure(){
 		
 	}
 	while(get_heading() < init_cap + 360.0) ;
-
-	return measure_array ; 
+ 	
+	for(k=0;k<size;k++)
+	{
+		printf("cap : %f\nmesure : %f\n",measure_array[i].cap,measure_array[i].power) ;
+	}	
+	result = get_max_measure(measure_array,size) ;
+	free(measure_array) ;	
+	return(result);
 	
 	//correlation
 }
