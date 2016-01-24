@@ -49,10 +49,12 @@ int trajectory(){
 		sleep(5);
 
 		//We have the right direction and the power related to it
-		if (trajectory_measure.power >= POWER_MAX) return 0; //We are close enough
+		if (trajectory_measure.power >= POWER_MAX) {
+			printf("\nPOWER_MAX reached\n");
+			return 0; //We are close enough
+		}
 
 		//Rotation toward the right direction
-
 	        orientate_drone(100, trajectory_measure.cap);
 
 		printf("\ncap:%f\n", retrieve_heading());
@@ -62,8 +64,9 @@ int trajectory(){
 
 		//Measurement of the distance from the phone and the distance to cross at 45° from the right head
 		distance = distance_measure(ex_distance);
+		printf("\nDistance:%f\n", distance);
 		distance_todo = distance * 0.71; //cosinus(45)
-
+		printf("\nDistance_TODO:%f\n",distance_todo);
 		//Rotation of 45° from the cap
 		turn_right(75,45.0);
 		sleep(3);
