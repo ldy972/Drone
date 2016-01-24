@@ -29,17 +29,17 @@ int init_navdata_reception()
     result = initialize_commands_socket();
 
     if (result == 0) {
-        printf("[NAV] Commands socket ok\n");
+        //printf("[NAV] Commands socket ok\n");
         result = initialize_navdata_socket();
     }
 
     if (result == 0) {
-        printf("[NAV] Navdata socket ok\n");
+        //printf("[NAV] Navdata socket ok\n");
         result = send_navdata("\x01\x00");
     }
 
     if (result == 0) {
-        printf("[NAV] Navdata flag sent\n");
+        //printf("[NAV] Navdata flag sent\n");
         //while (!ok) {
             result = update_navdata();
 
@@ -59,7 +59,7 @@ int init_navdata_reception()
         result = configure_navdata_demo();
 
         if (result == 0) {
-            printf("[NAV] Navdata conf sent\n");
+            //printf("[NAV] Navdata conf sent\n");
             ok = 0;
             while (!ok) {
                 result = update_navdata();
@@ -82,7 +82,7 @@ int init_navdata_reception()
             if (result != 0) {
                 if (navdata_struct->navdata_header.state & ARDRONE_COMMAND_MASK) {
                     ok = 1;
-                    printf("[NAV] Ack\n");
+                    //printf("[NAV] Ack\n");
                 }
             }
         }
@@ -122,8 +122,6 @@ int update_navdata()
 void decode_navdata(unsigned char * data, int size)
 {
     pthread_mutex_lock(&mutex_navdata_struct);
-
-    printf("Decode\n");
 
     // Allocate the navdata structure if it is nt already done
     if (navdata_struct == NULL) {
@@ -179,8 +177,6 @@ void decode_navdata(unsigned char * data, int size)
             mag_ok = 1;
         }
     }
-
-    printf("Decoded\n");
 
     pthread_mutex_unlock(&mutex_navdata_struct);
 }
