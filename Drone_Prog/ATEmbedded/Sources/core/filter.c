@@ -66,6 +66,7 @@ trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
         }
     }
 
+    free(measure) ;	
     return max_measure;
 }
 
@@ -77,25 +78,21 @@ trajectory_measure_t * get_measure(){
 	trajectory_measure_t * measure_array;
 	measure_array = malloc(sizeof(trajectory_measure_t)*size) ;
         int i = 0, j = 0 ;
-	float current_heading, last_heading, heading_diff, rotation ;
+	float init_cap = 0.0 ;
 
 	for(j=0;j<size;j++)
 	{
-		measure_array[i].cap = 999.0 ;
+		measure_array[i].cap = 0.0 ;
 		measure_array[i].power = 0.0 ;
 	}
+
+	
+	init_cap = get_heading() ;
 		
 	do
 	{	
-		current_heading = get_heading() ;
-		if(current_heading < 0.0)
-			current_heading += 360.0 ;	
-		if(current_heading > 360.0)
-			current_heading = (float)((int)get_heading()%360);
 
-		last_heading = current_heading ;
-
-		measure_array[i].cap = current_heading ;
+		measure_array[i].cap = get_heading() ;
 		measure_array[i].power = measure() ;	
 		printf("Cap : %f\n", measure_array[i].cap) ;
 		printf("Power : %f\n", measure_array[i].power) ;
@@ -104,20 +101,8 @@ trajectory_measure_t * get_measure(){
 	
 		rotate_right_mag(75,10.0) ;
 		
-		current_heading = get_heading() ;
-		if(current_heading < 0.0)
-			current_heading += 360.0 ;	
-		if(current_heading > 360.0)
-			current_heading = (float)((int)get_heading()%360);
-	   			
-		heading_diff = current_heading - last_heading ;
- 
-		if(heading_diff < 0.0)
-			heading_diff = 360.0 + heading_diff ;
-			printf("heading diff : %f",heading_diff) ;
-		rotation += heading_diff ;
 	}
-	while(rotation < 360.0) ;
+	while(get_heading() < init_cap + 360.0) ;
 
 	return measure_array ; 
 	
