@@ -8,10 +8,11 @@ extern "C" {
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
 #include "shared.h"
 #include "udp_sender.h"
 #include "navdata.h"
-#include "time.h"
 #include "navdata.h"
 
  /***********************************************************************
