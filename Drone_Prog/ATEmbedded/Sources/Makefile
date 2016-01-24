@@ -1,15 +1,18 @@
 COREDIR = core
 TESTDIR = test
 
-.PHONY = local embedded tests
+.PHONY = local embedded tests simu
 
-all : local embedded test
+all : local embedded
 
 local :
 	$(MAKE) -C $(COREDIR)
 
 embedded :
 	$(MAKE) -C $(COREDIR) EMBED=1
+
+simu :
+	$(MAKE) -C $(COREDIR) FULL_SIMU=1
 
 tests :
 	$(MAKE) -C $(TESTDIR)

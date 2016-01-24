@@ -4,6 +4,7 @@
 
 CFLAGS = -W -Wall -pthread -D_REENTRANT
 LIBS = -lm
+ARCH = arm
 
 BUILDDIR = ../../Build
 OBJDIR = $(BUILDDIR)/core
@@ -47,6 +48,9 @@ ifeq ($(wildcard $(BUILDDIR)),)
 endif
 ifeq ($(wildcard $(OBJDIR)),)
 	@mkdir $(OBJDIR)
+endif
+ifdef EMBED
+	@export ARCH=$(ARCH)
 endif
 
 ## Rules for non embedded compilation
