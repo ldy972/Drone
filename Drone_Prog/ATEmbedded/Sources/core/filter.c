@@ -1,14 +1,14 @@
 #include "filter.h"
 
 //If a line is longer than the buffer defined in get_mean_from_file, it is reduced.
-static void vider_buffer(FILE *f)
+void vider_buffer(FILE *f)
 {
     char c;
     while ((c=fgetc(f)) != '\n' && c != EOF);
 }
 
 //We get rid of the \n character in each line of the file
-static void suppress_return(FILE *f, char* chain)
+void suppress_return(FILE *f, char* chain)
 {  
     char *p = strchr(chain, '\n');
     if (p)
@@ -69,43 +69,62 @@ trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
     return max_measure;
 }
 
-
-//Returning the heading and power according to the max power
-//Full rotation retrieving the power each 10 degrees
+//Rotation 10° by 10°, construction of the (heading,power) array  
 //Correlation
 trajectory_measure_t * get_measure(){
-	trajectory_measure_t my_measure[50];
-        int i = 0, j = 0 ;
-	float init_cap; 
-	for(j=0;j<50;j++)
-	{
-		my_measure[i].cap = 0.0 ;
-		my_measure[i].power = 0.0 ;
-	}
-
-	//Every 10 degrees: calculate the signal power and the heading
-//	my_measure[i].cap = get_heading();
-//	my_measure[i].power = get_power(); //Recuperer la puissance 
-	init_cap = get_heading();
-       	
-	rotate_right_mag(75,10.0);
-	while(get_heading()<init_cap+360.0)
-	{
-	  
-		my_measure[i].cap = get_heading();
-		my_measure[i].power = measure();		
-		printf("Cap : %f\n", my_measure[i].cap);
-		printf("Power : %f\n", my_measure[i].power);
-		
-		i++;
 	
-		rotate_right_mag(75,10.0);
-	}
+	int size = 50 ;
+	trajectory_measure_t measure_array[size];
+        int i = 0, j = 0 ;
+	float first_heading, last_heading, rotatio
 
-	//Correlation
-	return my_measure ; //get_max_measure(&my_measure);
+	for(j=0;j<size;j++)
+	{
+		measure_array[i].cap = 999.0 ;
+		measure_array[i].power = 0.0 ;
+	}
+		
+	do
+	{	
+		current_heading = get_heading() ;
+		if(current_heading < 0.0)
+			current_heading += 360.0 ;	
+		if(current_heading > 360.0)
+			current_heading = (float)((int)get_heading()%360);
+
+		last_heading = current_heading ;
+
+		measure_array[i].cap = current_heading ;
+		measure_array[i].power = measure() ;	
+		printf("Cap : %f\n", measure_array[i].cap) ;
+		printf("Power : %f\n", measure_array[i].power) ;
+		
+		i++ ;
+	
+		rotate_right_mag(75,10.0) ;
+		
+		current_heading = get_heading() ;
+		if(current_heading < 0.0)
+			current_heading += 360.0 ;	
+		if(current_heading > 360.0)
+			current_heading = (float)((int)get_heading()%360);
+	   			
+		heading_diff = current_heading - last_heading ;
+ 
+		if(heading_diff < 0.0)
+			heading_diff = 360.0 + heading_diff ;
+			printf("heading diff : %f",heading_diff) ;
+		rotation += heading_diff ;
+	}
+	while(rotation < 360.0) ;
+
+	return measure_array ; 
+	
+	//correlation
 }
 
+
+//creates the file and the max from it
 float measure()
 {  
     generate_acquisition_file("acquisition.csv") ;
