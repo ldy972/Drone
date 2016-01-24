@@ -123,11 +123,12 @@ void update_sim(float distance, float direction)
 {
     printf("[SIM] Move %fm in direction %f\n", distance, direction);
 	float heading = (float) adjust_angle_f(state_howard.heading);
-	float beta = (float) adjust_angle_f(heading - 180.0 + state_howard.theta);
+	float beta = (float) adjust_angle_f(heading - state_howard.theta + 180.0);
 	
     // computing the new polar position of the drone
 	state_howard.rho = sqrt(pow(state_howard.rho,2) + pow(distance,2) - 2*state_howard.rho*distance*cos(beta * to_rad));
 	float gamma = (float) adjust_angle_f(asin(sin(beta * to_rad) * distance / state_howard.rho) / to_rad);
+    printf("Gamma : %f\n", gamma);
 	state_howard.theta = state_howard.theta - (float) adjust_angle_f( gamma);
 
     print_drone_state(stdout);
@@ -164,7 +165,7 @@ int forward_simu(int power, int times, float heading)
 {
     int result = 0;
 #ifdef FULL_SIMU
-    printf("[SIM] Forward\n");
+    printf("[SIM] Forward following %f\n", heading);
     // When the drone is simulated, calculate its position and update state
     update_sim(compute_travelled_distance(times), heading);
     simulate_rssi();
