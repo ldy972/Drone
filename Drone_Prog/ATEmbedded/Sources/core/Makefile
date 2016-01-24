@@ -3,7 +3,7 @@
 # Builds ATEmbedded core .o files
 
 CFLAGS = -W -Wall -pthread -D_REENTRANT
-LIBS = -lm
+LIBS = -lm -lrt
 ARCH = arm
 
 BUILDDIR = ../../Build
