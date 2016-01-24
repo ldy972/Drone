@@ -69,11 +69,12 @@ trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
     return max_measure;
 }
 
+
 //Rotation 10° by 10°, construction of the (heading,power) array  
 //Correlation
 trajectory_measure_t get_measure(){
 	
-	int size = 50 ;
+	int size = 50, new_size = 0 ;
 	trajectory_measure_t * measure_array;
 	trajectory_measure_t result ;
 	measure_array = malloc(sizeof(trajectory_measure_t)*size) ;
@@ -99,18 +100,21 @@ trajectory_measure_t get_measure(){
 		printf("Power : %f\n", measure_array[i].power) ;
 		
 		i++ ;
-	
-		rotate_right_mag(75,10.0) ;
+		scanf("%*c") ;
+		//rotate_right_mag(100,10.0) ;
 		
 	}
 	while(get_heading() < init_cap + 360.0) ;
-	printf("\nOut of while, rotation done\n") ;
+	i-- ;
 
-	for(k=0;k<size;k++)
+	printf("\nOut of while, rotation done\n") ;
+	
+	
+	for(k=0;k<i;k++)
 	{
 		printf("cap : %f\nmesure : %f\n",measure_array[i].cap,measure_array[i].power) ;
 	}
-	result = get_max_measure(measure_array,size) ;
+	result = get_max_measure(measure_array,i) ;
 	free(measure_array) ;	
 	return(result);
 	
