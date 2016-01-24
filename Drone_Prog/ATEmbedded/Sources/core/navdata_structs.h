@@ -137,13 +137,13 @@ typedef struct _navdata_header_t {
     uint32_t    state;                      // the state of the drone 
     uint32_t    seq;                        // sequence number 
     uint32_t    vision;                     // vision flag 
-} navdata_header_t;
+} __attribute__ ((packed)) navdata_header_t;
 
 // Option header : the first two fields of every option
 typedef struct _navdata_option_header_t {
     uint16_t    tag;                        // Option identifier
     uint16_t    size;                       // Option size
-} navdata_option_header_t;
+} __attribute__ ((packed)) navdata_option_header_t;
 
 // Navdata option, demo mode
 typedef struct _navdata_demo_t {
@@ -163,7 +163,7 @@ typedef struct _navdata_demo_t {
     float32_t   vz;                         // estimated linear velocity
 
     uint32_t    num_frames;                 //!< streamed frame index  // Not used -> To integrate in video stage.
-} navdata_demo_t;
+} __attribute__ ((packed)) navdata_demo_t;
 
 
 
@@ -199,7 +199,7 @@ typedef struct _navdata_magneto_t {
     float         error_mean;
     float         error_var;
 
-} navdata_magneto_t;
+} __attribute__ ((packed)) navdata_magneto_t;
 
 
 // navdata structure
