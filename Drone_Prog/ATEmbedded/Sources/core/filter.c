@@ -74,9 +74,10 @@ trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
 trajectory_measure_t * get_measure(){
 	
 	int size = 50 ;
-	trajectory_measure_t measure_array[size];
+	trajectory_measure_t * measure_array;
+	measure_array = malloc(sizeof(trajectory_measure_t)*size) ;
         int i = 0, j = 0 ;
-	float first_heading, last_heading, rotatio
+	float current_heading, last_heading, heading_diff, rotation ;
 
 	for(j=0;j<size;j++)
 	{
