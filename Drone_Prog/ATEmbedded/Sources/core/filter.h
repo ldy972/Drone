@@ -11,5 +11,5 @@ void vider_buffer(FILE *f);
 void suppress_return(FILE *f, char* chain);
 void generate_acquisition_file(char * filename_csv);
 trajectory_measure_t get_max_measure(trajectory_measure_t *measure, int size);
-trajectory_measure_t * get_measure();
+trajectory_measure_t get_measure();
 float measure() ;
