@@ -7,7 +7,9 @@
 pthread_cond_t navdata_initialised = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex_navdata_cond = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t mutex_navdata_struct = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_navdata_origin = PTHREAD_COND_INITIALIZER;
 navdata_t * navdata_struct = NULL;
+float original_heading = 0.0;
 
 /*******************************************************************************
  * Local Functions prototypes
@@ -297,6 +299,19 @@ float get_heading()
 
     return heading;
 }
+
+float get_origin_heading()
+{
+    float heading_ori;
+
+    pthread_mutex_lock(&mutex_navdata_origin);
+    heading_ori = original_heading;
+    pthread_mutex_unlock(&mutex_navdata_origin);
+
+    return heading_ori;
+    
+}
+
 
 float get_magneto_radius()
 {

@@ -93,6 +93,8 @@ float32_t get_vz() ;
 
 float get_heading();
 
+float get_origin_heading();
+
 float get_magneto_radius();
 
 float get_heading_unwrapped();

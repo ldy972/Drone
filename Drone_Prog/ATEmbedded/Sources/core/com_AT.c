@@ -702,14 +702,24 @@ int rotate_right_mag(int power, float heading_disp)
     float current_heading = get_heading() ;
     float aimed_heading = current_heading + heading_disp ;
 
-    while (current_heading<aimed_heading)
+    if (aimed_heading > get_origin_heading() + 360.0) {
+        aimed_heading -= 360.0;
+
+	while (current_heading > aimed_heading) {
+            move_rotate_mag(pow, current_heading) ;
+            current_heading = get_heading() ;
+            printf("heading : %f\n", current_heading);
+        }
+    }
+
+    while (current_heading < aimed_heading)
     {
         move_rotate_mag(pow, current_heading) ;
         current_heading = get_heading() ;
-        //printf("heading : %f\n", current_heading);
+        printf("heading : %f\n", current_heading);
     }
 
-    move_rotate_mag(pow, current_heading);
+    move_rotate_mag(-pow/10.0, current_heading);
 
     return 0;
 }
@@ -937,6 +947,12 @@ int calibrate_magnetometer()
     int result;
 
     result = send_AT_CALIB(0);
+
+    sleep(5);
+
+    pthread_mutex_lock(&mutex_navdata_origin);
+    original_heading = get_heading();
+    pthread_mutex_unlock(&mutex_navdata_origin);
 
     return result;
 }
