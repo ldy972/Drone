@@ -90,26 +90,25 @@ trajectory_measure_t get_measure(){
 	
 	init_cap = get_heading() ;
 	printf("\nCap_init:%f\n", init_cap);		
-	do
-	{	
-
-
+	measure_array[i].cap = get_heading();
+	//measure_array[i].power=measure();
+	printf("Cap : %f\n", measure_array[i].cap);
+	printf("Power : %f\n", measure_array[i].power);
+	rotate_right_mag(75,10.0);
+	while(get_heading()<init_cap+360.0){
+		i++;
 		measure_array[i].cap = get_heading() ;
-		measure_array[i].power = measure() ;	
+		//measure_array[i].power = measure() ;	
 		printf("Cap : %f\n", measure_array[i].cap) ;
 		printf("Power : %f\n", measure_array[i].power) ;
-		
-		i++ ;
-		scanf("%*c") ;
-		//rotate_right_mag(100,10.0) ;
-		
+		//scanf("%*c") ;
+		rotate_right_mag(75,10.0);
+//		sleep(0.5);
+		printf("End loop\n");
 	}
-	while(get_heading() < init_cap + 360.0) ;
-	i-- ;
 
 	printf("\nOut of while, rotation done\n") ;
-	
-	
+
 	for(k=0;k<i;k++)
 	{
 		printf("cap : %f\nmesure : %f\n",measure_array[i].cap,measure_array[i].power) ;

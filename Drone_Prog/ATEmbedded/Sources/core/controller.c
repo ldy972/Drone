@@ -55,7 +55,7 @@ int trajectory(){
 		}
 
 		//Rotation toward the right direction
-        orientate_drone(100, trajectory_measure.cap);
+	        orientate_drone(100, trajectory_measure.cap);
 
 		printf("\ncap:%f\n", retrieve_heading());
 		init_cap = retrieve_heading();
