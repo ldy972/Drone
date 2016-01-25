@@ -95,23 +95,31 @@ trajectory_measure_t get_measure(){
 	printf("Cap : %f\n", measure_array[i].cap);
 	printf("Power : %f\n", measure_array[i].power);
 	rotate_right_mag(75,10.0);
-	while(get_heading()<init_cap+360.0){
+	while(get_heading() > init_cap){
 		i++;
 		measure_array[i].cap = get_heading() ;
 		//measure_array[i].power = measure() ;	
 		printf("Cap : %f\n", measure_array[i].cap) ;
 		printf("Power : %f\n", measure_array[i].power) ;
-		//scanf("%*c") ;
 		rotate_right_mag(75,10.0);
 //		sleep(0.5);
-		printf("End loop\n");
+	}
+
+	while(get_heading() < init_cap){
+		i++;
+		measure_array[i].cap = get_heading() ;
+		//measure_array[i].power = measure() ;	
+		printf("Cap : %f\n", measure_array[i].cap) ;
+		printf("Power : %f\n", measure_array[i].power) ;
+		rotate_right_mag(75,10.0);
+//		sleep(0.5);
 	}
 
 	printf("\nOut of while, rotation done\n") ;
 
 	for(k=0;k<i;k++)
 	{
-		printf("cap : %f\nmesure : %f\n",measure_array[i].cap,measure_array[i].power) ;
+		printf("cap : %f\nmesure : %f\n",measure_array[k].cap,measure_array[k].power) ;
 	}
 	result = get_max_measure(measure_array,i) ;
 	free(measure_array) ;	

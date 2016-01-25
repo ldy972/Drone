@@ -102,7 +102,7 @@ int main()
 
     printf("First Altitude : %d\n", (int) get_altitude());
     sleep(2);
-    //calibrate_magnetometer();
+    calibrate_magnetometer();
 
     //sleep(7);
 
@@ -115,19 +115,19 @@ int main()
     /*************************
      * Normal behaviour      *
      *************************/
-    //trajectory();
+    trajectory();
 
     /*************************
      * Tests                 *
      *************************/
-    sleep(2) ;
+    /*sleep(2) ;
 
     printf("orientation\n") ;
     printf("first heading : %f\n", get_heading()) ;
     //forward(10, 2.0);
     //forward_mag(100, 150, get_heading());
     //sleep(2) ;
-
+*/
     //orientate_mag(100, get_heading() + 10.0);
 
     //sleep(2) ;
