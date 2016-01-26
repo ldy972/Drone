@@ -53,7 +53,7 @@ void generate_acquisition_file(char * filename_csv)
     system (command_acq) ; 
 }
 
-//Returning the max power according to the correlation
+//Returning the max power from a table
 trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
 {
     trajectory_measure_t max_measure;
@@ -69,12 +69,31 @@ trajectory_measure_t get_max_measure(trajectory_measure_t * measure, int size)
     return max_measure;
 }
 
+//Returning the min power from a table
+trajectory_measure_t get_min_measure(trajectory_measure_t * measure, int size)
+{
+    trajectory_measure_t min_measure;
+    min_measure.power = FLT_MAX;
+
+    int i;
+    for (i = 0; i < size; i++){
+        if (min_measure.power > measure[i].power) {
+            min_measure = measure[i];
+        }
+    }
+	
+    return min_measure;
+}
+
+
+
+
 
 //Rotation 10° by 10°, construction of the (heading,power) array  
 //Correlation
 trajectory_measure_t get_measure(){
 	
-	int size = 50, new_size = 0 ;
+	int size = 50 ;
 	trajectory_measure_t * measure_array;
 	trajectory_measure_t result ;
 	measure_array = malloc(sizeof(trajectory_measure_t)*size) ;
@@ -87,39 +106,43 @@ trajectory_measure_t get_measure(){
 		measure_array[i].power = 0.0 ;
 	}
 
+	float prev_heading;
 	
 	init_cap = get_heading() ;
 	printf("\nCap_init:%f\n", init_cap);		
 	measure_array[i].cap = get_heading();
-	//measure_array[i].power=measure();
+	measure_array[i].power=measure();
 	printf("Cap : %f\n", measure_array[i].cap);
 	printf("Power : %f\n", measure_array[i].power);
 	rotate_right_mag(75,10.0);
-	while(get_heading() > init_cap){
+	prev_heading = init_cap;
+	while(get_heading() > prev_heading){
+		prev_heading = get_heading();
 		i++;
 		measure_array[i].cap = get_heading() ;
-		//measure_array[i].power = measure() ;	
+		measure_array[i].power = measure() ;	
 		printf("Cap : %f\n", measure_array[i].cap) ;
 		printf("Power : %f\n", measure_array[i].power) ;
 		rotate_right_mag(75,10.0);
-//		sleep(0.5);
+		sleep(1.5);
 	}
+	
 
-	while(get_heading() < init_cap){
+	/*while(get_heading() < init_cap){
 		i++;
 		measure_array[i].cap = get_heading() ;
-		//measure_array[i].power = measure() ;	
+		measure_array[i].power = measure() ;	
 		printf("Cap : %f\n", measure_array[i].cap) ;
 		printf("Power : %f\n", measure_array[i].power) ;
 		rotate_right_mag(75,10.0);
-//		sleep(0.5);
-	}
+		sleep(1.5);
+	}*/
 
 	printf("\nOut of while, rotation done\n") ;
 
 	for(k=0;k<i;k++)
 	{
-		printf("cap : %f\nmesure : %f\n",measure_array[k].cap,measure_array[k].power) ;
+		printf("cap : %f ; mesure : %f\n",measure_array[k].cap,measure_array[k].power) ;
 	}
 	result = get_max_measure(measure_array,i) ;
 	free(measure_array) ;	
@@ -128,6 +151,69 @@ trajectory_measure_t get_measure(){
 	//correlation
 }
 
+
+trajectory_measure_t get_measure_presentation(){
+	
+	int size = 50 ;
+	trajectory_measure_t * measure_array;
+	trajectory_measure_t result ;
+	measure_array = malloc(sizeof(trajectory_measure_t)*size) ;
+        int i = 0, j = 0, k = 0 ;
+	float init_cap = 0.0 ;
+
+	for(j=0;j<size;j++)
+	{
+		measure_array[i].cap = 0.0 ;
+		measure_array[i].power = 0.0 ;
+	}
+
+	float prev_heading;
+	
+	init_cap = get_heading() ;
+	printf("\nCap_init:%f\n", init_cap);		
+	measure_array[i].cap = get_heading();
+	measure_array[i].power=measure();
+	printf("Cap : %f\n", measure_array[i].cap);
+	printf("Power : %f\n", measure_array[i].power);
+	getchar() ;
+	//rotate_right_mag(75,10.0);	
+	prev_heading = init_cap;
+	while(get_heading() > prev_heading){
+		prev_heading = get_heading();
+		i++;
+		getchar() ;
+		measure_array[i].cap = get_heading() ;
+		measure_array[i].power = measure() ;	
+		printf("Cap : %f\n", measure_array[i].cap) ;
+		printf("Power : %f\n", measure_array[i].power) ;
+		//rotate_right_mag(75,10.0);
+		//sleep(1.5);
+	}
+	
+
+//	printf("\nOut of while, rotation done\n") ;
+	
+	 
+	printf("%==================================================",measure_array[k].cap) ;
+	printf("\n");
+	for(k=0;k<=i;k++)
+	{
+		printf("%4.3f ",measure_array[k].power) ;
+	}
+	printf("\n") ;
+	for(k=0;k<=i;k++)
+		{
+			printf("%4.3f ",measure_array[k].cap) ;
+		}
+	printf("\n");
+	
+
+	result = get_max_measure(measure_array,i) ;
+	free(measure_array) ;	
+	return(result);
+	
+	//correlation
+}
 
 //creates the file and the max from it
 float measure()
