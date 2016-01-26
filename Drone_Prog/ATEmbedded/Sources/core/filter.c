@@ -144,7 +144,7 @@ trajectory_measure_t get_measure(){
 	{
 		printf("cap : %f ; mesure : %f\n",measure_array[k].cap,measure_array[k].power) ;
 	}*/
-	printf("==================================================\n",measure_array[k].cap) ;
+	printf("==================================================\n") ;
 	for(k=0;k<=i;k++)
 	{
 		printf("%4.3f ",measure_array[k].power) ;
@@ -206,7 +206,7 @@ trajectory_measure_t get_measure_presentation(){
 //	printf("\nOut of while, rotation done\n") ;
 	
 	 
-	printf("==================================================\n",measure_array[k].cap) ;
+	printf("==================================================\n") ;
 	for(k=0;k<=i;k++)
 	{
 		printf("%4.3f ",measure_array[k].power) ;
