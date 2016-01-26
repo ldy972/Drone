@@ -147,16 +147,17 @@ trajectory_measure_t get_measure(){
 	printf("==================================================\n") ;
 	for(k=0;k<=i;k++)
 	{
-		printf("%4.3f ",measure_array[k].power) ;
+		printf("%-8.3lf ",measure_array[k].power) ;
 	}
 	printf("\n") ;
 	for(k=0;k<=i;k++)
 		{
-			printf("%4.3f ",measure_array[k].cap) ;
+			printf("%-8.3lf ",measure_array[k].cap) ;
 		}
-	printf("\n");
+	printf("\n\n");
 	
 	result = get_max_measure(measure_array,i) ;
+	printf("max power found : %f at %f\n", result.power,result.cap) ;
 	free(measure_array) ;	
 	return(result);
 	
@@ -209,12 +210,12 @@ trajectory_measure_t get_measure_presentation(){
 	printf("==================================================\n") ;
 	for(k=0;k<=i;k++)
 	{
-		printf("%4.3f ",measure_array[k].power) ;
+		printf("%-8.3lf ",measure_array[k].power) ;
 	}
 	printf("\n") ;
 	for(k=0;k<=i;k++)
 		{
-			printf("%4.3f ",measure_array[k].cap) ;
+			printf("%-8.3lf ",measure_array[k].cap) ;
 		}
 	printf("\n");
 	
