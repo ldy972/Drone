@@ -217,9 +217,10 @@ trajectory_measure_t get_measure_presentation(){
 		{
 			printf("%-8.3lf ",measure_array[k].cap) ;
 		}
-	printf("\n");
+	printf("\n\n");
 	
 	result = get_max_measure(measure_array,i) ;
+	printf("max power found : %f at %f\n", result.power,result.cap) ;
 	free(measure_array) ;	
 	return(result);
 	
