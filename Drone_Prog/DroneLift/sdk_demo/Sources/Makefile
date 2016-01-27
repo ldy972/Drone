@@ -24,7 +24,7 @@ SRC_DIR:=$(shell pwd)
 GENERIC_BINARIES_SOURCE_DIR:=$(SRC_DIR)
 
 GENERIC_BINARIES_COMMON_SOURCE_FILES+=			\
-   lift_land.c          \
+   ./lift_land.c          \
    Navdata/navdata.c    \
    Video/video_stage.c
 

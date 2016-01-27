@@ -39,8 +39,8 @@ matrices.o ../../Soft/Build/targets_versions/ardrone_lib_PROD_MODE_vlib_Linux_3.
  ..//VP_Os/linux/vp_os_serial.h /usr/include/termios.h \
  /usr/include/x86_64-linux-gnu/bits/termios.h \
  /usr/include/x86_64-linux-gnu/sys/ttydefaults.h ../VP_Os/linux/intrin.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/matrices.h \
- /home/yann/Documents/INSA/5SEC/Drone/Drone/Drone_Prog/DroneTestPerso/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/maths.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneLift/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/matrices.h \
+ /home/yann/Documents/INSA/5SEC/Drone/Drone_Prog/DroneLift/sdk_demo/Sources/../../ARDroneLib/Soft/Lib/Maths/maths.h \
  /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/huge_val.h \
  /usr/include/x86_64-linux-gnu/bits/huge_valf.h \
  /usr/include/x86_64-linux-gnu/bits/huge_vall.h \

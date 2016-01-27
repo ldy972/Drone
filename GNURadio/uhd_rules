@@ -1,0 +1,3 @@
+sudo cp /usr/local/lib/uhd/utils/uhd-usrp.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+sudo udevadm trigger

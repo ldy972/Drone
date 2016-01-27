@@ -1,0 +1,29 @@
+#yann
+#gestion du dongle rtl2832 
+#le but est de récupérer un signal RF a partir d'une architecture embarquée
+#dans notre cas AR.Drone Parrot 2.0
+
+le dossier CC_rtl contient l'ensemble des fonction c de la librairie rtl_sdr
+ainsi qu'un makefile qui permet de les cross compiler dans un format compatible avec l'AR Drone
+la commande rtl_sdr.elf : usage ./rtl_sdr 'fichier_de_sortie'.bin -s 'frequence_d_échantillonage' -f 'frequence_porteuse'
+
+le dossier script_grc contient un ensemble de fichier permettant d exploiter les fichiers provenant d enregistrement RF fait sur le drone (ou pas car le format ne change pas 'fichier'.bin) :
+	-un script compatible avec grc en python : "top_block.py"
+		ainsi que
+	-son fichier .grc : "script.grc" (a ouvrir avec gnu radio companion 3.6 "grc")
+	
+	-un fichier en python autonome vis à vis de grc : "try.py"
+		-> ce fichier n'est pas encore fonctionel au 19/01/2016 22:01
+	
+	-un fichier "Makefile" qui permet de compiler le .c suivant
+	
+	-un fichier .c qui permet de récupérer la puissance recu au format 2.5f : "trancriptID.c"
+		-> usage : ./trancriptIQ 'fichier.bin' 'fichier_de_sortie'.txt
+		-> sortie : les puissance sont écrites par lignes (une lignes <-> une mesure)
+		-> ce fichier est à construire avec le makefile
+		-> ce fichier peut facilement se crosscompiler via la commande 'make EMBED="embed"'
+		-> le clean se fait selon le même usage ('make EMBED="embed" mrproper' ou 'make mrproper')
+		
+à la racine du dossier Dongle, on trouve les modules à insérer sur le drone ('ftp @drone' ; > 'put -module-') via la commande insmod, c'est-à-dire en s'y connectant en telnet : 
+	-dvb-core.ko : 'insmod dvb-core.ko'
+	-dvb-usb.ko : 'insmod dvb-usb.ko'

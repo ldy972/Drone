@@ -1,0 +1,38 @@
+
+
+Ce projet a pour but de fournir une interface contenant l'ensemble des commandes AT de communication avec le drone AR parrot v2.1 EN COURS Valid&Int (Yann)
+
+De fournir une interface propre (et réutilisable , ie idépendante de l'ar drone) permettant d'envoyer des commandes via l'udp EN COURS de IV&V (Yann)
+
+En utilisant les deux valeurs spécifié ci dessus, de créer un programme communiquant avec le drone selon (un semblant) d'algorithme (à définir)
+
+
+De permettre de mettre en place une architecture générique d'arborescence permettant une cross compilation systématique des projets de target cortex A8 V&V
+(réalisation d'un make file) DONE
+
+rappel des appel à make :
+##pour tester la syntaxe des makefile selon des regles définie dans rappel.txt
+make OBJ=toto.o --just-print
+
+##pour lancer le makefile en orientation embarqué
+##i-e gcc = arm-gnueabi-gcc ARCH=V7
+##@IP (Cf udp_sender.h) = localhost
+make -DEMBED
+
+## test de compilation (Cf make -DEMBED) au niveau Makefile
+make
+
+Idées :
+"$1 **** "_SP1
+fournir une interface graphique (Qt => done)
+tester unitairement et intégrer (done)
+donner à l'utilisateur la possibilité de commander la puissance des moteurs pour chaques actions (done)
+
+"$2 le mer 25 Nov"_SP2
+cross-compiler et vérifier le fonctionnement du drone en local
+récupérer les nav datas
+traiter les navdata
+mettre en place les "missions"
+ajouter des modules usb/dongle/gnuRadio (except GRC) sur le drone
+simuler une mission (a définir)
+enrichir le make pour adapter la compilation au non EMBARQUE

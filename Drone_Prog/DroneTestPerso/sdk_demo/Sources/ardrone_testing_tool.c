@@ -24,6 +24,9 @@
 //Local project
 #include <Video/video_stage.h>
 
+//Local thread
+#include "lift_land.h"
+
 static int32_t exit_ihm_program = 1;
 
 /* Implementing Custom methods for the main function of an ARDrone application */
@@ -40,6 +43,7 @@ C_RESULT ardrone_tool_init_custom(void)
 
   /* Start all threads of your application */
   START_THREAD( video_stage, NULL );
+  START_THREAD( lift_land, NULL );
   
   return C_OK;
 }
@@ -49,6 +53,7 @@ C_RESULT ardrone_tool_shutdown_custom(void)
 {
   /* Relinquish all threads of your application */
   JOIN_THREAD( video_stage );
+  JOIN_THREAD( lift_land );
 
   /* Unregistering for the current device */
   // ardrone_tool_input_remove( &gamepad );
@@ -74,5 +79,6 @@ BEGIN_THREAD_TABLE
   THREAD_TABLE_ENTRY( ardrone_control, 20 )
   THREAD_TABLE_ENTRY( navdata_update, 20 )
   THREAD_TABLE_ENTRY( video_stage, 20 )
+  THREAD_TABLE_ENTRY( lift_land, 20 )
 END_THREAD_TABLE
 
